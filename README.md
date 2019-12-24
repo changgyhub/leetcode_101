@@ -1,5 +1,7 @@
-<object data="https://github.com/irsisyphus/leetcode_101/raw/master/LeetCode 101 - A LeetCode Grinding Guide (C++ Version).pdf" type="application/pdf" width="750px" height="750px">
-    <embed src="https://github.com/irsisyphus/leetcode_101/raw/master/LeetCode 101 - A LeetCode Grinding Guide (C++ Version).pdf" type="application/pdf">
-        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="https://github.com/irsisyphus/leetcode_101/raw/master/LeetCode 101 - A LeetCode Grinding Guide (C++ Version).pdf">Download PDF</a>.</p>
-    </embed>
-</object>
+# LeetCode 101：和你一起你轻松刷题（C++）
+
+LeetCode 101: A LeetCode Grinding Guide (C++ Version)
+
+作者：高畅 Chang Gao
+
+版本：预览版 0.01
