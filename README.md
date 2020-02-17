@@ -14,14 +14,5 @@ LeetCode 101: A LeetCode Grinding Guide (C++ Version)
   * :white_check_mark: 目录
   * :white_check_mark: 101道题目和题解
   * :white_check_mark: 练习题题目挑选
-* :ballot_box_with_check: ~~Jan 31 2020~~ Feb 29 2020：发布预览版 0.02
-  * :ballot_box_with_check: LeetCode 入门
-  * :white_check_mark: 题目分类
-  * :white_check_mark: 贪心
-  * :white_check_mark: 双指针
-  * :white_check_mark: 二分查找
-  * :ballot_box_with_check: 搜索
-  * :ballot_box_with_check: DP
-  * :white_check_mark: 分治
-  * :white_check_mark: 数学
-  * :white_check_mark: 位运算
+* :black_square_button: Feb 29 2020：发布预览版 0.02
+  * :black_square_button: 大部分题目的中文题解讲解
