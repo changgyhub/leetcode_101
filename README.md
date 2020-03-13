@@ -19,5 +19,7 @@ LeetCode 101: A LeetCode Grinding Guide (C++ Version)
 * :white_check_mark: Mar 12 2020：发布预览版 0.03
   * :white_check_mark: 所有题目的中文题解讲解
   * :white_check_mark: 大部分的文字解释部分完成
-* :black_square_button: Mar 26 2020：发布预览版 0.04
-  * :black_square_button: 格式和文字调整（关键词加粗，加图，初次较对）
+* :white_check_mark: Mar 12 2020：发布预览版 0.04
+  * :white_check_mark: 格式和文字调整（关键词加粗，加图）
+* :black_square_button: Mar 15 2020：发布正式版 1.00
+  * :black_square_button: 较对，优化文笔
