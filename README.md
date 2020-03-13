@@ -16,7 +16,7 @@ LeetCode 101: A LeetCode Grinding Guide (C++ Version)
 
 如果您觉得这本书对您有帮助，不妨打赏一下作者哟~~~
 
-![wechatpay](wechatpay.jpg)
+![wechatpay](wechatpay.jpg | width=200)
 
 ## 版本更新历史
 * :white_check_mark: Dec 24 2019：发布预览版 0.01
