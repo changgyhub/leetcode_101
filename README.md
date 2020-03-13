@@ -1,5 +1,7 @@
 # LeetCode 101：和你一起你轻松刷题（C++）
 
+[下载链接](https://github.com/changgyhub/leetcode_101/raw/master/LeetCode%20101%20-%20A%20LeetCode%20Grinding%20Guide%20(C%2B%2B%20Version).pdf)
+
 LeetCode 101: A LeetCode Grinding Guide (C++ Version)
 
 一个面向有C++编程基础，但缺乏刷题经验的读者的教科书和工具书。
