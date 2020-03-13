@@ -8,10 +8,20 @@ LeetCode 101: A LeetCode Grinding Guide (C++ Version)
 
 作者：高畅 Chang Gao
 
+## 思维导图
+
+![overview](overview.png)
+
+## 打赏链接
+
+如果您觉得这本书对您有帮助，不妨打赏一下作者哟~~~
+
+![wechatpay](wechatpay.jpg)
+
 ## 版本更新历史
 * :white_check_mark: Dec 24 2019：发布预览版 0.01
   * :white_check_mark: 序
-  * :white_check_mark: 目录
+  * :whitea_check_mark: 目录
   * :white_check_mark: 101道题目和题解
   * :white_check_mark: 练习题题目挑选
 * :white_check_mark: Mar 1 2020：发布预览版 0.02
