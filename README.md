@@ -4,7 +4,7 @@ LeetCode 101: A LeetCode Grinding Guide (C++ Version)
 
 一个面向有C++编程基础，但缺乏刷题经验的读者的教科书和工具书。
 
-永久免费，禁止商业用途，欢迎传阅和指正。
+永久免费，禁止任何盈利性利用，欢迎传阅和指正。
 
 作者：高畅 Chang Gao
 
