@@ -38,4 +38,5 @@
 * :white_check_mark: Mar 12 2020：发布预览版 0.04
   * :white_check_mark: 格式和文字调整（关键词加下划线，加图）
 * :white_check_mark: Mar 13 2020：发布正式版 1.00
-  * :white_check_mark: 较对，优化文笔
+  * :white_check_mark: 校对，优化文笔
+
