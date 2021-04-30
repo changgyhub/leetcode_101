@@ -9,6 +9,16 @@
 
 作者：高畅 Chang Gao
 
+## 思维导图
+
+![overview](overview.png)
+
+## 打赏链接
+
+如果您觉得这本书对您有帮助，不妨打赏一下作者哟\~\~\~以下是微信打赏二维码
+
+<img src="./wechatpay.jpg" width="200" height="200">
+
 ## 版本更新历史
 
 欢迎在Github Issue中发布勘误、建议、以及对算法边界情况的讨论，请尽量避免清求帮忙debug。
@@ -29,14 +39,3 @@
   * :white_check_mark: 正式版第一次校对，优化文笔
 * :white_check_mark: Apr 29 2020：最新版本 1.11
   * :white_check_mark: 持续校对，收集意见
-
-## 思维导图
-
-![overview](overview.png)
-
-## 打赏链接
-
-如果您觉得这本书对您有帮助，不妨打赏一下作者哟\~\~\~以下是微信打赏二维码
-
-<img src="./wechatpay.jpg" width="200" height="200">
-
