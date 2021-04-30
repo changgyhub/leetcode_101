@@ -21,7 +21,7 @@
 
 ## 版本更新历史
 
-欢迎在Github Issue中发布勘误、建议、以及对算法边界情况的讨论，请尽量避免清求帮忙debug。
+欢迎在Github Issue中发布勘误、建议、以及对算法边界情况的讨论，请尽量避免请求帮忙debug。
 
 * :white_check_mark: Dec 24 2019：发布预览版 0.01
   * :white_check_mark: 序
