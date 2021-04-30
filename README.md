@@ -37,5 +37,5 @@
   * :white_check_mark: 格式和文字调整（关键词加下划线，加图）
 * :white_check_mark: Mar 13 2020：发布正式版 1.00
   * :white_check_mark: 正式版第一次校对，优化文笔
-* :white_check_mark: Apr 29 2020：最新版本 1.11
+* :white_check_mark: Apr 29 2021：最新版本 1.11
   * :white_check_mark: 持续校对，收集意见
