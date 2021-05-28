@@ -8,6 +8,7 @@
 * [图书模板链接](https://www.overleaf.com/latex/templates/elegantbook-template/zpsrbmdsxrgy)
 
 作者：高畅 Chang Gao
+
 最新版本：1.12
 
 ## 思维导图
