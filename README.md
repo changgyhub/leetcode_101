@@ -8,6 +8,7 @@
 * [图书模板链接](https://www.overleaf.com/latex/templates/elegantbook-template/zpsrbmdsxrgy)
 
 作者：高畅 Chang Gao
+最新版本：1.12
 
 ## 思维导图
 
@@ -38,4 +39,6 @@
 * :white_check_mark: Mar 13 2020：发布正式版 1.00
   * :white_check_mark: 正式版第一次校对，优化文笔
 * :white_check_mark: Apr 29 2021：最新版本 1.11
+  * :white_check_mark: 持续校对，收集意见
+* :white_check_mark: May 28 2021：最新版本 1.12
   * :white_check_mark: 持续校对，收集意见
