@@ -6,6 +6,7 @@
 
 * [图书链接](https://github.com/changgyhub/leetcode_101/blob/master/LeetCode%20101%20-%20A%20LeetCode%20Grinding%20Guide%20(C%2B%2B%20Version).pdf)
 * [图书模板链接](https://www.overleaf.com/latex/templates/elegantbook-template/zpsrbmdsxrgy)
+* [讨论区](https://github.com/changgyhub/leetcode_101/issues/49)
 
 作者：高畅 Chang Gao
 
