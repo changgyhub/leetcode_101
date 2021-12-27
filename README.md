@@ -46,3 +46,5 @@
   * :white_check_mark: 持续校对，收集意见
 * :white_check_mark: May 28 2021：最新版本 1.12
   * :white_check_mark: 持续校对，收集意见
+* :white_check_mark: Dec 27 2021：最新版本 1.14
+  * :white_check_mark: 持续校对，收集意见
