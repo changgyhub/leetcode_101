@@ -10,7 +10,7 @@
 
 作者：高畅 Chang Gao
 
-最新版本：1.18
+最新版本：1.19
 
 ## 思维导图
 
@@ -47,4 +47,6 @@
 * :white_check_mark: May 28 2021：最新版本 1.12
   * :white_check_mark: 持续校对，收集意见
 * :white_check_mark: Dec 27 2021：最新版本 1.14
+  * :white_check_mark: 持续校对，收集意见
+* :white_check_mark: Apr 8 2022：最新版本 1.19
   * :white_check_mark: 持续校对，收集意见
