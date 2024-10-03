@@ -20,7 +20,7 @@
 
 如果您觉得这本书对您有帮助，不妨打赏一下作者哟\~\~\~以下是微信打赏二维码
 
-<img src="./wechatpay.jpg" width="200" height="200">
+<img src="./misc/wechatpay.jpg" width="200" height="200">
 
 ## 版本更新历史
 
