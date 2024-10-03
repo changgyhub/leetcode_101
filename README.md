@@ -54,4 +54,4 @@
 * :white_check_mark: Aug 25 2022：最新版本 1.22
   * :white_check_mark: 持续校对，收集意见
 * :white_check_mark: Oct 02 2024：最新版本 1.90
-  * :white_check_mark: 第二版抢先预览，包含五个半章节
+  * :white_check_mark: 第二版抢先预览，包含前六个章节
