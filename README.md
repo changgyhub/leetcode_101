@@ -6,7 +6,7 @@
 
 永久免费，禁止任何盈利性利用，欢迎传阅和指正。为防止不被告知的二次修改，本书暂不放出Latex源代码。
 
-* [图书链接（第二版，包括C++和Python题解，正在撰写中）](https://github.com/changgyhub/leetcode_101/blob/master/LeetCode%20101%20-%20A%20Grinding%20Guide%20(Second%20Edition).pdf)
+* [图书链接（第二版，包括C++和Python题解，正在撰写中，预计2024年底完工）](https://github.com/changgyhub/leetcode_101/blob/master/LeetCode%20101%20-%20A%20Grinding%20Guide%20(Second%20Edition).pdf)
 * [图书链接（第一版，包括C++题解，已完稿且不再更新）](https://github.com/changgyhub/leetcode_101/blob/master/misc/%5BDeprecated%5D%20LeetCode%20101%20-%20A%20Grinding%20Guide%20(First%20Edition).pdf)
 * [图书模板链接](https://www.overleaf.com/latex/templates/elegantbook-template/zpsrbmdsxrgy)
 * [讨论区](https://github.com/changgyhub/leetcode_101/issues/49)
