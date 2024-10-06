@@ -1,5 +1,12 @@
 # LeetCode 101：力扣刷题指南
 
+<a href="https://github.com/changgyhub/leetcode_101/stargazers"><img src="https://img.shields.io/github/stars/changgyhub/leetcode_101" alt="Stars Badge"/></a>
+<a href="https://github.com/changgyhub/leetcode_101/network/members"><img src="https://img.shields.io/github/forks/changgyhub/leetcode_101" alt="Forks Badge"/></a>
+<a href="https://github.com/changgyhub/leetcode_101/pulls"><img src="https://img.shields.io/github/issues-pr/changgyhub/leetcode_101" alt="Pull Requests Badge"/></a>
+<a href="https://github.com/changgyhub/leetcode_101/issues"><img src="https://img.shields.io/github/issues/changgyhub/leetcode_101" alt="Issues Badge"/></a>
+<a href="https://github.com/changgyhub/leetcode_101/graphs/contributors"><img alt="GitHub contributors" src="https://img.shields.io/github/contributors/changgyhub/leetcode_101?color=2b9348"></a>
+<a href="https://github.com/changgyhub/leetcode_101/blob/master/LICENSE"><img src="https://img.shields.io/github/license/changgyhub/leetcode_101?color=2b9348" alt="License Badge"/></a>
+
 一个面向有一定的编程基础，但缺乏刷题经验的读者的教科书和工具书。
 
 包含各种常见LeetCode题型的C++和Python3代码和详解。
