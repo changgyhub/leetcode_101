@@ -1,15 +1,13 @@
 # LeetCode 101：力扣刷题指南
 
+<a href="https://isocpp.org/"><img src="https://img.shields.io/badge/C++-red?style=plastic" height="20" /></a>
+<a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python3-blue?style=plastic" height="20" /></a>
 <a href="https://github.com/changgyhub/leetcode_101/stargazers"><img src="https://img.shields.io/github/stars/changgyhub/leetcode_101" alt="Stars Badge"/></a>
 <a href="https://github.com/changgyhub/leetcode_101/network/members"><img src="https://img.shields.io/github/forks/changgyhub/leetcode_101" alt="Forks Badge"/></a>
-<a href="https://github.com/changgyhub/leetcode_101/pulls"><img src="https://img.shields.io/github/issues-pr/changgyhub/leetcode_101" alt="Pull Requests Badge"/></a>
-<a href="https://github.com/changgyhub/leetcode_101/issues"><img src="https://img.shields.io/github/issues/changgyhub/leetcode_101" alt="Issues Badge"/></a>
-<a href="https://github.com/changgyhub/leetcode_101/graphs/contributors"><img alt="GitHub contributors" src="https://img.shields.io/github/contributors/changgyhub/leetcode_101?color=2b9348"></a>
-<a href="https://github.com/changgyhub/leetcode_101/blob/master/LICENSE"><img src="https://img.shields.io/github/license/changgyhub/leetcode_101?color=2b9348" alt="License Badge"/></a>
+<a href="https://www.linkedin.com/in/changgy/" ><img src="https://img.shields.io/badge/LinkedIn-Follow_Chang_Gao-black?style=social&logo=linkedin" /> </a>
+
 
 一个面向有一定的编程基础，但缺乏刷题经验的读者的教科书和工具书。
-
-包含各种常见LeetCode题型的C++和Python3代码和详解。
 
 永久免费，禁止任何盈利性利用，欢迎传阅和指正。为防止不被告知的二次修改，本书暂不放出Latex源代码。
 
@@ -61,4 +59,4 @@
 * :white_check_mark: Aug 25 2022：最新版本 1.22
   * :white_check_mark: 持续校对，收集意见
 * :white_check_mark: Oct 02 2024：最新版本 1.90
-  * :white_check_mark: 第二版抢先预览，只包含一部分章节
+  * :white_check_mark: 第二版抢先预览，只包含部分章节
