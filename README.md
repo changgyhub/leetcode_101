@@ -9,7 +9,7 @@
 
 一个面向有一定的编程基础，但缺乏刷题经验的读者的教科书和工具书。
 
-永久免费，禁止任何盈利性利用，欢迎传阅和指正。为防止不被告知的二次修改，本书暂不放出Latex源代码。
+永久免费，禁止任何盈利性利用，欢迎传阅和指正。为防止不被告知的二次修改，本书暂不放出LaTeX源代码。
 
 * [图书链接（第二版，包括C++和Python题解，正在撰写中，预计2024年底完工）](https://github.com/changgyhub/leetcode_101/blob/master/LeetCode%20101%20-%20A%20Grinding%20Guide.pdf)
 * [图书链接（第一版，包括C++题解，已完稿且不再更新）](https://github.com/changgyhub/leetcode_101/blob/master/misc/%5BDeprecated%5D%20LeetCode%20101%20-%20A%20Grinding%20Guide%20(First%20Edition).pdf)
