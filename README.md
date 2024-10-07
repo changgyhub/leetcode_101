@@ -61,3 +61,5 @@
   * :white_check_mark: 第二版抢先预览，只包含部分章节
 * :white_check_mark: Oct 06 2024：最新版本 1.91
   * :white_check_mark: 第二版抢先预览，所有章节已完成，待审阅
+* :white_check_mark: Oct 07 2024：最新版本 2.00
+  * :white_check_mark: 第二版正式版第一次校对，优化文笔
