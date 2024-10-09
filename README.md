@@ -1,11 +1,11 @@
 # LeetCode 101：力扣刷题指南
 
-<a href="https://isocpp.org/"><img src="https://img.shields.io/badge/C++-red?style=plastic" height="20" /></a>
-<a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python3-blue?style=plastic" height="20" /></a>
-<a href="https://github.com/changgyhub/leetcode_101/stargazers"><img src="https://img.shields.io/github/stars/changgyhub/leetcode_101" alt="Stars Badge"/></a>
-<a href="https://github.com/changgyhub/leetcode_101/network/members"><img src="https://img.shields.io/github/forks/changgyhub/leetcode_101" alt="Forks Badge"/></a>
-<a href="https://www.linkedin.com/in/changgy/" ><img src="https://img.shields.io/badge/LinkedIn-Follow_Chang_Gao-black?style=social&logo=linkedin" /> </a>
-
+<a href="https://isocpp.org/"><img src="https://img.shields.io/badge/C++-red?style=plastic" height="22"/></a>
+<a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python3-blue?style=plastic" height="22"/></a>
+<a href="https://github.com/changgyhub/leetcode_101/blob/master/LeetCode%20101%20-%20A%20Grinding%20Guide.pdf"><img src="https://img.shields.io/badge/最新版本-2.0b-8A2BE2" height="22"/></a>
+<a href="https://github.com/changgyhub/leetcode_101/stargazers"><img src="https://img.shields.io/github/stars/changgyhub/leetcode_101" alt="Stars Badge" height="22"/></a>
+<a href="https://github.com/changgyhub/leetcode_101/network/members"><img src="https://img.shields.io/github/forks/changgyhub/leetcode_101" alt="Forks Badge" height="22"/></a>
+<a href="https://www.linkedin.com/in/changgy/" ><img src="https://img.shields.io/badge/LinkedIn-Follow_Chang_Gao-black?style=social&logo=linkedin" height="22"/> </a>
 
 一个面向有一定的编程基础，但缺乏刷题经验的读者的教科书和工具书。
 
@@ -17,7 +17,6 @@
 
 作者：高畅 Chang Gao
 
-最新版本：2.0
 
 ## 打赏链接
 
