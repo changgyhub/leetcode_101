@@ -29,37 +29,27 @@
 
 欢迎在Github Issue中发布勘误、建议、以及对算法边界情况的讨论，请尽量避免请求帮忙debug。
 
-* :white_check_mark: Dec 24 2019：发布预览版 0.01
-  * :white_check_mark: 序
-  * :white_check_mark: 目录
-  * :white_check_mark: 101道题目和题解
-  * :white_check_mark: 练习题题目挑选
-* :white_check_mark: Mar 1 2020：发布预览版 0.02
-  * :white_check_mark: 大部分题目的中文题解讲解
-* :white_check_mark: Mar 12 2020：发布预览版 0.03
-  * :white_check_mark: 所有题目的中文题解讲解
-  * :white_check_mark: 大部分的文字解释部分完成
-* :white_check_mark: Mar 12 2020：发布预览版 0.04
-  * :white_check_mark: 格式和文字调整（关键词加下划线，加图）
-* :white_check_mark: Mar 13 2020：发布正式版 1.00
-  * :white_check_mark: 正式版第一次校对，优化文笔
-* :white_check_mark: Apr 29 2021：最新版本 1.11
-  * :white_check_mark: 持续校对，收集意见
-* :white_check_mark: May 28 2021：最新版本 1.12
-  * :white_check_mark: 持续校对，收集意见
-* :white_check_mark: Dec 27 2021：最新版本 1.14
-  * :white_check_mark: 持续校对，收集意见
-* :white_check_mark: Apr 8 2022：最新版本 1.19
-  * :white_check_mark: 持续校对，收集意见
-* :white_check_mark: Apr 27 2022：最新版本 1.19
-  * :white_check_mark: 持续校对，收集意见
-* :white_check_mark: Jun 17 2022：最新版本 1.21
-  * :white_check_mark: 持续校对，收集意见
-* :white_check_mark: Aug 25 2022：最新版本 1.22
-  * :white_check_mark: 持续校对，收集意见
-* :white_check_mark: Oct 02 2024：最新版本 1.90
-  * :white_check_mark: 第二版抢先预览，只包含部分章节
-* :white_check_mark: Oct 06 2024：最新版本 1.91
-  * :white_check_mark: 第二版抢先预览，所有章节已完成，待审阅
-* :white_check_mark: Oct 07 2024：最新版本 2.00
-  * :white_check_mark: 第二版正式版第一次校对，优化文笔
+* Dec 24 2019：发布预览版 0.1
+  * 序、目录、101道题目和题解、练习题题目挑选
+* Mar 1 2020：发布预览版 0.2
+  * 大部分题目的中文题解讲解
+* Mar 12 2020：发布预览版 0.3
+  * 所有题目的中文题解讲解、大部分的文字解释部分完成
+* Mar 12 2020：发布预览版 0.4
+  * 格式和文字调整（关键词加下划线，加图）
+* Mar 13 2020：发布正式版 1.0
+  * 正式版第一次校对，优化文笔
+* Apr 29 2021：最新版本 1.1
+  * 持续校对，收集意见
+* Jun 17 2022：最新版本 1.2
+  * 持续校对，收集意见
+* Aug 25 2022：最新版本 1.3
+  * 持续校对，收集意见
+* Oct 02 2024：最新版本 1.9a
+  * 第二版抢先预览，只包含部分章节
+* Oct 06 2024：最新版本 1.9b
+  * 第二版抢先预览，所有章节已完成，待审阅
+* Oct 07 2024：最新版本 2.0
+  * 第二版正式版第一次校对，优化文笔
+* Oct 08 2024：最新版本 2.0b
+  * 第二版正式版第二次校对，优化文笔
