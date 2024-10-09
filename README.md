@@ -2,7 +2,7 @@
 
 <a href="https://isocpp.org/"><img src="https://img.shields.io/badge/C++-red?style=plastic" height="22"/></a>
 <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python3-blue?style=plastic" height="22"/></a>
-<a href="https://github.com/changgyhub/leetcode_101/blob/master/LeetCode%20101%20-%20A%20Grinding%20Guide.pdf"><img src="https://img.shields.io/badge/最新版本-2.0b-8A2BE2" height="22"/></a>
+<a href="https://github.com/changgyhub/leetcode_101/blob/master/LeetCode%20101%20-%20A%20Grinding%20Guide.pdf"><img src="https://img.shields.io/badge/Latest_Version-2.0b-8A2BE2" height="22"/></a>
 <a href="https://github.com/changgyhub/leetcode_101/stargazers"><img src="https://img.shields.io/github/stars/changgyhub/leetcode_101" alt="Stars Badge" height="22"/></a>
 <a href="https://github.com/changgyhub/leetcode_101/network/members"><img src="https://img.shields.io/github/forks/changgyhub/leetcode_101" alt="Forks Badge" height="22"/></a>
 <a href="https://www.linkedin.com/in/changgy/" ><img src="https://img.shields.io/badge/LinkedIn-Follow_Chang_Gao-black?style=social&logo=linkedin" height="22"/> </a>
