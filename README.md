@@ -7,11 +7,11 @@
 <a href="https://github.com/changgyhub/leetcode_101/network/members"><img src="https://img.shields.io/github/forks/changgyhub/leetcode_101" alt="Forks Badge" height="22"/></a>
 <a href="https://www.linkedin.com/in/changgy/" ><img src="https://img.shields.io/badge/LinkedIn-Follow_Chang_Gao-black?style=social&logo=linkedin" height="22"/> </a>
 
-一个面向有一定的编程基础，但缺乏刷题经验的读者的教科书和工具书。
+一个面向有一定的编程基础，但缺乏刷题经验的读者的教科书和工具书。提供C++和Python双题解。
 
 永久免费，禁止任何盈利性利用，欢迎传阅和指正。为防止不被告知的二次修改，本书暂不放出LaTeX源代码。本书由作者本人独立完成，不隶属于任何盈利或非盈利组织。
 
-* [图书链接（第二版，包括C++和Python题解）](https://github.com/changgyhub/leetcode_101/blob/master/LeetCode%20101%20-%20A%20Grinding%20Guide.pdf)
+* [图书链接](https://github.com/changgyhub/leetcode_101/blob/master/LeetCode%20101%20-%20A%20Grinding%20Guide.pdf)
 * [图书模板链接](https://www.overleaf.com/latex/templates/elegantbook-template/zpsrbmdsxrgy)
 * [讨论区](https://github.com/changgyhub/leetcode_101/issues/49)
 
