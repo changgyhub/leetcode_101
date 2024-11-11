@@ -1,0 +1,34 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.tutorialSidebar.category.1. 最易懂的贪心算法": {
+    "message": "1. 最易懂的貪心算法",
+    "description": "The label for category 1. 最易懂的贪心算法 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.1. 最易懂的贪心算法.link.generated-index.description": {
+    "message": "5 minutes to learn the most important Docusaurus concepts.",
+    "description": "The generated-index page description for category 1. 最易懂的贪心算法 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.2. 玩转双指针": {
+    "message": "2. 玩转双指针",
+    "description": "The label for category 2. 玩转双指针 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.2. 玩转双指针.link.generated-index.description": {
+    "message": "5 minutes to learn the most important Docusaurus concepts.",
+    "description": "The generated-index page description for category 2. 玩转双指针 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Tutorial - Basics": {
+    "message": "Tutorial - Basics",
+    "description": "The label for category Tutorial - Basics in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Tutorial - Basics.link.generated-index.description": {
+    "message": "5 minutes to learn the most important Docusaurus concepts.",
+    "description": "The generated-index page description for category Tutorial - Basics in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Tutorial - Extras": {
+    "message": "Tutorial - Extras",
+    "description": "The label for category Tutorial - Extras in sidebar tutorialSidebar"
+  }
+}
