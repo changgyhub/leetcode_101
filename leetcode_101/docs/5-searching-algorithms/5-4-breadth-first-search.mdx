@@ -1,0 +1,454 @@
+---
+sidebar_position: 24
+---
+
+# 5.4 广度优先搜索
+
+`广度优先搜索`（breadth-ﬁrst search，BFS）不同与深度优先搜索，它是一层层进行遍历的，因此`需要用先入先出的队列 (queue)` 而非先入后出的栈 (stack) 进行遍历。由于是按层次进行遍历，广度优先搜索时按照“广”的方向进行遍历的，也常常用来处理最短路径等问题。在 Python 中，我们可以用 collections.deque 来实现 C++ 中的 queue。
+
+```
+   1
+  / \
+  2 3
+ /
+4
+```
+
+这里要注意，深度优先搜索和广度优先搜索都可以处理`可达性`问题，即从一个节点开始是否能达到另一个节点。因为深度优先搜索可以利用递归快速实现，很多人会习惯使用深度优先搜索刷此类题目。实际软件工程中，笔者很少见到递归的写法，因为一方面难以理解，另一方面可能产生栈溢出的情况；而用栈实现的深度优先搜索和用队列实现的广度优先搜索在写法上并没有太大差异，因此使用哪一种搜索方式需要根据实际的功能需求来判断。另外，如果需要自定义搜索优先级，我们可以利用优先队列，这个我们会在数据结构的章节讲到。
+
+## [1091. Shortest Path in Binary Matrix](https://leetcode.com/problems/shortest-path-in-binary-matrix/)
+
+### 题目描述
+
+给定一个二维 0-1 矩阵，其中 1 表示障碍，0 表示道路，每个位置与周围八个格子相连。求从左上角到右下角的最短到达距离。如果没有可以到达的方法，返回-1。
+
+### 输入输出样例
+
+输入是一个二维整数数组，输出是一个整数，表示最短距离。
+
+```
+Input:
+[[0,0,1],
+ [1,1,0],
+ [1,1,0]]
+Output: 4
+```
+
+最短到达方法为先向右，拐弯之后再向下。
+
+### 题解
+
+利用队列，我们可以很直观地利用广度优先搜索，搜索最少扩展层数，即最短到达目的地的距离。注意不要重复搜索相同位置。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
+    if (grid[0][0] == 1) {
+        return -1;
+    }
+    int m = grid.size(), n = grid[0].size();
+    int dist = 0, count;
+    queue<pair<int, int>> q;
+    q.push({0, 0});
+    grid[0][0] = -1;  // -1表示visited
+    count = q.size();
+    while (count > 0) {
+        ++dist;
+        while (count--) {
+            auto [r, c] = q.front();
+            q.pop();
+            if (r == m - 1 && c == n - 1) {
+                return dist;
+            }
+            for (int dx = -1; dx <= 1; ++dx) {
+                for (int dy = -1; dy <= 1; ++dy) {
+                    if (dx == 0 && dy == 0) {
+                        continue;
+                    }
+                    int x = r + dx, y = c + dy;
+                    if (x < 0 || y < 0 || x >= m || y >= n || grid[x][y] != 0) {
+                        continue;
+                    }
+                    grid[x][y] = -1;
+                    q.push({x, y});
+                }
+            }
+        }
+        count = q.size();
+    }
+    return -1;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def shortestPathBinaryMatrix(grid: List[List[int]]) -> int:
+    if grid[0][0] == 1:
+        return -1
+    m, n = len(grid), len(grid[0])
+    dist = 0
+    q = collections.deque()
+    q.append((0, 0))
+    grid[0][0] = -1 # -1表示visited
+    count = len(q)
+    while count > 0:
+        dist += 1
+        while count > 0:
+            count -= 1
+            r, c = q.popleft()
+            if r == m - 1 and c == n - 1:
+                return dist
+            for dx in range(-1, 2):
+                for dy in range(-1, 2):
+                    if dx == 0 and dy == 0:
+                        continue
+                x, y = r + dx, c + dy
+                if x < 0 or y < 0 or x >= m or y >= n or grid[x][y] != 0:
+                    continue
+                grid[x][y] = -1
+                q.append((x, y))
+        count = len(q)
+    return -1
+```
+
+</TabItem>
+
+</Tabs>
+
+## [934. Shortest Bridge](https://leetcode.com/problems/shortest-bridge/)
+
+### 题目描述
+
+给定一个二维 0-1 矩阵，其中 1 表示陆地，0 表示海洋，每个位置与上下左右相连。已知矩阵中有且只有两个岛屿，求最少要填海造陆多少个位置才可以将两个岛屿相连。
+
+### 输入输出样例
+
+输入是一个二维整数数组，输出是一个非负整数，表示需要填海造陆的位置数。
+
+```
+Input:
+[[1,1,1,1,1],
+ [1,0,0,0,1],
+ [1,0,1,0,1],
+ [1,0,0,0,1],
+ [1,1,1,1,1]]
+Output: 1
+```
+
+### 题解
+
+本题实际上是求两个岛屿间的最短距离，因此我们可以先通过任意搜索方法找到其中一个岛屿，然后利用广度优先搜索，查找其与另一个岛屿的最短距离。这里我们展示利用深度优先搜索查找第一个岛屿。
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> direction{-1, 0, 1, 0, -1};
+// 辅函数。
+
+void dfs(queue<pair<int, int>>& points, vector<vector<int>>& grid, int i,
+         int j) {
+    int m = grid.size(), n = grid[0].size();
+    if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] == 2) {
+        return;
+    }
+    if (grid[i][j] == 0) {
+        points.push({i, j});
+        return;
+    }
+    grid[i][j] = 2;
+    for (int k = 0; k < 4; ++k) {
+        dfs(points, grid, i + direction[k], j + direction[k + 1]);
+    }
+}
+
+// 主函数。
+int shortestBridge(vector<vector<int>>& grid) {
+    int m = grid.size(), n = grid[0].size();
+    queue<pair<int, int>> points;
+    // DFS寻找第一个岛屿，并把1全部赋值为2。
+    bool flipped = false;
+    for (int i = 0; i < m && !flipped; ++i) {
+        for (int j = 0; j < n && !flipped; ++j) {
+            if (grid[i][j] == 1) {
+                dfs(points, grid, i, j);
+                flipped = true;
+            }
+        }
+    }
+    // BFS寻找第二个岛屿，并把过程中经过的0赋值为2。
+    int level = 0;
+    while (!points.empty()) {
+        ++level;
+        int n_points = points.size();
+        while (n_points--) {
+            auto [r, c] = points.front();
+            points.pop();
+            grid[r][c] = 2;
+            for (int k = 0; k < 4; ++k) {
+                int x = r + direction[k], y = c + direction[k + 1];
+                if (x >= 0 && x < m && y >= 0 && y < n) {
+                    if (grid[x][y] == 2) {
+                        continue;
+                    }
+                    if (grid[x][y] == 1) {
+                        return level;
+                    }
+                    grid[x][y] = 2;
+                    points.push({x, y});
+                }
+            }
+        }
+    }
+    return 0;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+direction = [-1, 0, 1, 0, -1]
+
+# 辅函数。
+def dfs(points: Deque[Tuple[int, int]], grid: List[List[int]], i: int, j: int):
+    m, n = len(grid), len(grid[0])
+    if i < 0 or i >= m or j < 0 or j >= n or grid[i][j] == 2:
+        return
+    if grid[i][j] == 0:
+        points.append((i, j))
+        return
+    grid[i][j] = 2
+    for k in range(4):
+        dfs(points, grid, i + direction[k], j + direction[k + 1])
+
+def shortestBridge(grid: List[List[int]]) -> int:
+    m, n = len(grid), len(grid[0])
+    points = collections.deque()
+    # DFS寻找第一个岛屿，并把1全部赋值为2。
+    flipped = False
+    for i in range(m):
+        if flipped:
+            break
+        for j in range(n):
+            if grid[i][j] == 1:
+                dfs(points, grid, i, j)
+                flipped = True
+                break
+    # BFS寻找第二个岛屿，并把过程中经过的0赋值为2。
+    level = 0
+    while len(points) > 0:
+        level += 1
+        points_at_current_level = len(points)
+        for _ in range(points_at_current_level):
+            r, c = points.popleft()
+            grid[r][c] = 2
+            for k in range(4):
+                x, y = r + direction[k], c + direction[k + 1]
+                if x >= 0 and x < m and y >= 0 and y < n:
+                    if grid[x][y] == 2:
+                        continue
+                    if grid[x][y] == 1:
+                        return level
+                    grid[x][y] = 2
+                    points.append((x, y))
+    return level
+```
+
+</TabItem>
+
+</Tabs>
+
+## [126. Word Ladder II](https://leetcode.com/problems/word-ladder-ii/)
+
+### 题目描述
+
+给定一个起始字符串和一个终止字符串，以及一个单词表，求是否可以将起始字符串每次改一个字符，直到改成终止字符串，且所有中间的修改过程表示的字符串都可以在单词表里找到。若存在，输出需要修改次数最少的所有更改方式。
+
+### 输入输出样例
+
+输入是两个字符串，输出是一个二维字符串数组，表示每种字符串修改方式。
+
+```
+Input: beginWord = "hit", endWord = "cog",
+wordList = ["hot","dot","dog","lot","log","cog"]
+Output:
+[["hit","hot","dot","dog","cog"],
+ ["hit","hot","lot","log","cog"]]
+```
+
+### 题解
+
+
+我们可以把起始字符串、终止字符串、以及单词表里所有的字符串想象成节点。若两个字符串只有一个字符不同，那么它们相连。因为题目需要输出修改次数最少的所有修改方式，因此我们可以使用广度优先搜索，求得起始节点到终止节点的最短距离。
+
+我们同时还使用了一个小技巧：我们并不是直接从起始节点进行广度优先搜索，直到找到终止节点为止；而是从起始节点和终止节点分别进行广度优先搜索，每次只延展当前层节点数最少的那一端，这样我们可以减少搜索的总结点数。举例来说，假设最短距离为 4，如果我们只从一端搜索 4 层，总遍历节点数最多是 $1 + 2 + 4 + 8 + 16 = 31$；而如果我们从两端各搜索两层，总遍历节点数最多只有 $2 × (1 + 2 + 4) =14$。
+
+在搜索结束后，我们还需要通过回溯法来重建所有可能的路径。
+
+这道题略微复杂，需要读者耐心思考和实现代码。LeetCode 对于本题的时间要求非常严格，即使是官方题解也经常容易超时，可以尝试多次提交。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// 辅函数。
+void backtracking(const string &src, const string &dst,
+                  unordered_map<string, vector<string>> &next_words,
+                  vector<string> &path, vector<vector<string>> &ladder) {
+    if (src == dst) {
+        ladder.push_back(path);
+        return;
+    }
+    if (!next_words.contains(src)) {
+        return;
+    }
+    for (const auto &w : next_words[src]) {
+        path.push_back(w);  // 修改当前节点状态
+        backtracking(w, dst, next_words, path, ladder);  // 递归子节点
+        path.pop_back();  // 回改当前节点状态
+    }
+}
+
+// 主函数。
+vector<vector<string>> findLadders(string beginWord, string endWord,
+                                   vector<string> &wordList) {
+    vector<vector<string>> ladder;
+    // 用哈希集合存储字典，方便查找。
+    unordered_set<string> word_dict;
+    for (const auto &w : wordList) {
+        word_dict.insert(w);
+    }
+    if (!word_dict.contains(endWord)) {
+        return ladder;
+    }
+    word_dict.erase(beginWord);
+    word_dict.erase(endWord);
+    // 建立两个queue，从beginWord和endWord同时延展，每次延展最小的。
+    // 因为之后的去重操作需要遍历queue，我们这里用哈希表实现它，
+    // 只要保证是分层次遍历即可。
+    unordered_set<string> q_small{beginWord}, q_large{endWord};
+    unordered_map<string, vector<string>> next_words;
+    bool reversed_path = false, found_path = false;
+    while (!q_small.empty()) {
+        unordered_set<string> q;
+        for (const auto &w : q_small) {
+            string s = w;
+            for (int i = 0; i < s.size(); ++i) {
+                for (int j = 0; j < 26; ++j) {
+                    s[i] = j + ’a’;
+                    if (q_large.contains(s)) {
+                        reversed_path ? next_words[s].push_back(w)
+                                      : next_words[w].push_back(s);
+                        found_path = true;
+                    }
+                    if (word_dict.contains(s)) {
+                        reversed_path ? next_words[s].push_back(w)
+                                      : next_words[w].push_back(s);
+                        q.insert(s);
+                    }
+                }
+                s[i] = w[i];
+            }
+        }
+        if (found_path) {
+            break;
+        }
+        // 环路一定不是最短解，所以这里需要去重和避免无限循环。
+        for (const auto &w : q) {
+            word_dict.erase(w);
+        }
+        // 更新两个queue，并维持大小关系。
+        if (q.size() <= q_large.size()) {
+            q_small = q;
+        } else {
+            reversed_path = !reversed_path;
+            q_small = q_large;
+            q_large = q;
+        }
+    }
+    if (found_path) {
+        vector<string> path{beginWord};
+        backtracking(beginWord, endWord, next_words, path, ladder);
+    }
+    return ladder;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# 辅函数。
+def backtracking(src: str, dst: str, next_words: Dict[str, List[str]],
+                 path: List[str], ladder: List[List[str]]):
+    if src == dst:
+        ladder.append(path[:])
+        return
+    if src not in next_words:
+        return
+    for w in next_words[src]:
+        path.append(w)  # 修改当前节点状态
+        backtracking(w, dst, next_words, path, ladder)  # 递归子节点
+        path.pop()  # 回改当前节点状态
+
+# 主函数。
+def findLadders(beginWord: str, endWord: str,
+              wordList: List[str]) -> List[List[str]]:
+    ladder = []
+    # 用哈希集合存储字典，方便查找。
+    word_dict = set(wordList)
+    if endWord not in word_dict:
+        return ladder
+    word_dict = word_dict.difference(set([beginWord, endWord]))
+    # 建立两个queue，从beginWord和endWord同时延展，每次延展最小的。
+    # 因为之后的去重操作需要遍历queue，我们这里用哈希表实现它，
+    # 只要保证是分层次遍历即可。
+    q_small, q_large = set([beginWord]), set([endWord])
+    next_words = dict()
+    reversed_path, found_path = False, False
+    while len(q_small) > 0:
+        q = set()
+        for w in q_small:
+            for i in range(len(w)):
+                for j in range(26):
+                    s = w[:i] + chr(ord("a") + j) + w[i + 1:]
+                    if s in q_large:
+                        if reversed_path:
+                            next_words[s] = next_words.get(s, []) + [w]
+                        else:
+                            next_words[w] = next_words.get(w, []) + [s]
+                        found_path = True
+                    if s in word_dict:
+                        if reversed_path:
+                            next_words[s] = next_words.get(s, []) + [w]
+                        else:
+                            next_words[w] = next_words.get(w, []) + [s]
+                        q.add(s)
+        if found_path:
+            break
+        # 环路一定不是最短解，所以这里需要去重和避免无限循环。
+        word_dict = word_dict.difference(q)
+        # 更新两个queue，并维持大小关系。
+        if len(q) <= len(q_large):
+            q_small = q
+        else:
+            reversed_path = not reversed_path
+            q_small = q_large
+            q_large = q
+
+    if found_path:
+        path = [beginWord]
+        backtracking(beginWord, endWord, next_words, path, ladder)
+    return ladder
+
+```
+
+</TabItem>
+
+</Tabs>

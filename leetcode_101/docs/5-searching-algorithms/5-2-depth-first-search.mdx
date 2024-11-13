@@ -1,0 +1,372 @@
+---
+sidebar_position: 22
+---
+
+# 5.2 深度优先搜索
+
+`深度优先搜索`（depth-ﬁrst search，DFS）在搜索到一个新的节点时，立即对该新节点进行遍历；因此遍历需要用`先入后出的栈（stack）`来实现，也可以通过与栈等价的`递归`来实现。对于树结构而言，由于总是对新节点调用遍历，因此看起来是向着“深”的方向前进。在 Python 中，我们可以用 collections.deque 来实现 C++ 中的 stack。但是通常情况下，我们还是会选用 C++ 中的 vector 或 Python 中的 list 来实现栈，因为它们既是先入后出的数据结构，又能支持随机查找。
+
+考虑如下一颗简单的树，我们从 1 号节点开始遍历。假如遍历顺序是从左子节点到右子节点，那么按照优先向着“深”的方向前进的策略，则遍历过程为 1（起始节点）->2（遍历更深一层的左子节点）->4（遍历更深一层的左子节点）->2（无子节点，返回父结点）->1（子节点均已完成遍历，返回父结点）->3（遍历更深一层的右子节点）->1（无子节点，返回父结点）-> 结束程序（子节点均已完成遍历）。如果我们使用栈实现，我们的栈顶元素的变化过程为 1->2->4->3。
+
+```
+   1
+  / \
+  2 3
+ /
+4
+```
+
+深度优先搜索也可以用来`检测环路`：记录每个遍历过的节点的父节点，若一个节点被再次遍历且父节点不同，则说明有环。我们也可以用之后会讲到的拓扑排序判断是否有环路，若最后存在入度不为零的点，则说明有环。
+
+有时我们可能会需要对已经搜索过的节点进行标记，以防止在遍历时重复搜索某个节点，这种做法叫做`状态记录`或`记忆化`（memoization）。
+
+## [695. Max Area of Island](https://leetcode.com/problems/max-area-of-island/)
+
+### 题目描述
+
+给定一个二维的 0-1 矩阵，其中 0 表示海洋，1 表示陆地。单独的或相邻的陆地可以形成岛屿，每个格子只与其上下左右四个格子相邻。求最大的岛屿面积。
+
+### 输入输出样例
+
+输入是一个二维数组，输出是一个整数，表示最大的岛屿面积。
+
+```
+Input:
+[[1,0,1,1,0,1,0,1],
+[1,0,1,1,0,1,1,1],
+[0,0,0,0,0,0,0,1]]
+Output: 6
+```
+
+最大的岛屿面积为 6，位于最右侧。
+
+### 题解
+
+此题是十分标准的搜索题，我们可以拿来练手深度优先搜索。一般来说，深度优先搜索类型的题可以分为主函数和辅函数，主函数用于遍历所有的搜索位置，判断是否可以开始搜索，如果可以即在辅函数进行搜索。辅函数则负责深度优先搜索的递归调用。当然，我们也可以使用栈（stack）实现深度优先搜索，但因为栈与递归的调用原理相同，而递归相对便于实现，因此刷题时笔者推荐使用递归式写法，同时也方便进行回溯（见下节）。不过在实际工程上，直接使用栈可能才是最好的选择，一是因为便于理解，二是更不易出现递归栈满的情况。
+
+我们先展示使用栈的写法。这里我们使用了一个小技巧，对于四个方向的遍历，可以创造一个数组 [-1, 0, 1, 0, -1]，每相邻两位即为上下左右四个方向之一。当然您也可以显式写成 [-1, 0]、[1, 0]、[0, 1] 和 [0, -1]，以便理解。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int maxAreaOfIsland(vector<vector<int>>& grid) {
+    vector<int> direction{-1, 0, 1, 0, -1};
+    int m = grid.size(), n = grid[0].size(), max_area = 0;
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (grid[i][j] == 1) {
+                stack<pair<int, int>> island;
+                // 初始化第第一个节点。
+                int local_area = 1;
+                grid[i][j] = 0;
+                island.push({i, j});
+                // DFS.
+                while (!island.empty()) {
+                    auto [r, c] = island.top();
+                    island.pop();
+                    for (int k = 0; k < 4; ++k) {
+                        int x = r + direction[k], y = c + direction[k + 1];
+                        // 放入满足条件的相邻节点。
+                        if (x >= 0 && x < m && y >= 0 && y < n &&
+                            grid[x][y] == 1) {
+                            ++local_area;
+                            grid[x][y] = 0;
+                            island.push({x, y});
+                        }
+                    }
+                }
+                max_area = max(max_area, local_area);
+            }
+        }
+    }
+    return max_area;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def maxAreaOfIsland(grid: List[List[int]]) -> int:
+    direction = [-1, 0, 1, 0, -1]
+    m, n, max_area = len(grid), len(grid[0]), 0
+    for i in range(m):
+        for j in range(n):
+            if grid[i][j] == 1:
+                island = []
+                # 初始化第第一个节点。
+                local_area = 1
+                grid[i][j] = 0
+                island.append((i, j))
+                # DFS.
+                while len(island) > 0:
+                    r, c = island.pop()
+                    for k in range(4):
+                        x, y = r + direction[k], c + direction[k + 1]
+                        # 放入满足条件的相邻节点。
+                        if 0 <= x < m and 0 <= y < n and grid[x][y] == 1:
+                            local_area += 1
+                            grid[x][y] = 0
+                            island.append((x, y))
+                max_area = max(max_area, local_area)
+    return max_area
+```
+
+</TabItem>
+
+</Tabs>
+
+下面我们展示递归写法，注意进行递归搜索时，一定要检查边界条件。可以在每次调用辅函数之前检查，也可以在辅函数的一开始进行检查。这里我们没有利用 [-1, 0, 1, 0, -1] 数组进行上下左右四个方向的搜索，而是直接显式地写出来四种不同的递归函数。两种写法都可以，读者可以掌握任意一种。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// 辅函数。
+int dfs(vector<vector<int>>& grid, int r, int c) {
+    if (r < 0 || r >= grid.size() || c < 0 || c >= grid[0].size() ||
+        grid[r][c] == 0) {
+        return 0;
+    }
+    grid[r][c] = 0;
+    return (1 + dfs(grid, r + 1, c) + dfs(grid, r - 1, c) +
+            dfs(grid, r, c + 1) + dfs(grid, r, c - 1));
+}
+
+// 主函数。
+int maxAreaOfIsland(vector<vector<int>>& grid) {
+    int max_area = 0;
+    for (int i = 0; i < grid.size(); ++i) {
+        for (int j = 0; j < grid[0].size(); ++j) {
+            max_area = max(max_area, dfs(grid, i, j));
+        }
+    }
+    return max_area;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# 辅函数。
+def dfs(grid: List[List[int]], r: int, c: int) -> int:
+    if r < 0 or r >= len(grid) or c < 0 or c >= len(grid[0]) or grid[r][c] == 0:
+        return 0
+    grid[r][c] = 0
+    return (1 + dfs(grid, r + 1, c) + dfs(grid, r - 1, c) +
+            dfs(grid, r, c + 1) + dfs(grid, r, c - 1))
+
+# 主函数。
+def maxAreaOfIsland(grid: List[List[int]]) -> int:
+    max_area = 0
+    for i in range(len(grid)):
+        for j in range(len(grid[0])):
+            max_area = max(max_area, dfs(grid, i, j))
+    return max_area
+```
+
+</TabItem>
+
+</Tabs>
+
+## [547. Number of Provinces](https://leetcode.com/problems/number-of-provinces/)
+
+### 题目描述
+
+给定一个二维的 0-1 矩阵，如果第 (i, j) 位置是 1，则表示第 i 个城市和第 j 个城市处于同一城市圈。已知城市的相邻关系是可以传递的，即如果 a 和 b 相邻，b 和 c 相邻，那么 a 和 c 也相邻，换言之这三个城市处于同一个城市圈之内。求一共有多少个城市圈。
+
+### 输入输出样例
+
+输入是一个二维数组，输出是一个整数，表示城市圈数量。因为城市相邻关系具有对称性，该二维数组为对称矩阵。同时，因为自己也处于自己的城市圈，对角线上的值全部为 1。
+
+```
+Input:
+[[1,1,0],
+[1,1,0],
+[0,0,1]]
+Output: 2
+```
+
+在这个样例中，[1,2] 处于一个城市圈，[3] 处于一个城市圈。
+
+### 题解
+
+在上一道题目中，图的表示方法是，每个位置代表一个节点，每个节点与上下左右四个节点相邻。而在这一道题里面，每一行（列）表示一个节点，它的每列（行）表示是否存在一个相邻节点。上一道题目拥有 m × n 个节点，每个节点有 4 条边；而本题拥有 n 个节点，每个节点最多有 n 条边，表示和所有城市都相邻，最少可以有 1 条边，表示当前城市圈只有自己。当清楚了图的表示方法后，这道题目与上一道题目本质上是同一道题：搜索城市圈（岛屿圈）的个数。我们这里采用递归的写法。
+
+:::warning
+
+对于节点连接类问题，我们也可以利用并查集来进行快速的连接和搜索。我们将会在之后的章节讲解。
+
+:::
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// 辅函数。
+void dfs(vector<vector<int>>& isConnected, int i, vector<bool>& visited) {
+    visited[i] = true;
+    for (int j = 0; j < isConnected.size(); ++j) {
+        if (isConnected[i][j] == 1 && !visited[j]) {
+            dfs(isConnected, j, visited);
+        }
+    }
+}
+
+// 主函数。
+int findCircleNum(vector<vector<int>>& isConnected) {
+    int n = isConnected.size(), count = 0;
+    // 防止重复搜索已被搜索过的节点。
+    vector<bool> visited(n, false);
+    for (int i = 0; i < n; ++i) {
+        if (!visited[i]) {
+            dfs(isConnected, i, visited);
+            ++count;
+        }
+    }
+    return count;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# 辅函数。
+def dfs(isConnected: List[List[int]], city: int, visited: Set[int]):
+    visited.add(city)
+    for i in range(len(isConnected)):
+        if isConnected[city][i] == 1 and i not in visited:
+            dfs(isConnected, i, visited)
+
+# 主函数。
+def findCircleNum(isConnected: List[List[int]]) -> int:
+    count = 0
+    # 防止重复搜索已被搜索过的节点。
+    visited = set()
+    for i in range(len(isConnected)):
+        if i not in visited:
+            dfs(isConnected, i, visited)
+            count += 1
+    return count
+```
+
+</TabItem>
+
+</Tabs>
+
+
+## [417. Paciﬁc Atlantic Water Flow](https://leetcode.com/problems/pacific-atlantic-water-flow/)
+
+### 题目描述
+
+给定一个二维的非负整数矩阵，每个位置的值表示海拔高度。假设左边和上边是太平洋，右边和下边是大西洋，求从哪些位置向下流水，可以流到太平洋和大西洋。水只能从海拔高的位置流到海拔低或相同的位置。
+
+### 输入输出样例
+
+输入是一个二维的非负整数数组，表示海拔高度。输出是一个二维的数组，其中第二个维度大小固定为 2，表示满足条件的位置坐标。
+
+
+```
+Input:
+ 太平洋 ~  ~  ~  ~  ~
+    ~  1   2  2  3  (5) *
+    ~  3   2  3 (4) (4) *
+    ~  2   4 (5) 3   1 *
+    ~ (6) (7) 1  4   5 *
+    ~ (5)  1  1  2   4 *
+       *   *  *  *   * 大西洋
+Output: [[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]]
+```
+
+在这个样例中，有括号的区域为满足条件的位置。
+
+### 题解
+
+虽然题目要求的是满足向下流能到达两个大洋的位置，如果我们对所有的位置进行搜索，那么在不剪枝的情况下复杂度会很高。因此我们可以反过来想，从两个大洋开始向上流，这样我们只需要对矩形四条边进行搜索。搜索完成后，只需遍历一遍矩阵，两个大洋向上流都能到达的位置即为满足条件的位置。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> direction{-1, 0, 1, 0, -1};
+// 辅函数。
+void dfs(const vector<vector<int>>& heights, vector<vector<bool>>& can_reach,
+         int r, int c) {
+    if (can_reach[r][c]) {
+        return;
+    }
+    can_reach[r][c] = true;
+    for (int i = 0; i < 4; ++i) {
+        int x = r + direction[i], y = c + direction[i + 1];
+        if (x >= 0 && x < heights.size() && y >= 0 && y < heights[0].size() &&
+            heights[r][c] <= heights[x][y]) {
+            dfs(heights, can_reach, x, y);
+        }
+    }
+}
+
+// 主函数。
+vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
+    int m = heights.size(), n = heights[0].size();
+    vector<vector<bool>> can_reach_p(m, vector<bool>(n, false));
+    vector<vector<bool>> can_reach_a(m, vector<bool>(n, false));
+    vector<vector<int>> can_reach_p_and_a;
+    for (int i = 0; i < m; ++i) {
+        dfs(heights, can_reach_p, i, 0);
+        dfs(heights, can_reach_a, i, n - 1);
+    }
+    for (int i = 0; i < n; ++i) {
+        dfs(heights, can_reach_p, 0, i);
+        dfs(heights, can_reach_a, m - 1, i);
+    }
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (can_reach_p[i][j] && can_reach_a[i][j]) {
+                can_reach_p_and_a.push_back({i, j});
+            }
+        }
+    }
+    return can_reach_p_and_a;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+direction = [-1, 0, 1, 0, -1]
+
+# 辅函数。
+def dfs(heights: List[List[int]], can_reach: List[List[int]], r: int, c: int):
+    if can_reach[r][c]:
+        return
+    can_reach[r][c] = True
+    for i in range(4):
+        x, y = r + direction[i], c + direction[i + 1]
+        if (x >= 0 and x < len(heights) and y >= 0 and y < len(heights[0]) and
+            heights[x][y] >= heights[r][c]):
+            dfs(heights, can_reach, x, y)
+
+# 主函数。
+def pacificAtlantic(heights: List[List[int]]) -> List[List[int]]:
+    m, n = len(heights), len(heights[0])
+    can_reach_p = [[False for _ in range(n)] for _ in range(m)]
+    can_reach_a = [[False for _ in range(n)] for _ in range(m)]
+    for i in range(m):
+        dfs(heights, can_reach_p, i, 0)
+        dfs(heights, can_reach_a, i, n - 1)
+    for j in range(n):
+        dfs(heights, can_reach_p, 0, j)
+        dfs(heights, can_reach_a, m - 1, j)
+    return [
+            [i, j] for i in range(m) for j in range(n)
+            if can_reach_p[i][j] and can_reach_a[i][j]
+        ]
+```
+
+</TabItem>
+
+</Tabs>
