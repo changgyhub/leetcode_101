@@ -4,6 +4,8 @@ sidebar_position: 0
 
 # 0. LeetCode 101: 力扣刷题指南 (第二版)
 
+![](https://github.com/changgyhub/leetcode_101/blob/master/misc/cover.jpg?raw=true)
+
 作者：高畅 Chang Gao
 
 语言：C++ & Python
