@@ -1,0 +1,82 @@
+---
+sidebar_position: 54
+---
+
+# 10.7 双端队列
+
+## [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
+
+### 题目描述
+
+给定一个整数数组和一个滑动窗口大小，求在这个窗口的滑动过程中，每个时刻其包含的最大值。
+
+### 输入输出样例
+
+输入是一个一维整数数组，和一个表示滑动窗口大小的整数；输出是一个一维整数数组，表示每个时刻时的窗口内最大值。
+
+```
+Input: nums = [1,3,-1,-3,5,3,6,7], k = 3
+Output: [3,3,5,5,6,7]
+```
+
+在这个样例中，滑动窗口在每个位置的最大包含值取法如下：
+
+```
+    Window position        Max
+------------------------- -----
+[1  3  -1] -3  5  3  6  7   3
+ 1 [3  -1  -3] 5  3  6  7   3
+ 1  3 [-1  -3  5] 3  6  7   5
+ 1  3  -1 [-3  5  3] 6  7   5
+ 1  3  -1  -3 [5  3  6] 7   6
+ 1  3  -1  -3  5 [3  6  7]  7
+```
+
+### 题解
+
+我们可以利用双端队列进行操作：每当向右移动时，把窗口左端的值从双端队列左端剔除，把双端队列右边小于窗口右端的值全部剔除。这样双端队列的最左端永远是当前窗口内的最大值。另外，这道题也是单调栈的一种延申：该双端队列利用从左到右递减来维持大小关系。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+    deque<int> dq;
+    vector<int> swm;
+    for (int i = 0; i < nums.size(); ++i) {
+        if (!dq.empty() && dq.front() == i - k) {
+            dq.pop_front();
+        }
+        while (!dq.empty() && nums[dq.back()] < nums[i]) {
+            dq.pop_back();
+        }
+        dq.push_back(i);
+        if (i >= k - 1) {
+            swm.push_back(nums[dq.front()]);
+        }
+    }
+    return swm;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def maxSlidingWindow(nums: List[int], k: int) -> List[int]:
+    dq = collections.deque()
+    swm = []
+    for i, num in enumerate(nums):
+        if len(dq) > 0 and dq[0] == i - k:
+            dq.popleft()
+        while len(dq) > 0 and nums[dq[-1]] < num:
+            dq.pop()
+        dq.append(i)
+        if i >= k - 1:
+            swm.append(nums[dq[0]])
+    return swm
+```
+
+</TabItem>
+
+</Tabs>
