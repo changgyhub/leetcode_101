@@ -1,0 +1,140 @@
+---
+sidebar_position: 76
+---
+
+# 15.2 并查集
+
+`并查集`（union-ﬁnd, disjoint set）可以动态地连通两个点，并且可以非常快速地判断两个点是否连通。假设存在 n 个节点，我们先将所有节点的父节点标为自己；每次要连接节点 i 和 j 时，我们可以将秩较小一方的父节点标为另一方（按秩合并）；每次要查询两个节点是否相连时，我们可以查找 i 和 j 的祖先是否最终为同一个人，并减少祖先层级（路径压缩）。
+
+<figure>
+  <span style={{ display: 'block', width: '30%', margin: '0 auto' }}>
+    ![](15.1.png)
+  </span>
+  <figcaption style={{ textAlign: 'center' }}>图 15.1: 并查集样例，其中 union 操作可以将两个集合按秩合并，ﬁnd 操作可以查找节点的祖先并压缩路径。</figcaption>
+</figure>
+
+## [684. Redundant Connection](https://leetcode.com/problems/redundant-connection/)
+
+### 題目描述
+
+在无向图找出一条边，移除它之后该图能够成为一棵树（即无向无环图）。如果有多个解，返回在原数组中位置最靠后的那条边。
+
+### 輸入輸出範例
+
+输入是一个二维数组，表示所有的边（对应的两个节点）；输出是一个一维数组，表示需要移除的边（对应的两个节点）。
+
+```
+Input: [[1,2], [1,3], [2,3]]
+  1
+ / \
+2 - 3
+Output: [2,3]
+```
+
+### 題解
+
+因为需要判断是否两个节点被重复连通，所以我们可以使用并查集来解决此类问题。具体实现算法如下所示。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+class Solution {
+   public:
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        n_ = edges.size();
+        id_ = vector<int>(n_);
+        depth_ = vector<int>(n_, 1);
+        for (int i = 0; i < n_; ++i) {
+            id_[i] = i;
+        }
+        for (auto& edge : edges) {
+            int i = edge[0], j = edge[1];
+            if (linked(i - 1, j - 1)) {
+                return vector<int>{i, j};
+            }
+            connect(i - 1, j - 1);
+        }
+        return vector<int>();
+    }
+
+   private:
+    int find(int i) {
+        // 路径压缩。
+        while (i != id_[i]) {
+            id_[i] = id_[id_[i]];
+            i = id_[i];
+        }
+        return i;
+    }
+
+    void connect(int i, int j) {
+        i = find(i), j = find(j);
+        if (i == j) {
+            return;
+        }
+        // 按秩合并。
+        if (depth_[i] <= depth_[j]) {
+            id_[i] = j;
+            depth_[j] = max(depth_[j], depth_[i] + 1);
+        } else {
+            id_[j] = i;
+            depth_[i] = max(depth_[i], depth_[j] + 1);
+        }
+    }
+
+    bool linked(int i, int j) { return find(i) == find(j); }
+
+    int n_;
+    vector<int> id_;
+    vector<int> depth_;
+};
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+class Solution:
+    def __init__(self):
+        self.n = 0
+        self.id = None
+        self.depth = None
+
+    def find(self, i: int) -> int:
+        # 路径压缩。
+        while i != self.id[i]:
+            self.id[i] = self.id[self.id[i]]
+            i = self.id[i]
+        return i
+
+    def connect(self, i: int, j: int):
+        i = self.find(i)
+        j = self.find(j)
+        if i == j:
+            return
+        # 按秩合并。
+        if self.depth[i] <= self.depth[j]:
+            self.id[i] = j
+            self.depth[j] = max(self.depth[j], self.depth[i] + 1)
+        else:
+            self.id[j] = i
+            self.depth[i] = max(self.depth[i], self.depth[j] + 1)
+
+    def linked(self, i: int, j: int) -> bool:
+        return self.find(i) == self.find(j)
+
+    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
+        self.n = len(edges)
+        self.id = list(range(self.n))
+        self.depth = [1] * self.n
+        for i, j in edges:
+            if self.linked(i - 1, j - 1):
+                return [i, j]
+            self.connect(i - 1, j - 1)
+        return []
+```
+
+</TabItem>
+
+</Tabs>

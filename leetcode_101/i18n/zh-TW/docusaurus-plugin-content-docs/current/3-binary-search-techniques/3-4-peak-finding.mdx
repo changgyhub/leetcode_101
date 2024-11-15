@@ -1,0 +1,86 @@
+---
+sidebar_position: 14
+---
+
+# 3.4 搜尋最大值
+
+## [162. Find Peak Element](https://leetcode.com/problems/find-peak-element/)
+
+### 題目描述
+
+給定一個數組，定義最大值為比兩邊都大的數字，要求出任意一個最大值的位置。一個數組中可能存在多個最大值，返回任意一個即可。要求時間複雜度為 $O(\log n)$。
+
+### 輸入輸出範例
+
+輸入是一個數組，輸出為最大值的位置。
+
+```
+Input: nums = [1,2,3,1]
+Output: 2
+```
+
+最大值 3 出現在位置 2。
+
+
+### 題解
+
+為了實現 $O(\log n)$ 的時間複雜度，我們可以對數組進行二分搜尋。在確保數組兩端不是最大值後，若當前中點不是最大值，那麼其左右一側必定存在一個最大值。
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int findPeakElement(vector<int>& nums) {
+    int n = nums.size();
+    if (n == 1) {
+        return 0;
+    }
+    if (nums[0] > nums[1]) {
+        return 0;
+    }
+    if (nums[n - 1] > nums[n - 2]) {
+        return n - 1;
+    }
+    int l = 1, r = n - 2, mid;
+    while (l <= r) {
+        mid = l + (r - l) / 2;
+        if (nums[mid] > nums[mid + 1] && nums[mid] > nums[mid - 1]) {
+            return mid;
+        } else if (nums[mid] > nums[mid - 1]) {
+            l = mid + 1;
+        } else {
+            r = mid - 1;
+        }
+    }
+    return -1;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def findPeakElement(self, nums: List[int]) -> int:
+    n = len(nums)
+    if n == 1:
+        return 0
+    if nums[0] > nums[1]:
+        return 0
+    if nums[n - 1] > nums[n - 2]:
+        return n - 1
+    l, r = 1, n - 2
+    while l <= r:
+        mid = (l + r) // 2
+        if nums[mid] > nums[mid + 1] and nums[mid] > nums[mid - 1]:
+            return mid
+        elif nums[mid] > nums[mid - 1]:
+            l = mid + 1
+        else:
+            r = mid - 1
+    return -1
+```
+
+</TabItem>
+
+</Tabs>

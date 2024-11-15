@@ -1,0 +1,454 @@
+---
+sidebar_position: 24
+---
+
+# 5.4 Breadth-First Search
+
+`Breadth-First Search` (BFS) differs from Depth-First Search in that it traverses level by level, so it `requires a first-in, first-out queue` instead of the last-in, first-out stack used in DFS. Since BFS processes nodes by levels, it explores nodes in a "broad" manner and is often used for solving shortest path problems. In Python, we can use `collections.deque` to implement the `queue` used in C++.
+
+
+```
+   1
+  / \
+  2 3
+ /
+4
+```
+
+It’s important to note that both DFS and BFS can solve `reachability` problems, such as determining if one node is reachable from another. Many people prefer DFS for such problems because it can be quickly implemented using recursion. However, in practical software engineering, recursive implementations are rarely used because they are harder to understand and may cause stack overflow. Since iterative DFS (using a stack) and BFS (using a queue) have similar implementations, the choice between them depends on the specific requirements of the task. Additionally, if custom traversal priorities are needed, we can use priority queues, which will be discussed in the data structures section.
+
+
+## [1091. Shortest Path in Binary Matrix](https://leetcode.com/problems/shortest-path-in-binary-matrix/)
+
+### Problem Description
+
+Given a 2D binary matrix where `1` represents obstacles and `0` represents open paths, each position is connected to its eight neighbors. Find the shortest path from the top-left corner to the bottom-right corner. If there is no valid path, return `-1`.
+
+### Input and Output Example
+
+Input is a 2D integer array, and the output is an integer representing the shortest distance.
+
+```
+Input:
+[[0,0,1],
+ [1,1,0],
+ [1,1,0]]
+Output: 4
+```
+
+The shortest path is to move right first, then turn and move downward.
+
+### Solution Explanation
+
+Using a queue, we can intuitively apply Breadth-First Search (BFS) to determine the minimum number of layers to expand, i.e., the shortest path to the destination. Be careful not to revisit previously searched positions.
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
+    if (grid[0][0] == 1) {
+        return -1;
+    }
+    int m = grid.size(), n = grid[0].size();
+    int dist = 0, count;
+    queue<pair<int, int>> q;
+    q.push({0, 0});
+    grid[0][0] = -1;  // -1 indicates visited
+    count = q.size();
+    while (count > 0) {
+        ++dist;
+        while (count--) {
+            auto [r, c] = q.front();
+            q.pop();
+            if (r == m - 1 && c == n - 1) {
+                return dist;
+            }
+            for (int dx = -1; dx <= 1; ++dx) {
+                for (int dy = -1; dy <= 1; ++dy) {
+                    if (dx == 0 && dy == 0) {
+                        continue;
+                    }
+                    int x = r + dx, y = c + dy;
+                    if (x < 0 || y < 0 || x >= m || y >= n || grid[x][y] != 0) {
+                        continue;
+                    }
+                    grid[x][y] = -1;
+                    q.push({x, y});
+                }
+            }
+        }
+        count = q.size();
+    }
+    return -1;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def shortestPathBinaryMatrix(grid: List[List[int]]) -> int:
+    if grid[0][0] == 1:
+        return -1
+    m, n = len(grid), len(grid[0])
+    dist = 0
+    q = collections.deque()
+    q.append((0, 0))
+    grid[0][0] = -1 # -1 indicates visited
+    count = len(q)
+    while count > 0:
+        dist += 1
+        while count > 0:
+            count -= 1
+            r, c = q.popleft()
+            if r == m - 1 and c == n - 1:
+                return dist
+            for dx in range(-1, 2):
+                for dy in range(-1, 2):
+                    if dx == 0 and dy == 0:
+                        continue
+                x, y = r + dx, c + dy
+                if x < 0 or y < 0 or x >= m or y >= n or grid[x][y] != 0:
+                    continue
+                grid[x][y] = -1
+                q.append((x, y))
+        count = len(q)
+    return -1
+```
+
+</TabItem>
+
+</Tabs>
+
+## [934. Shortest Bridge](https://leetcode.com/problems/shortest-bridge/)
+
+### Problem Description
+
+Given a 2D binary grid where `1` represents land and `0` represents water, each position is connected to its four neighbors. There are exactly two islands in the grid. Find the minimum number of water cells to convert into land to connect the two islands.
+
+### Input and Output Example
+
+Input is a 2D integer grid, and the output is a non-negative integer representing the number of water cells to fill.
+
+```
+Input:
+[[1,1,1,1,1],
+ [1,0,0,0,1],
+ [1,0,1,0,1],
+ [1,0,0,0,1],
+ [1,1,1,1,1]]
+Output: 1
+```
+
+### Solution Explanation
+
+This problem can be solved by finding the shortest distance between the two islands. First, identify one of the islands using any search method, then use Breadth-First Search (BFS) to find the shortest distance to the other island. Below is the implementation using Depth-First Search (DFS) to find the first island.
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> direction{-1, 0, 1, 0, -1};
+// Auxiliary function
+
+void dfs(queue<pair<int, int>>& points, vector<vector<int>>& grid, int i,
+         int j) {
+    int m = grid.size(), n = grid[0].size();
+    if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] == 2) {
+        return;
+    }
+    if (grid[i][j] == 0) {
+        points.push({i, j});
+        return;
+    }
+    grid[i][j] = 2;
+    for (int k = 0; k < 4; ++k) {
+        dfs(points, grid, i + direction[k], j + direction[k + 1]);
+    }
+}
+
+// Main function
+int shortestBridge(vector<vector<int>>& grid) {
+    int m = grid.size(), n = grid[0].size();
+    queue<pair<int, int>> points;
+    // DFS to find the first island, and change all 1s to 2
+    bool flipped = false;
+    for (int i = 0; i < m && !flipped; ++i) {
+        for (int j = 0; j < n && !flipped; ++j) {
+            if (grid[i][j] == 1) {
+                dfs(points, grid, i, j);
+                flipped = true;
+            }
+        }
+    }
+    // BFS to find the second island, and change all 0s encountered to 2
+    int level = 0;
+    while (!points.empty()) {
+        ++level;
+        int n_points = points.size();
+        while (n_points--) {
+            auto [r, c] = points.front();
+            points.pop();
+            grid[r][c] = 2;
+            for (int k = 0; k < 4; ++k) {
+                int x = r + direction[k], y = c + direction[k + 1];
+                if (x >= 0 && x < m && y >= 0 && y < n) {
+                    if (grid[x][y] == 2) {
+                        continue;
+                    }
+                    if (grid[x][y] == 1) {
+                        return level;
+                    }
+                    grid[x][y] = 2;
+                    points.push({x, y});
+                }
+            }
+        }
+    }
+    return 0;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+direction = [-1, 0, 1, 0, -1]
+
+# Auxiliary function
+def dfs(points: Deque[Tuple[int, int]], grid: List[List[int]], i: int, j: int):
+    m, n = len(grid), len(grid[0])
+    if i < 0 or i >= m or j < 0 or j >= n or grid[i][j] == 2:
+        return
+    if grid[i][j] == 0:
+        points.append((i, j))
+        return
+    grid[i][j] = 2
+    for k in range(4):
+        dfs(points, grid, i + direction[k], j + direction[k + 1])
+
+def shortestBridge(grid: List[List[int]]) -> int:
+    m, n = len(grid), len(grid[0])
+    points = collections.deque()
+    # DFS to find the first island, and change all 1s to 2
+    flipped = False
+    for i in range(m):
+        if flipped:
+            break
+        for j in range(n):
+            if grid[i][j] == 1:
+                dfs(points, grid, i, j)
+                flipped = True
+                break
+    # BFS to find the second island, and change all 0s encountered to 2
+    level = 0
+    while len(points) > 0:
+        level += 1
+        points_at_current_level = len(points)
+        for _ in range(points_at_current_level):
+            r, c = points.popleft()
+            grid[r][c] = 2
+            for k in range(4):
+                x, y = r + direction[k], c + direction[k + 1]
+                if x >= 0 and x < m and y >= 0 and y < n:
+                    if grid[x][y] == 2:
+                        continue
+                    if grid[x][y] == 1:
+                        return level
+                    grid[x][y] = 2
+                    points.append((x, y))
+    return level
+```
+
+</TabItem>
+
+</Tabs>
+
+## [126. Word Ladder II](https://leetcode.com/problems/word-ladder-ii/)
+
+### Problem Description
+
+Given a start string, an end string, and a word list, determine if you can transform the start string into the end string by changing one character at a time, where every intermediate string must exist in the word list. If possible, output all transformation sequences with the minimum number of changes.
+
+### Input and Output Example
+
+Input consists of two strings and a word list, and the output is a 2D string array representing all transformation sequences.
+
+```
+Input: beginWord = "hit", endWord = "cog",
+wordList = ["hot","dot","dog","lot","log","cog"]
+Output:
+[["hit","hot","dot","dog","cog"],
+ ["hit","hot","lot","log","cog"]]
+```
+
+### Solution Explanation
+
+We can think of the start string, the end string, and all strings in the word list as nodes. If two strings differ by exactly one character, they are connected. Since the problem requires outputting all transformation sequences with the minimum number of changes, we can use breadth-first search (BFS) to compute the shortest path from the start node to the end node.
+
+We also use a small optimization: instead of performing BFS only from the start node until the end node is found, we perform BFS from both the start node and the end node simultaneously. Each time, we extend the smaller frontier to minimize the total number of nodes explored. For example, if the shortest distance is 4, performing BFS from one end would explore up to $1 + 2 + 4 + 8 + 16 = 31$ nodes, while performing BFS from both ends for two levels would explore only $2 × (1 + 2 + 4) = 14$ nodes.
+
+After completing the search, we use backtracking to reconstruct all possible paths.
+
+This problem is somewhat complex and requires careful thought and implementation. LeetCode's time constraints for this problem are very strict, so even the official solutions may sometimes time out. Multiple submissions may be necessary.
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// Auxiliary function
+void backtracking(const string &src, const string &dst,
+                  unordered_map<string, vector<string>> &next_words,
+                  vector<string> &path, vector<vector<string>> &ladder) {
+    if (src == dst) {
+        ladder.push_back(path);
+        return;
+    }
+    if (!next_words.contains(src)) {
+        return;
+    }
+    for (const auto &w : next_words[src]) {
+        path.push_back(w);  // Modify the current node state
+        backtracking(w, dst, next_words, path, ladder);  // Recursively process child nodes
+        path.pop_back();  // Revert the current node state
+    }
+}
+
+// Main function
+vector<vector<string>> findLadders(string beginWord, string endWord,
+                                   vector<string> &wordList) {
+    vector<vector<string>> ladder;
+    // Use a hash set to store the dictionary for quick lookups.
+    unordered_set<string> word_dict;
+    for (const auto &w : wordList) {
+        word_dict.insert(w);
+    }
+    if (!word_dict.contains(endWord)) {
+        return ladder;
+    }
+    word_dict.erase(beginWord);
+    word_dict.erase(endWord);
+    // Create two queues for bidirectional BFS from beginWord and endWord,
+    // expanding the smaller queue each time.
+    unordered_set<string> q_small{beginWord}, q_large{endWord};
+    unordered_map<string, vector<string>> next_words;
+    bool reversed_path = false, found_path = false;
+    while (!q_small.empty()) {
+        unordered_set<string> q;
+        for (const auto &w : q_small) {
+            string s = w;
+            for (int i = 0; i < s.size(); ++i) {
+                for (int j = 0; j < 26; ++j) {
+                    s[i] = j + 'a';
+                    if (q_large.contains(s)) {
+                        reversed_path ? next_words[s].push_back(w)
+                                      : next_words[w].push_back(s);
+                        found_path = true;
+                    }
+                    if (word_dict.contains(s)) {
+                        reversed_path ? next_words[s].push_back(w)
+                                      : next_words[w].push_back(s);
+                        q.insert(s);
+                    }
+                }
+                s[i] = w[i];
+            }
+        }
+        if (found_path) {
+            break;
+        }
+        // Avoid revisiting nodes and infinite loops.
+        for (const auto &w : q) {
+            word_dict.erase(w);
+        }
+        // Update the two queues and maintain size relationship.
+        if (q.size() <= q_large.size()) {
+            q_small = q;
+        } else {
+            reversed_path = !reversed_path;
+            q_small = q_large;
+            q_large = q;
+        }
+    }
+    if (found_path) {
+        vector<string> path{beginWord};
+        backtracking(beginWord, endWord, next_words, path, ladder);
+    }
+    return ladder;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# Auxiliary function
+def backtracking(src: str, dst: str, next_words: Dict[str, List[str]],
+                 path: List[str], ladder: List[List[str]]):
+    if src == dst:
+        ladder.append(path[:])
+        return
+    if src not in next_words:
+        return
+    for w in next_words[src]:
+        path.append(w)  # Modify the current node state
+        backtracking(w, dst, next_words, path, ladder)  # Recurse to child nodes
+        path.pop()  # Revert the current node state
+
+# Main function
+def findLadders(beginWord: str, endWord: str,
+              wordList: List[str]) -> List[List[str]]:
+    ladder = []
+    # Use a hash set to store the dictionary for quick lookups.
+    word_dict = set(wordList)
+    if endWord not in word_dict:
+        return ladder
+    word_dict = word_dict.difference(set([beginWord, endWord]))
+    # Create two queues for bidirectional BFS from beginWord and endWord,
+    # expanding the smaller queue each time.
+    q_small, q_large = set([beginWord]), set([endWord])
+    next_words = dict()
+    reversed_path, found_path = False, False
+    while len(q_small) > 0:
+        q = set()
+        for w in q_small:
+            for i in range(len(w)):
+                for j in range(26):
+                    s = w[:i] + chr(ord("a") + j) + w[i + 1:]
+                    if s in q_large:
+                        if reversed_path:
+                            next_words[s] = next_words.get(s, []) + [w]
+                        else:
+                            next_words[w] = next_words.get(w, []) + [s]
+                        found_path = True
+                    if s in word_dict:
+                        if reversed_path:
+                            next_words[s] = next_words.get(s, []) + [w]
+                        else:
+                            next_words[w] = next_words.get(w, []) + [s]
+                        q.add(s)
+        if found_path:
+            break
+        # Avoid revisiting nodes and infinite loops.
+        word_dict = word_dict.difference(q)
+        # Update the two queues and maintain size relationships.
+        if len(q) <= len(q_large):
+            q_small = q
+        else:
+            reversed_path = not reversed_path
+            q_small = q_large
+            q_large = q
+
+    if found_path:
+        path = [beginWord]
+        backtracking(beginWord, endWord, next_words, path, ladder)
+    return ladder
+```
+
+</TabItem>
+
+</Tabs>

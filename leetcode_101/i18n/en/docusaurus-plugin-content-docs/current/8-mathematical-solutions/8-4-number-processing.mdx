@@ -1,0 +1,318 @@
+---
+sidebar_position: 41
+---
+
+# 8.4 数字处理
+
+## [504. Base 7](https://leetcode.com/problems/base-7/)
+
+### Problem Description
+
+给定一个十进制整数，求它在七进制下的表示。
+
+### Input and Output Example
+
+输入一个整数，输出一个字符串，表示其七进制。
+
+```
+Input: 100
+Output: "202"
+```
+
+在这个样例中，100 的七进制表示法来源于 101 = 2 * 49 + 0 * 7 + 2 * 1。
+
+### Solution Explanation
+
+`进制转换`类型的题，通常是利用除法和取模（mod）来进行计算，同时也要注意一些细节，如负数和零。如果输出是数字类型而非字符串，则也需要考虑是否会超出整数上下界。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+string convertToBase7(int num) {
+    if (num == 0) {
+        return "0";
+    }
+    string base7;
+    bool is_negative = num < 0;
+    num = abs(num);
+    while (num) {
+        int quotient = num / 7, remainder = num % 7;
+        base7 = to_string(remainder) + base7;
+        num = quotient;
+    }
+    return is_negative ? "-" + base7 : base7;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def convertToBase7(num: int) -> str:
+    if num == 0:
+        return "0"
+    base7 = ""
+    is_negative = num < 0
+    num = abs(num)
+    while num:
+        quotient, remainder = num // 7, num % 7
+        base7 = str(remainder) + base7
+        num = quotient
+    return "-" + base7 if is_negative else base7
+```
+
+</TabItem>
+
+</Tabs>
+
+## [172. Factorial Trailing Zeroes](https://leetcode.com/problems/factorial-trailing-zeroes/)
+
+### Problem Description
+
+给定一个非负整数，判断它的阶乘结果的结尾有几个 0。
+
+### Input and Output Example
+
+输入一个非负整数，输出一个非负整数，表示输入的阶乘结果的结尾有几个 0。
+
+```
+Input: 12
+Output: 2
+```
+
+在这个样例中，12 != 479001600 的结尾有两个 0。
+
+### Solution Explanation
+
+每个尾部的 0 由 2 × 5 =10 而来，因此我们可以把阶乘的每一个元素拆成质数相乘，统计有多少个 2 和 5。明显的，质因子 2 的数量远多于质因子 5 的数量，因此我们可以只统计阶乘结果里有多少个质因子 5。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int trailingZeroes(int n) { 
+    return n == 0 ? 0 : n / 5 + trailingZeroes(n / 5); 
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def trailingZeroes(n: int) -> int:
+    return 0 if n == 0 else n // 5 + trailingZeroes(n // 5)
+```
+
+</TabItem>
+
+</Tabs>
+
+## [415. Add Strings](https://leetcode.com/problems/add-strings/)
+
+### Problem Description
+
+给定两个由数字组成的字符串，求它们相加的结果。
+
+### Input and Output Example
+
+输入是两个字符串，输出是一个整数，表示输入的数字和。
+
+```
+Input: num1 = "99", num2 = "1"
+Output: 100
+```
+
+因为相加运算是从后往前进行的，所以可以先翻转字符串，再逐位计算。这种类型的题考察的是细节，如进位、位数差等等。
+
+### Solution Explanation
+
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+string addStrings(string num1, string num2) {
+    string added_str;
+    reverse(num1.begin(), num1.end());
+    reverse(num2.begin(), num2.end());
+    int len1 = num1.length(), len2 = num2.length();
+    if (len1 <= len2) {
+        swap(num1, num2);
+        swap(len1, len2);
+    }
+    int add_bit = 0;
+    for (int i = 0; i < len1; ++i) {
+        int cur_sum =
+            (num1[i] - ’0’) + (i < len2 ? num2[i] - ’0’ : 0) + add_bit;
+        added_str += to_string(cur_sum % 10);
+        add_bit = cur_sum >= 10;
+    }
+    if (add_bit) {
+        added_str += "1";
+    }
+    reverse(added_str.begin(), added_str.end());
+    return added_str;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def addStrings(num1: str, num2: str) -> str:
+    added_str = ""
+    num1 = num1[::-1]
+    num2 = num2[::-1]
+    len1, len2 = len(num1), len(num2)
+    if len1 <= len2:
+        num1, num2 = num2, num1
+        len1, len2 = len2, len1
+    add_bit = 0
+    for i in range(len1):
+        cur_sum = int(num1[i]) + (int(num2[i]) if i < len2 else 0) + add_bit
+        added_str += str(cur_sum % 10)
+        add_bit = int(cur_sum >= 10)
+    if add_bit:
+        added_str += "1"
+    return added_str[::-1]
+```
+
+</TabItem>
+
+</Tabs>
+
+
+## [326. Power of Three](https://leetcode.com/problems/power-of-three/)
+
+### Problem Description
+
+判断一个数字是否是 3 的次方。
+
+### Input and Output Example
+
+输入一个整数，输出一个布尔值。
+
+```
+Input: n = 27
+Output: true
+```
+
+### Solution Explanation
+
+有两种方法，一种是利用对数。设 log3 n =m，如果 n 是 3 的整数次方，那么 m 一定是整数。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+bool isPowerOfThree(int n) {
+    return fmod(log10(n) / log10(3), 1) == 0;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def isPowerOfThree(n: int) -> bool:
+    return n > 0 and math.fmod(math.log10(n) / math.log10(3), 1) == 0
+```
+
+</TabItem>
+
+</Tabs>
+
+另一种方法是，因为在 C++ int 范围内 3 的最大次方是 $3^{19} = 1162261467$，如果 n 是 3 的整数次方，那么 1162261467 除以 n 的余数一定是零；反之亦然。然而对于 Python 来说，因为 int 理论上可以取无穷大，我们只能循环判断。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+bool isPowerOfThree(int n) {
+    return n > 0 && 1162261467 % n == 0;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def isPowerOfThree(n: int) -> bool:
+    if n <= 0:
+        return False
+    while n % 3 == 0:
+        n //= 3
+    return n == 1
+```
+
+</TabItem>
+
+</Tabs>
+
+## [50. Pow(x, n)](https://leetcode.com/problems/powx-n/)
+
+### Problem Description
+
+计算 x 的 n 次方。
+
+### Input and Output Example
+
+输入一个浮点数表示 x 和一个整数表示 n，输出一个浮点数表示次方结果。
+
+```
+Input: x = 2.00000, n = 10
+Output: 1024.00000
+```
+
+### Solution Explanation
+
+
+利用递归，我们可以较为轻松地解决本题。注意边界条件的处理。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+double myPow(double x, int n) {
+    if (n == 0) {
+        return 1;
+    }
+    if (x == 0) {
+        return 0;
+    }
+    if (n == numeric_limits<int>::min()) {
+        return 1 / (x * myPow(x, numeric_limits<int>::max()));
+    }
+    if (n < 0) {
+        return 1 / myPow(x, -n);
+    }
+    if (n % 2 != 0) {
+        return x * myPow(x, n - 1);
+    }
+    double myPowSqrt = myPow(x, n >> 1);
+    return myPowSqrt * myPowSqrt;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def myPow(x: float, n: int) -> float:
+    if n == 0:
+        return 1
+    if x == 0:
+        return 0
+    if n < 0:
+        return 1 / myPow(x, -n)
+    if n % 2 != 0:
+        return x * myPow(x, n - 1)
+    myPowSqrt = myPow(x, n >> 1)
+    return myPowSqrt * myPowSqrt
+```
+
+</TabItem>
+
+</Tabs>

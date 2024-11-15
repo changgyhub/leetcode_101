@@ -1,0 +1,250 @@
+---
+sidebar_position: 71
+---
+
+# 13.4 前中后序遍历
+
+前序遍历、中序遍历和后序遍历是三种利用深度优先搜索遍历二叉树的方式。它们是在对节点访问的顺序有一点不同，其它完全相同。考虑如下一棵树，
+
+```
+    1
+   / \
+  2   3
+ / \   \
+4   5   6
+```
+
+前序遍历先遍历父结点，再遍历左结点，最后遍历右节点，我们得到的遍历顺序是 [1 2 4 5 3 6]。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+void preorder(TreeNode* root) {
+    visit(root);
+    preorder(root->left);
+    preorder(root->right);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def preorder(root: TreeNode):
+    visit(root)
+    preorder(root.left)
+    preorder(root.right)
+```
+
+</TabItem>
+
+</Tabs>
+
+中序遍历先遍历左节点，再遍历父结点，最后遍历右节点，我们得到的遍历顺序是 [4 2 5 1 3 6]。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+void inorder(TreeNode* root) {
+    inorder(root->left);
+    visit(root);
+    inorder(root->right);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def inorder(root: TreeNode):
+    inorder(root.left)
+    visit(root)
+    inorder(root.right)
+```
+
+</TabItem>
+
+</Tabs>
+
+后序遍历先遍历左节点，再遍历右结点，最后遍历父节点，我们得到的遍历顺序是 [4 5 2 6 3 1]。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+void postorder(TreeNode* root) {
+    postorder(root->left);
+    postorder(root->right);
+    visit(root);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def postorder(root: TreeNode):
+    postorder(root.left)
+    postorder(root.right)
+    visit(root)
+```
+
+</TabItem>
+
+</Tabs>
+
+## [105. Construct Binary Tree from Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
+
+### 題目描述
+
+给定一个二叉树的前序遍历和中序遍历结果，尝试复原这个树。已知树里不存在重复值的节点。
+
+### 輸入輸出範例
+
+输入是两个一维数组，分别表示树的前序遍历和中序遍历结果；输出是一个二叉树。
+
+```
+Input: preorder = [4,9,20,15,7], inorder = [9,4,15,20,7]
+Output:
+    4
+   / \
+  9  20
+     / \
+    15  7
+```
+
+### 題解
+
+我们通过本题的样例讲解一下本题的思路。前序遍历的第一个节点是 4，意味着 4 是根节点。我们在中序遍历结果里找到 4 这个节点，根据中序遍历的性质可以得出，4 在中序遍历数组位置的左子数组为左子树，节点数为 1，对应的是前序排列数组里 4 之后的 1 个数字（9）；4 在中序遍历数组位置的右子数组为右子树，节点数为 3，对应的是前序排列数组里最后的 3 个数字。有了这些信息，我们就可以对左子树和右子树进行递归复原了。为了方便查找数字的位置，我们可以用哈希表预处理中序遍历的结果。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// 輔助函式。
+TreeNode* reconstruct(unordered_map<int, int>& io_map, vector<int>& po, int l,
+                      int r, int mid_po) {
+    if (l > r) {
+        return nullptr;
+    }
+    int mid_val = po[mid_po];
+    int mid_io = io_map[mid_val];
+    int left_len = mid_io - l + 1;
+    TreeNode* node = new TreeNode(mid_val);
+    node->left = reconstruct(io_map, po, l, mid_io - 1, mid_po + 1);
+    node->right = reconstruct(io_map, po, mid_io + 1, r, mid_po + left_len);
+    return node;
+}
+// 主函式。
+TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+    unordered_map<int, int> io_map;
+    for (int i = 0; i < inorder.size(); ++i) {
+        io_map[inorder[i]] = i;
+    }
+    return reconstruct(io_map, preorder, 0, preorder.size() - 1, 0);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# 輔助函式。
+def reconstruct(
+    io_map: Dict[int, int], po: List[int], l: int, r: int, mid_po: int
+) -> Optional[TreeNode]:
+    if l > r:
+        return None
+    mid_val = po[mid_po]
+    mid_io = io_map[mid_val]
+    left_len = mid_io - l + 1
+    node = TreeNode(mid_val)
+    node.left = reconstruct(io_map, po, l, mid_io - 1, mid_po + 1)
+    node.right = reconstruct(io_map, po, mid_io + 1, r, mid_po + left_len)
+    return node
+
+# 主函式。
+def buildTree(preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
+    io_map = {val: i for i, val in enumerate(inorder)}
+    return reconstruct(io_map, preorder, 0, len(preorder) - 1, 0)
+
+```
+
+</TabItem>
+
+</Tabs>
+
+## [144. Binary Tree Preorder Traversal](https://leetcode.com/problems/binary-tree-preorder-traversal/)
+
+### 題目描述
+
+不使用递归，实现二叉树的前序遍历。
+
+### 輸入輸出範例
+
+输入一个二叉树，输出一个数组，为二叉树前序遍历的结果，
+
+```
+Input:
+    1
+     \
+      2
+     /
+    3
+Output: [1,2,3]
+```
+
+### 題解
+
+因为递归的本质是栈调用，因此我们可以通过栈来实现前序遍历。注意入栈的顺序。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> preorderTraversal(TreeNode* root) {
+    vector<int> po;
+    if (root == nullptr) {
+        return po;
+    }
+    stack<TreeNode*> s;
+    s.push(root);
+    while (!s.empty()) {
+        TreeNode* node = s.top();
+        s.pop();
+        po.push_back(node->val);
+        if (node->right) {
+            s.push(node->right);  // 先右后左，保证左子树先遍历
+        }
+        if (node->left) {
+            s.push(node->left);
+        }
+    }
+    return po;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def preorderTraversal(root: Optional[TreeNode]) -> List[int]:
+    po = []
+    if root is None:
+        return po
+    s = [root]
+    while len(s) > 0:
+        node = s.pop()
+        po.append(node.val)
+        if node.right is not None:
+            s.append(node.right)  # 先右后左，保证左子树先遍历
+        if node.left is not None:
+            s.append(node.left)
+    return po
+```
+
+</TabItem>
+
+</Tabs>

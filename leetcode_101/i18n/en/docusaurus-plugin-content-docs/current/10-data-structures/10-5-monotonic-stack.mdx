@@ -1,0 +1,72 @@
+---
+sidebar_position: 52
+---
+
+# 10.5 单调栈
+
+`单调栈`通过维持栈内值的单调递增（递减）性，在整体 $O(n)$ 的时间内处理需要大小比较的问题。
+
+## [739. Daily Temperatures](https://leetcode.com/problems/daily-temperatures/)
+
+### Problem Description
+
+给定每天的温度，求对于每一天需要等几天才可以等到更暖和的一天。如果该天之后不存在更暖和的天气，则记为 0。
+
+### Input and Output Example
+
+输入是一个一维整数数组，输出是同样长度的整数数组，表示对于每天需要等待多少天。
+
+```
+Input: [73, 74, 75, 71, 69, 72, 76, 73]
+Output: [1, 1, 4, 2, 1, 1, 0, 0]
+```
+
+### Solution Explanation
+
+我们可以维持一个单调递减的栈，表示每天的温度；为了方便计算天数差，我们这里存放位置（即日期）而非温度本身。我们从左向右遍历温度数组，对于每个日期 p，如果 p 的温度比栈顶存储位置 q 的温度高，则我们取出 q，并记录 q 需要等待的天数为 p − q；我们重复这一过程，直到 p 的温度小于等于栈顶存储位置的温度（或空栈）时，我们将 p 插入栈顶，然后考虑下一天。在这个过程中，栈内数组永远保持单调递减，避免了使用排序进行比较。最后若栈内剩余一些日期，则说明它们之后都没有出现更暖和的日期。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> dailyTemperatures(vector<int>& temperatures) {
+    int n = temperatures.size();
+    vector<int> days_to_wait(n, 0);
+    stack<int> mono_stack;
+    for (int i = 0; i < n; ++i) {
+        while (!mono_stack.empty()) {
+            int j = mono_stack.top();
+            if (temperatures[i] <= temperatures[j]) {
+                break;
+            }
+            mono_stack.pop();
+            days_to_wait[j] = i - j;
+        }
+        mono_stack.push(i);
+    }
+    return days_to_wait;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def dailyTemperatures(temperatures: List[int]) -> List[int]:
+    n = len(temperatures)
+    days_to_wait = [0] * n
+    mono_stack = []
+    for i in range(n):
+        while len(mono_stack) > 0:
+            j = mono_stack[-1]
+            if temperatures[i] <= temperatures[j]:
+                break
+            mono_stack.pop()
+            days_to_wait[j] = i - j
+        mono_stack.append(i)
+    return days_to_wait
+```
+
+</TabItem>
+
+</Tabs>

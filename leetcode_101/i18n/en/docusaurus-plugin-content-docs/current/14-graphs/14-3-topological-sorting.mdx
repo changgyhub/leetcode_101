@@ -1,0 +1,97 @@
+---
+sidebar_position: 77
+---
+
+# 14.3 拓扑排序
+
+`拓扑排序`（topological sort）是一种常见的，对有向无环图排序的算法。给定有向无环图中的 $N$ 个节点，我们把它们排序成一个线性序列；若原图中节点 i 指向节点 j，则排序结果中 i 一定在 j 之前。拓扑排序的结果不是唯一的，只要满足以上条件即可。
+
+## [210. Course Schedule II](https://leetcode.com/problems/course-schedule-ii/)
+
+### Problem Description
+
+给定 N 个课程和这些课程的前置必修课，求可以一次性上完所有课的顺序。
+
+### Input and Output Example
+
+输入是一个正整数，表示课程数量，和一个二维矩阵，表示所有的有向边（如 [1,0] 表示上课程 1 之前必须先上课程 0）。输出是一个一维数组，表示拓扑排序结果。
+
+```
+Input: numCourses = 4, prerequisites = [[1,0],[2,0],[3,1],[3,2]]
+Output: [0,1,2,3]
+```
+
+在这个样例中，另一种可行的顺序是 [0,2,1,3]。
+
+### Solution Explanation
+
+我们可以先建立一个邻接矩阵表示图，方便进行直接查找。这里注意我们将所有的边反向，使得如果课程 i 指向课程 j，那么课程 i 需要在课程 j 前面先修完。这样更符合我们的直观理解。
+
+拓扑排序也可以被看成是广度优先搜索的一种情况：我们先遍历一遍所有节点，把入度为 0 的节点（即没有前置课程要求）放在队列中。在每次从队列中获得节点时，我们将该节点放在目前排序的末尾，并且把它指向的课程的入度各减 1；如果在这个过程中有课程的所有前置必修课都已修完（即入度为 0），我们把这个节点加入队列中。当队列的节点都被处理完时，说明所有的节点都已排好序，或因图中存在循环而无法上完所有课程。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+    vector<vector<int>> graph(numCourses, vector<int>());
+    vector<int> indegree(numCourses, 0), schedule;
+    for (const auto& pr : prerequisites) {
+        graph[pr[1]].push_back(pr[0]);
+        ++indegree[pr[0]];
+    }
+    queue<int> q;
+    for (int i = 0; i < indegree.size(); ++i) {
+        if (indegree[i] == 0) {
+            q.push(i);
+        }
+    }
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        schedule.push_back(u);
+        for (int v : graph[u]) {
+            --indegree[v];
+            if (indegree[v] == 0) {
+                q.push(v);
+            }
+        }
+    }
+    for (int i = 0; i < indegree.size(); ++i) {
+        if (indegree[i] != 0) {
+            return vector<int>();
+        }
+    }
+    return schedule;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def findOrder(numCourses: int, prerequisites: List[List[int]]) -> List[int]:
+    graph = [[] for _ in range(numCourses)]
+    indegree = [0] * numCourses
+    schedule = []
+
+    for pr_from, pr_to in prerequisites:
+        graph[pr_to].append(pr_from)
+        indegree[pr_from] += 1
+
+    q = collections.deque([i for i, deg in enumerate(indegree) if deg == 0])
+
+    while len(q) > 0:
+        u = q.popleft()
+        schedule.append(u)
+        for v in graph[u]:
+            indegree[v] -= 1
+            if indegree[v] == 0:
+                q.append(v)
+
+    return schedule if all(deg == 0 for deg in indegree) else []
+```
+
+</TabItem>
+
+</Tabs>

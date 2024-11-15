@@ -1,0 +1,132 @@
+---
+sidebar_position: 32
+---
+
+# 6.7 字符串编辑
+
+## [72. Edit Distance](https://leetcode.com/problems/edit-distance/)
+
+### 題目描述
+
+给定两个字符串，已知你可以删除、替换和插入任意字符串的任意字符，求最少编辑几步可以将两个字符串变成相同。
+
+### 輸入輸出範例
+
+输入是两个字符串，输出是一个整数，表示最少的步骤。
+
+```
+Input: word1 = "horse", word2 = "ros"
+Output: 3
+```
+
+在这个样例中，一种最优编辑方法是 horse -> rorse -> rose -> ros。
+
+### 題解
+
+类似于题目 1143，我们使用一个二维数组 dp[i][j]，表示将第一个字符串到位置 i 为止，和第二个字符串到位置 j 为止，最多需要几步编辑。当第 i 位和第 j 位对应的字符相同时，dp[i][j] 等于 dp[i-1][j-1]；当二者对应的字符不同时，修改的消耗是 dp[i-1][j-1]+1，插入 i 位置/删除 j 位置的消耗是 dp[i][j-1] + 1，插入 j 位置/删除 i 位置的消耗是 dp[i-1][j] + 1。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int minDistance(string word1, string word2) {
+    int m = word1.length(), n = word2.length();
+    vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+    for (int i = 0; i <= m; ++i) {
+        for (int j = 0; j <= n; ++j) {
+            if (i == 0 || j == 0) {
+                dp[i][j] = i + j;
+            } else {
+                dp[i][j] = dp[i - 1][j - 1] + (word1[i - 1] != word2[j - 1]);
+                dp[i][j] = min(dp[i][j], dp[i - 1][j] + 1);
+                dp[i][j] = min(dp[i][j], dp[i][j - 1] + 1);
+            }
+        }
+    }
+    return dp[m][n];
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def minDistance(word1: str, word2: str) -> int:
+    m, n = len(word1), len(word2)
+    dp = [[0 for _ in range(n + 1)] for _ in range(m + 1)]
+    for i in range(m + 1):
+        for j in range(n + 1):
+            if i == 0 or j == 0:
+                dp[i][j] = i + j
+            else:
+                dp[i][j] = min(
+                    dp[i - 1][j - 1] + int(word1[i - 1] != word2[j - 1]),
+                    dp[i][j - 1] + 1,
+                    dp[i - 1][j] + 1,
+                )
+    return dp[m][n]
+```
+
+</TabItem>
+
+</Tabs>
+
+## [650. 2 Keys Keyboard](https://leetcode.com/problems/2-keys-keyboard/)
+
+### 題目描述
+
+给定一个字母 A，已知你可以每次选择复制全部字符，或者粘贴之前复制的字符，求最少需要几次操作可以把字符串延展到指定长度。
+
+### 輸入輸出範例
+
+输入是一个正整数，代表指定长度；输出是一个整数，表示最少操作次数。
+
+```
+Input: 3
+Output: 3
+```
+
+在这个样例中，一种最优的操作方法是先复制一次，再粘贴两次。
+
+### 題解
+
+不同于以往通过加减实现的动态规划，这里需要乘除法来计算位置，因为粘贴操作是倍数增加的。我们使用一个一维数组 dp，其中位置 i 表示延展到长度 i 的最少操作次数。对于每个位置 j，如果 j 可以被 i 整除，那么长度 i 就可以由长度 j 操作得到，其操作次数等价于把一个长度为 j 的 A 延展到长度为 i/j。因此我们可以得到递推公式 dp[i] = dp[j] + dp[i/j]。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int minSteps(int n) {
+    vector<int> dp(n + 1, 0);
+    for (int i = 2; i <= n; ++i) {
+        dp[i] = i;
+        for (int j = 2; j * j <= i; ++j) {
+            if (i % j == 0) {
+                dp[i] = dp[j] + dp[i / j];
+                // 提前剪枝，因为j从小到大，因此操作数量一定最小。
+                break;
+            }
+        }
+    }
+    return dp[n];
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def minSteps(n: int) -> int:
+    dp = [0] * 2 + list(range(2, n + 1))
+    for i in range(2, n + 1):
+        for j in range(2, floor(sqrt(i)) + 1):
+            if i % j == 0:
+                dp[i] = dp[j] + dp[i // j]
+                # 提前剪枝，因为j从小到大，因此操作数量一定最小。
+                break
+    return dp[n]
+```
+
+</TabItem>
+
+</Tabs>

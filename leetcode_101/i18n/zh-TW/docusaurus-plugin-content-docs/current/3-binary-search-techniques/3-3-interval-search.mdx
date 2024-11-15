@@ -1,0 +1,109 @@
+---
+sidebar_position: 13
+---
+
+# 3.3 搜尋範圍
+
+## [34. Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
+
+### 題目描述
+
+給定一個遞增的整數數組和一個目標值，查找該值第一次和最後一次出現的位置。
+
+
+### 輸入輸出範例
+
+輸入是一個數組和一個值，輸出為該值第一次出現的位置和最後一次出現的位置（從 0 開始）；如果該值不存在，則兩個返回值都設為 -1。
+
+```
+Input: nums = [5,7,7,8,8,10], target = 8
+Output: [3,4]
+```
+
+數字 8 在第 3 位第一次出現，在第 4 位最後一次出現。
+
+### 題解
+
+這道題可以看作是實現 C++ 的 `lower_bound` 和 `upper_bound` 函數，或者 Python 的 `bisect_left` 和 `bisect_right` 函數。我們這裡採用左閉右開的寫法，當然左閉右閉也可以。
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int lowerBound(vector<int> &nums, int target) {
+    int l = 0, r = nums.size(), mid;
+    while (l < r) {
+        mid = l + (r - l) / 2;
+        if (nums[mid] < target) {
+            l = mid + 1;
+        } else {
+            r = mid;
+        }
+    }
+    return l;
+}
+
+int upperBound(vector<int> &nums, int target) {
+    int l = 0, r = nums.size(), mid;
+    while (l < r) {
+        mid = l + (r - l) / 2;
+        if (nums[mid] <= target) {
+            l = mid + 1;
+        } else {
+            r = mid;
+        }
+    }
+    return l;
+}
+
+vector<int> searchRange(vector<int> &nums, int target) {
+    if (nums.empty()) {
+        return vector<int>{-1, -1};
+    }
+    int lower = lowerBound(nums, target);
+    int upper = upperBound(nums, target) - 1;
+    if (lower == nums.size() || nums[lower] != target) {
+        return vector<int>{-1, -1};
+    }
+    return vector<int>{lower, upper};
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def lowerBound(nums: List[int], target: int) -> int:
+    l, r = 0, len(nums)
+    while l < r:
+        mid = (l + r) // 2
+        if nums[mid] < target:
+            l = mid + 1
+        else:
+            r = mid
+    return l
+
+def upperBound(nums: List[int], target: int) -> int:
+    l, r = 0, len(nums)
+    while l < r:
+        mid = (l + r) // 2
+        if nums[mid] <= target:
+            l = mid + 1
+        else:
+            r = mid
+    return l
+
+def searchRange(nums: List[int], target: int) -> List[int]:
+    if not nums:
+        return [-1, -1]
+    lower = lowerBound(nums, target)
+    upper = upperBound(nums, target) - 1
+    if lower == len(nums) or nums[lower] != target:
+        return [-1, -1]
+    return [lower, upper]
+```
+
+</TabItem>
+
+</Tabs>

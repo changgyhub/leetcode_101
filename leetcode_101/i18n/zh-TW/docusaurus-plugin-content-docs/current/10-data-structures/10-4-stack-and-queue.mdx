@@ -1,0 +1,257 @@
+---
+sidebar_position: 51
+---
+
+# 10.4 栈和队列
+
+## [232. Implement Queue using Stacks](https://leetcode.com/problems/implement-queue-using-stacks/)
+
+### 題目描述
+
+尝试使用栈（stack）来实现队列（queue）。
+
+### 輸入輸出範例
+
+以下是数据结构的调用样例。
+
+```
+MyQueue queue = new MyQueue();
+queue.push(1);
+queue.push(2);
+queue.peek(); // returns 1
+queue.pop(); // returns 1
+queue.empty(); // returns false
+```
+
+### 題解
+
+我们可以用两个栈来实现一个队列：因为我们需要得到先入先出的结果，所以必定要通过一个额外栈翻转一次数组。这个翻转过程既可以在插入时完成，也可以在取值时完成。我们这里展示在取值时完成的写法。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+class MyQueue {
+   public:
+    MyQueue() {}
+
+    void push(int x) { s_in_.push(x); }
+
+    int pop() {
+        in2out();
+        int x = s_out_.top();
+        s_out_.pop();
+        return x;
+    }
+
+    int peek() {
+        in2out();
+        return s_out_.top();
+    }
+
+    bool empty() { return s_in_.empty() && s_out_.empty(); }
+
+   private:
+    void in2out() {
+        if (!s_out_.empty()) {
+            return;
+        }
+        while (!s_in_.empty()) {
+            int x = s_in_.top();
+            s_in_.pop();
+            s_out_.push(x);
+        }
+    }
+
+    stack<int> s_in_, s_out_;
+};
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+class MyQueue:
+    def __init__(self):
+        self.s_in = []
+        self.s_out = []
+
+    def _in2out(self):
+        if len(self.s_out) > 0:
+            return
+        while len(self.s_in) > 0:
+            self.s_out.append(self.s_in.pop())
+
+    def push(self, x: int) -> None:
+        self.s_in.append(x)
+
+    def pop(self) -> int:
+        self._in2out()
+        return self.s_out.pop()
+
+    def peek(self) -> int:
+        self._in2out()
+        return self.s_out[-1]
+
+    def empty(self) -> bool:
+        return len(self.s_in) == 0 and len(self.s_out) == 0
+```
+
+</TabItem>
+
+</Tabs>
+
+## [155. Min Stack](https://leetcode.com/problems/min-stack/)
+
+### 題目描述
+
+设计一个最小栈，除了需要支持常规栈的操作外，还需要支持在 $O(1)$ 时间内查询栈内最小值的功能。
+
+### 輸入輸出範例
+
+以下是数据结构的调用样例。
+
+```
+MinStack minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+minStack.getMin(); // Returns -3.
+minStack.pop();
+minStack.top(); // Returns 0.
+minStack.getMin(); // Returns -2.
+```
+
+### 題解
+
+我们可以额外建立一个新栈，栈顶表示原栈里所有值的最小值。每当在原栈里插入一个数字时，若该数字小于等于新栈栈顶，则表示这个数字在原栈里是最小值，我们将其同时插入新栈内。每当从原栈里取出一个数字时，若该数字等于新栈栈顶，则表示这个数是原栈里的最小值之一，我们同时取出新栈栈顶的值。
+
+一个写起来更简单但是时间复杂度略高的方法是，我们每次插入原栈时，都向新栈插入一次原栈里所有值的最小值（新栈栈顶和待插入值中小的那一个）；每次从原栈里取出数字时，同样取出新栈的栈顶。这样可以避免判断，但是每次都要插入和取出。我们这里只展示第一种写法。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+class MinStack {
+   public:
+    MinStack() {}
+
+    void push(int x) {
+        s_.push(x);
+        if (min_s_.empty() || min_s_.top() >= x) {
+            min_s_.push(x);
+        }
+    }
+
+    void pop() {
+        if (!min_s_.empty() && min_s_.top() == s_.top()) {
+            min_s_.pop();
+        }
+        s_.pop();
+    }
+
+    int top() { return s_.top(); }
+
+    int getMin() { return min_s_.top(); }
+
+   private:
+    stack<int> s_, min_s_;
+};
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+class MinStack:
+    def __init__(self):
+        self.s = []
+        self.min_s = []
+
+    def push(self, x: int) -> None:
+        self.s.append(x)
+        if len(self.min_s) == 0 or self.min_s[-1] >= x:
+            self.min_s.append(x)
+
+    def pop(self) -> None:
+        if len(self.min_s) != 0 and self.s[-1] == self.min_s[-1]:
+            self.min_s.pop()
+        self.s.pop()
+
+    def top(self) -> int:
+        return self.s[-1]
+
+    def getMin(self) -> int:
+        return self.min_s[-1]
+```
+
+</TabItem>
+
+</Tabs>
+
+
+## [20. Valid Parentheses](https://leetcode.com/problems/valid-parentheses/)
+
+### 題目描述
+
+给定一个只由左右圆括号、花括号和方括号组成的字符串，求这个字符串是否合法。合法的定义是每一个类型的左括号都有一个右括号一一对应，且括号内的字符串也满足此要求。
+
+### 輸入輸出範例
+
+输入是一个字符串，输出是一个布尔值，表示字符串是否合法。
+
+```
+Input: "{[]}()"
+Output: true
+```
+
+### 題解
+
+括号匹配是典型的使用栈来解决的问题。我们从左往右遍历，每当遇到左括号便放入栈内，遇到右括号则判断其和栈顶的括号是否是统一类型，是则从栈内取出左括号，否则说明字符串不合法。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+bool isValid(string s) {
+    stack<char> parsed;
+    unordered_map<char, int> matches{{’(’, ’)’}, {’{’, ’}’}, {’[’, ’]’}};
+    for (char c : s) {
+        if (matches.contains(c)) {
+            parsed.push(c);
+            continue;
+        }
+        if (parsed.empty()) {
+            return false;
+        }
+        if (c != matches[parsed.top()]) {
+            return false;
+        }
+        parsed.pop();
+    }
+    return parsed.empty();
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def isValid(s: str) -> bool:
+    parsed = []
+    matches = {"{": "}", "(": ")", "[": "]"}
+    for c in s:
+        if c in matches.keys():
+            parsed.append(c)
+            continue
+        if len(parsed) == 0:
+            return False
+        if c != matches[parsed[-1]]:
+            return False
+        parsed.pop()
+    return len(parsed) == 0
+```
+
+</TabItem>
+
+</Tabs>

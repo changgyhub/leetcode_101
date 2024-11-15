@@ -1,0 +1,90 @@
+---
+sidebar_position: 76
+---
+
+# 14.2 二分图
+
+`二分图`算法也称为`染色法`，是一种广度优先搜索。如果可以用两种颜色对图中的节点进行着色，并且保证相邻的节点颜色不同，那么图为二分。
+
+## [785. Is Graph Bipartite?](https://leetcode.com/problems/is-graph-bipartite/)
+
+### Problem Description
+
+给定一个图，判断其是否可以二分。
+
+### Input and Output Example
+
+输入是邻接链表表示的图（如位置 0 的邻接链表为 [1,3]，表示 0 与 1、0 与 3 相连）；输出是一个布尔值，表示图是否二分。
+
+```
+Input: [[1,3], [0,2], [1,3], [0,2]]
+0----1
+|    |
+|    |
+3----2
+Output: true
+```
+
+在这个样例中，我们可以把 {0,2} 分为一组，把 {1,3} 分为另一组。
+
+### Solution Explanation
+
+利用队列和广度优先搜索，我们可以对未染色的节点进行染色，并且检查是否有颜色相同的相邻节点存在。注意在代码中，我们用 0 表示未检查的节点，用 1 和 2 表示两种不同的颜色。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+bool isBipartite(vector<vector<int>>& graph) {
+    int n = graph.size();
+    vector<int> color(n, 0);
+    queue<int> q;
+    for (int i = 0; i < n; ++i) {
+        if (color[i] == 0) {
+            q.push(i);
+            color[i] = 1;
+        }
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+            for (int j : graph[node]) {
+                if (color[j] == 0) {
+                    q.push(j);
+                    color[j] = color[node] == 2 ? 1 : 2;
+                } else if (color[j] == color[node]) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def isBipartite(graph: List[List[int]]) -> bool:
+    n = len(graph)
+    color = [0] * n
+    q = collections.deque()
+
+    for i in range(n):
+        if color[i] == 0:
+            q.append(i)
+            color[i] = 1
+        while len(q) > 0:
+            node = q.popleft()
+            for j in graph[node]:
+                if color[j] == 0:
+                    q.append(j)
+                    color[j] = 1 if color[node] == 2 else 2
+                elif color[j] == color[node]:
+                    return False
+    return True
+```
+
+</TabItem>
+
+</Tabs>

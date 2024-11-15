@@ -1,0 +1,257 @@
+---
+sidebar_position: 77
+---
+
+# 15.3 复合数据结构
+
+这一类题通常采用哈希表或有序表辅助记录，从而加速寻址；再配上数组或者链表进行连续的数据储存，从而加速连续选址或删除值。
+
+## [146. LRU Cache](https://leetcode.com/problems/lru-cache/)
+
+### 題目描述
+
+设计一个固定大小的，最近最少使用缓存 (least recently used cache, LRU)。每次将信息插入未满的缓存的时候，以及更新或查找一个缓存内存在的信息的时候，将该信息标为最近使用。在缓存满的情况下将一个新信息插入的时候，需要移除最旧的信息，插入新信息，并将该新信息标为最近使用。
+
+### 輸入輸出範例
+
+以下是数据结构的调用样例。给定一个大小为 n 的缓存，利用最近最少使用策略储存数据。
+
+```
+LRUCache cache = new LRUCache( 2 /* capacity */ );
+cache.put(1, 1);
+cache.put(2, 2);
+cache.get(1); // 输出 value 1
+cache.put(3, 3); // 移除 key 2
+cache.get(2); // 输出 value -1 (未找到)
+cache.put(4, 4); // 移除 key 1
+cache.get(1); // 输出 value -1 (未找到)
+cache.get(3); // 输出 value 3
+cache.get(4); // 输出 value 4
+```
+
+### 題解
+
+我们采用一个链表来储存信息的 key 和 value，链表的链接顺序即为最近使用的新旧顺序，最新的信息在链表头节点。同时我们需要一个哈希表进行查找，键是信息的 key，值是其在链表中的对应指针/迭代器。每次查找成功（cache hit）时，需要把指针/迭代器对应的节点移动到链表的头节点。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+class LRUCache {
+   public:
+    LRUCache(int capacity) : n_(capacity) {}
+
+    int get(int key) {
+        auto it = key_to_cache_it_.find(key);
+        if (it == key_to_cache_it_.end()) {
+            return -1;
+        }
+        cache_.splice(cache_.begin(), cache_, it->second);
+        return it->second->second;
+    }
+
+    void put(int key, int value) {
+        auto it = key_to_cache_it_.find(key);
+        if (it != key_to_cache_it_.end()) {
+            it->second->second = value;
+            return cache_.splice(cache_.begin(), cache_, it->second);
+        }
+        cache_.insert(cache_.begin(), make_pair(key, value));
+        key_to_cache_it_[key] = cache_.begin();
+        if (cache_.size() > n_) {
+            key_to_cache_it_.erase(cache_.back().first);
+            cache_.pop_back();
+        }
+    }
+
+   private:
+    list<pair<int, int>> cache_;
+    unordered_map<int, list<pair<int, int>>::iterator> key_to_cache_it_;
+    int n_;
+};
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+class Node:
+    def __init__(self, key=-1, val=-1):
+        self.key = key
+        self.val = val
+        self.prev = None
+        self.next = None
+
+class LinkedList:
+    def __init__(self):
+        self.dummy_start = Node()
+        self.dummy_end = Node()
+        self.dummy_start.next = self.dummy_end
+        self.dummy_end.prev = self.dummy_start
+
+    def appendleft(self, node) -> Node:
+        left, right = self.dummy_start, self.dummy_start.next
+        node.next = right
+        right.prev = node
+        left.next = node
+        node.prev = left
+        return node
+
+    def remove(self, node) -> Node:
+        left, right = node.prev, node.next
+        left.next = right
+        right.prev = left
+        return node
+
+    def move_to_start(self, node):
+        return self.appendleft(self.remove(node))
+
+    def pop(self):
+        return self.remove(self.dummy_end.prev)
+
+    def peek(self):
+        return self.dummy_end.prev.val
+
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.n = capacity
+        self.key_to_node = dict()
+        self.cache_nodes = LinkedList()
+
+    def get(self, key: int) -> int:
+        if key not in self.key_to_node:
+            return -1
+        node = self.key_to_node[key]
+        self.cache_nodes.move_to_start(node)
+        return node.val
+
+    def put(self, key: int, value: int) -> None:
+        if key in self.key_to_node:
+            node = self.cache_nodes.remove(self.key_to_node[key])
+            node.val = value
+        else:
+            node = Node(key, value)
+            self.key_to_node[key] = node
+        self.cache_nodes.appendleft(node)
+        if len(self.key_to_node) > self.n:
+            self.key_to_node.pop(self.cache_nodes.pop().key)
+```
+
+</TabItem>
+
+</Tabs>
+
+对于 Python 而言，我们还可以直接利用 OrderedDict 函数实现 LRU，这将大大简化题目难度。这里笔者希望读者还是仔细研读一下以上题解，了解 LRU 实现的核心原理。
+
+
+```py
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.n = capacity
+        self.cache = {}
+
+    def get(self, key: int) -> int:
+        if key not in self.cache:
+            return -1
+        self.cache[key] = self.cache.pop(key)
+        return self.cache[key]
+
+    def put(self, key: int, value: int) -> None:
+        if key in self.cache:
+            self.cache.pop(key)
+        self.cache[key] = value
+        if len(self.cache) > self.n:
+            self.cache.pop(next(iter(self.cache)))
+```
+
+## [380. Insert Delete GetRandom O(1)](https://leetcode.com/problems/insert-delete-getrandom-o1/)
+
+### 題目描述
+
+设计一个插入、删除和随机取值均为 $O(1)$ 时间复杂度的数据结构。
+
+### 輸入輸出範例
+
+以下是数据结构的调用样例。
+
+```
+RandomizedSet randomizedSet = new RandomizedSet();
+randomizedSet.insert(1);
+randomizedSet.remove(2);
+randomizedSet.insert(2);
+randomizedSet.getRandom(); // 50% 1, 50% 2
+randomizedSet.remove(1);
+randomizedSet.insert(2);
+randomizedSet.getRandom(); // 100% 2
+```
+
+### 題解
+
+我们采用一个数组存储插入的数字，同时利用一个哈希表查找位置。每次插入数字时，直接加入数组，且将位置记录在哈希表中。每次删除数字时，将当前数组最后一位与删除位互换，并更新哈希表。随机取值时，则可以在数组内任意选取位置。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+class RandomizedSet {
+   public:
+    bool insert(int val) {
+        if (v_to_k_.contains(val)) {
+            return false;
+        }
+        v_to_k_[val] = nums_.size();
+        nums_.push_back(val);
+        return true;
+    }
+
+    bool remove(int val) {
+        if (!v_to_k_.contains(val)) {
+            return false;
+        }
+        v_to_k_[nums_.back()] = v_to_k_[val];
+        nums_[v_to_k_[val]] = nums_.back();
+        v_to_k_.erase(val);
+        nums_.pop_back();
+        return true;
+    }
+
+    int getRandom() { return nums_[rand() % nums_.size()]; }
+
+   private:
+    unordered_map<int, int> v_to_k_;
+    vector<int> nums_;
+};
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+class RandomizedSet:
+    def __init__(self):
+        self.nums = []
+        self.v_to_k = {}
+
+    def insert(self, val: int) -> bool:
+        if val in self.v_to_k:
+            return False
+        self.v_to_k[val] = len(self.nums)
+        self.nums.append(val)
+        return True
+
+    def remove(self, val: int) -> bool:
+        if val not in self.v_to_k:
+            return False
+        self.v_to_k[self.nums[-1]] = self.v_to_k[val]
+        self.nums[self.v_to_k[val]] = self.nums[-1]
+        del self.v_to_k[val]
+        self.nums.pop()
+        return True
+
+    def getRandom(self) -> int:
+        return self.nums[random.randint(0, len(self.nums) - 1)]
+```
+
+</TabItem>
+
+</Tabs>

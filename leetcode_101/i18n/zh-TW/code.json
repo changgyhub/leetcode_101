@@ -134,10 +134,6 @@
     "message": "標籤：",
     "description": "The label alongside a tag list"
   },
-  "theme.AnnouncementBar.closeButtonAriaLabel": {
-    "message": "關閉",
-    "description": "The ARIA label for close button of announcement bar"
-  },
   "theme.admonition.caution": {
     "message": "警告",
     "description": "The default label used for the Caution admonition (:::caution)"
@@ -161,6 +157,10 @@
   "theme.admonition.warning": {
     "message": "注意",
     "description": "The default label used for the Warning admonition (:::warning)"
+  },
+  "theme.AnnouncementBar.closeButtonAriaLabel": {
+    "message": "關閉",
+    "description": "The ARIA label for close button of announcement bar"
   },
   "theme.blog.sidebar.navAriaLabel": {
     "message": "最近部落格文章導覽",
@@ -194,10 +194,6 @@
     "message": "主導航",
     "description": "The ARIA label for the main navigation"
   },
-  "theme.navbar.mobileLanguageDropdown.label": {
-    "message": "選擇語言",
-    "description": "The label for the mobile language switcher dropdown"
-  },
   "theme.NotFound.p1": {
     "message": "我們沒有您要找的頁面。",
     "description": "The first paragraph of the 404 page"
@@ -205,6 +201,10 @@
   "theme.NotFound.p2": {
     "message": "請聯絡原始連結來源網站的所有者，並通知他們連結已毀損。",
     "description": "The 2nd paragraph of the 404 page"
+  },
+  "theme.navbar.mobileLanguageDropdown.label": {
+    "message": "選擇語言",
+    "description": "The label for the mobile language switcher dropdown"
   },
   "theme.TOCCollapsible.toggleButtonLabel": {
     "message": "本頁導覽",

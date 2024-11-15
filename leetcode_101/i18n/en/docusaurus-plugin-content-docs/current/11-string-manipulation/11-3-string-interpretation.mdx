@@ -1,0 +1,129 @@
+---
+sidebar_position: 61
+---
+
+# 11.3 字符串理解
+
+## [227. Basic Calculator II](https://leetcode.com/problems/basic-calculator-ii/)
+
+### Problem Description
+
+给定一个包含加减乘除整数运算的字符串，求其运算的整数值结果。如果除不尽则向 0 取整。
+
+### Input and Output Example
+
+输入是一个合法的运算字符串，输出是一个整数，表示其运算结果。
+
+```
+Input: " 3+5 / 2 "
+Output: 5
+```
+
+在这个样例中，因为除法的优先度高于加法，所以结果是 5 而非 4。
+
+### Solution Explanation
+
+如果我们在字符串左边加上一个加号，可以证明其并不改变运算结果，且字符串可以分割成多个 < 一个运算符，一个数字 > 对子的形式；这样一来我们就可以从左往右处理了。由于乘除的优先级高于加减，因此我们需要使用一个中间变量来存储高优先度的运算结果。
+
+此类型题也考察很多细节处理，如无运算符的情况，和多个空格的情况等等。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// 辅函数 - parse从位置i开始的一个数字。
+int parseNum(const string& s, int& i) {
+    int num = 0, n = s.length();
+    while (i < n && isdigit(s[i])) {
+        num = 10 * num + (s[i++] - '0');
+    }
+    return num;
+}
+
+// Main function
+int calculate(string s) {
+    char op = '+';
+    long global_num = 0, local_num = 0;
+    int i = -1, n = s.length();
+    while (++i < n) {
+        if (s[i] == ' ') {
+            continue;
+        }
+        long num = parseNum(s, i);
+        switch (op) {
+            case '+':
+                global_num += local_num;
+                local_num = num;
+                break;
+            case '-':
+                global_num += local_num;
+                local_num = -num;
+                break;
+            case '*':
+                local_num *= num;
+                break;
+            case '/':
+                local_num /= num;
+                break;
+        }
+        if (i < n) {
+            op = s[i];
+        }
+    }
+    return global_num + local_num;
+}
+
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+from typing import Tuple
+
+# 辅函数 - parse从位置i开始的一个数字。
+# 返回(数字, 下一个i位置)
+def parseNum(s: str, i: int) -> Tuple[int, int]:
+    num, n = 0, len(s)
+    while i < n and s[i].isdigit():
+        num = 10 * num + int(s[i])
+        i += 1
+    return (num, i)
+
+# Main function
+def calculate(s: str) -> int:
+    op = "+"
+    global_num, local_num = 0, 0
+    i, n = 0, len(s)
+    
+    while i < n:
+        if s[i] == " ":
+            i += 1
+            continue
+        
+        num, i = parseNum(s, i)
+        
+        match op:
+            case "+":
+                global_num += local_num
+                local_num = num
+            case "-":
+                global_num += local_num
+                local_num = -num
+            case "*":
+                local_num *= num
+            case "/":
+                # int()会实现向0取整，而//对负数会远离0取整。
+                local_num = int(local_num / num)
+        
+        if i < n:
+            op = s[i]
+            i += 1
+
+    return global_num + local_num
+
+```
+
+</TabItem>
+
+</Tabs>

@@ -1,0 +1,469 @@
+---
+sidebar_position: 69
+---
+
+# 13.2 树的递归
+
+对于一些简单的递归题，某些 LeetCode 达人喜欢写 one-line code，即用一行代码解决问题。我们也会展示一些这样的代码，但是对于新手，笔者仍然建议您使用多行的 if-else 判断语句。
+
+在很多时候，树递归的写法与深度优先搜索的递归写法相同，因此本书不会区分二者。
+
+## [104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/)
+
+### 題目描述
+
+求一个二叉树的最大深度。
+
+### 輸入輸出範例
+
+输入是一个二叉树，输出是一个整数，表示该树的最大深度。
+
+```
+Input:
+    3
+   / \
+  9  20
+     / \
+    15  7
+Output: 3
+```
+
+### 題解
+
+利用递归，我们可以很方便地求得最大深度。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int maxDepth(TreeNode* root) {
+    if (root == nullptr) {
+        return 0;
+    }
+    return max(maxDepth(root->left), maxDepth(root->right)) + 1;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def maxDepth(root: Optional[TreeNode]) -> int:
+    if root is None:
+        return 0
+    return max(maxDepth(root.left), maxDepth(root.right)) + 1
+```
+
+</TabItem>
+
+</Tabs>
+
+## [110. Balanced Binary Tree](https://leetcode.com/problems/balanced-binary-tree/)
+
+### 題目描述
+
+判断一个二叉树是否平衡。树平衡的定义是，对于树上的任意节点，其两侧节点的最大深度的差值不得大于 1。
+
+### 輸入輸出範例
+
+输入是一个二叉树，输出一个布尔值，表示树是否平衡。
+
+```
+Input:
+      1
+     / \
+    2   2
+   / \
+  3   3
+ / \
+4   4 
+Output: false
+```
+
+### 題解
+
+解法类似于求树的最大深度，但有两个不同的地方：一是我们需要先处理子树的深度再进行比较，二是如果我们在处理子树时发现其已经不平衡了，则可以返回一个-1，使得所有其长辈节点可以避免多余的判断（本题的判断比较简单，做差后取绝对值即可；但如果此处是一个开销较大的比较过程，则避免重复判断可以节省大量的计算时间）。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// 輔助函式。
+int balancedDepth(TreeNode* root) {
+    if (root == nullptr) {
+        return 0;
+    }
+    int left = balancedDepth(root->left);
+    int right = balancedDepth(root->right);
+    if (left == -1 || right == -1 || abs(left - right) > 1) {
+        return -1;
+    }
+    return max(left, right) + 1;
+}
+// 主函式。
+bool isBalanced(TreeNode* root) { return balancedDepth(root) != -1; }
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# 輔助函式。
+def balancedDepth(root: Optional[TreeNode]) -> int:
+    if root is None:
+        return 0
+    left = balancedDepth(root.left)
+    right = balancedDepth(root.right)
+    if left == -1 or right == -1 or abs(left - right) > 1:
+        return -1
+    return max(left, right) + 1
+
+# 主函式。
+def isBalanced(root: Optional[TreeNode]) -> bool:
+    return balancedDepth(root) != -1
+
+```
+
+</TabItem>
+
+</Tabs>
+
+## [543. Diameter of Binary Tree](https://leetcode.com/problems/diameter-of-binary-tree/)
+
+### 題目描述
+
+求一个二叉树的最长直径。直径的定义是二叉树上任意两节点之间的无向距离。
+
+### 輸入輸出範例
+
+输入是一个二叉树，输出一个整数，表示最长直径。
+
+```
+Input:
+      1
+     / \
+    2   3
+   / \
+  4   5
+Output: 3
+```
+
+在这个样例中，最长直径是 [4,2,1,3] 和 [5,2,1,3]。
+
+### 題解
+
+同样的，我们可以利用递归来处理树。解题时要注意，在我们处理某个子树时，我们更新的最长直径值和递归返回的值是不同的。这是因为待更新的最长直径值是经过该子树根节点的最长直径（即两侧长度）；而函数返回值是以该子树根节点为端点的最长直径值（即一侧长度），使用这样的返回值才可以通过递归更新父节点的最长直径值）。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// 輔助函式。
+int updateDiameter(TreeNode* node, int& diameter) {
+    if (node == nullptr) {
+        return 0;
+    }
+    int left = updateDiameter(node->left, diameter);
+    int right = updateDiameter(node->right, diameter);
+    diameter = max(diameter, left + right);
+    return max(left, right) + 1;
+}
+// 主函式。
+int diameterOfBinaryTree(TreeNode* root) {
+    int diameter = 0;
+    updateDiameter(root, diameter);
+    return diameter;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# 輔助函式。
+def updateDiameter(node: Optional[TreeNode], diameter: List[int]) -> int:
+    if node is None:
+        return 0
+    left = updateDiameter(node.left, diameter)
+    right = updateDiameter(node.right, diameter)
+    diameter[0] = max(diameter[0], left + right)
+    return max(left, right) + 1
+
+# 主函式。
+def diameterOfBinaryTree(root: Optional[TreeNode]) -> int:
+    diameter = [0]
+    updateDiameter(root, diameter)
+    return diameter[0]
+
+```
+
+</TabItem>
+
+</Tabs>
+
+## [437. Path Sum III](https://leetcode.com/problems/path-sum-iii/)
+
+### 題目描述
+
+给定一个整数二叉树，求有多少条路径节点值的和等于给定值。
+
+### 輸入輸出範例
+
+输入一个二叉树和一个给定整数，输出一个整数，表示有多少条满足条件的路径。
+
+```
+Input: sum = 8, tree =
+        10
+       / \
+      5  -3
+     / \   \
+    3   2   11
+   / \   \
+  3 -2    1
+Output: 3
+```
+
+在这个样例中，和为 8 的路径一共有三个：[[5,3],[5,2,1],[-3,11]]。
+
+### 題解
+
+递归每个节点时，需要分情况考虑：（1）如果选取该节点加入路径，则之后必须继续加入连续节点，或停止加入节点（2）如果不选取该节点加入路径，则对其左右节点进行重新进行考虑。因此一个方便的方法是我们创建一个辅函数，专门用来计算连续加入节点的路径。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// 輔助函式。
+// long long防止test case中大数溢出，一般情况下用int即可。
+long long pathSumStartWithRoot(TreeNode* root, long long targetSum) {
+    if (root == nullptr) {
+        return 0;
+    }
+    return (root->val == targetSum) +
+           pathSumStartWithRoot(root->left, targetSum - root->val) +
+           pathSumStartWithRoot(root->right, targetSum - root->val);
+}
+// 主函式。
+int pathSum(TreeNode* root, int targetSum) {
+    if (root == nullptr) {
+        return 0;
+    }
+    return pathSumStartWithRoot(root, targetSum) +
+           pathSum(root->left, targetSum) + pathSum(root->right, targetSum);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# 輔助函式。
+def pathSumStartWithRoot(root: Optional[TreeNode], targetSum: int) -> int:
+    if root is None:
+        return 0
+    return (
+        int(root.val == targetSum)
+        + pathSumStartWithRoot(root.left, targetSum - root.val)
+        + pathSumStartWithRoot(root.right, targetSum - root.val)
+    )
+
+# 主函式。
+def pathSum(root: Optional[TreeNode], targetSum: int) -> int:
+    if root is None:
+        return 0
+    return (
+        pathSumStartWithRoot(root, targetSum)
+        + pathSum(root.left, targetSum)
+        + pathSum(root.right, targetSum)
+    )
+
+```
+
+</TabItem>
+
+</Tabs>
+
+## [101. Symmetric Tree](https://leetcode.com/problems/symmetric-tree/)
+
+### 題目描述
+
+判断一个二叉树是否对称。
+
+### 輸入輸出範例
+
+输入一个二叉树，输出一个布尔值，表示该树是否对称。
+
+```
+Input:
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4 3
+Output: true
+```
+
+### 題解
+
+判断一个树是否对称等价于判断左右子树是否对称。笔者一般习惯将判断两个子树是否相等或对称类型的题的解法叫做“四步法”：（1）如果两个子树都为空指针，则它们相等或对称（2）如果两个子树只有一个为空指针，则它们不相等或不对称（3）如果两个子树根节点的值不相等，则它们不相等或不对称（4）根据相等或对称要求，进行递归处理。
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// 輔助函式。
+bool isLeftRightSymmetric(TreeNode* left, TreeNode* right) {
+    if (left == nullptr && right == nullptr) {
+        return true;
+    }
+    if (left == nullptr or right == nullptr) {
+        return false;
+    }
+    if (left->val != right->val) {
+        return false;
+    }
+    return isLeftRightSymmetric(left->left, right->right) &&
+           isLeftRightSymmetric(left->right, right->left);
+}
+// 主函式。
+bool isSymmetric(TreeNode* root) {
+    if (root == nullptr) {
+        return true;
+    }
+    return isLeftRightSymmetric(root->left, root->right);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# 輔助函式。
+def isLeftRightSymmetric(
+    left: Optional[TreeNode], right: Optional[TreeNode]
+) -> bool:
+    if left is None and right is None:
+        return True
+    if left is None or right is None:
+        return False
+    if left.val != right.val:
+        return False
+    return (
+        isLeftRightSymmetric(left.left, right.right) and
+        isLeftRightSymmetric(left.right, right.left)
+    )
+
+# 主函式。
+def isSymmetric(root: Optional[TreeNode]) -> bool:
+    if root is None:
+        return True
+    return isLeftRightSymmetric(root.left, root.right)
+
+```
+
+</TabItem>
+
+</Tabs>
+
+## [1110. Delete Nodes And Return Forest](https://leetcode.com/problems/delete-nodes-and-return-forest/)
+
+### 題目描述
+
+给定一个整数二叉树和一些整数，求删掉这些整数对应的节点后，剩余的子树。
+
+### 輸入輸出範例
+
+输入是一个整数二叉树和一个一维整数数组，输出一个数组，每个位置存储一个子树（的根节点）。
+
+```
+Input: to_delete = [3,5], tree =
+    1
+   / \
+  2   3
+ / \ / \
+ 4 5 6 7
+Output: [
+    1
+   /
+  2
+ /
+4  ,6 ,7]
+```
+
+### 題解
+
+这道题最主要需要注意的细节是如果通过递归处理原树，以及需要在什么时候断开指针。同时，为了便于寻找待删除节点，可以建立一个哈希表方便查找。笔者强烈建议读者在看完题解后，自己写一遍本题，加深对于递归的理解和运用能力。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// 輔助函式。
+TreeNode* moveNodesToForest(TreeNode* root, unordered_set<int>& undeleted,
+                            vector<TreeNode*>& forest) {
+    if (root == nullptr) {
+        return nullptr;
+    }
+    root->left = moveNodesToForest(root->left, undeleted, forest);
+    root->right = moveNodesToForest(root->right, undeleted, forest);
+    if (undeleted.contains(root->val)) {
+        if (root->left != nullptr) {
+            forest.push_back(root->left);
+        }
+        if (root->right != nullptr) {
+            forest.push_back(root->right);
+        }
+        root = nullptr;
+    }
+    return root;
+}
+// 主函式。
+vector<TreeNode*> delNodes(TreeNode* root, vector<int>& to_delete) {
+    vector<TreeNode*> forest;
+    unordered_set<int> undeleted(to_delete.begin(), to_delete.end());
+    root = moveNodesToForest(root, undeleted, forest);
+    if (root != nullptr) {
+        forest.push_back(root);
+    }
+    return forest;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# 輔助函式。
+def moveNodesToForest(
+    root: Optional[TreeNode], undeleted: Set[int], forest: List[TreeNode]
+) -> Optional[TreeNode]:
+    if root is None:
+        return None
+    
+    root.left = moveNodesToForest(root.left, undeleted, forest)
+    root.right = moveNodesToForest(root.right, undeleted, forest)
+    
+    if root.val in undeleted:
+        if root.left is not None:
+            forest.append(root.left)
+        if root.right is not None:
+            forest.append(root.right)
+        root = None
+    
+    return root
+
+# 主函式。
+def delNodes(root: Optional[TreeNode], to_delete: List[int]) -> List[TreeNode]:
+    forest = []
+    undeleted = set(to_delete)
+    root = moveNodesToForest(root, undeleted, forest)
+    if root is not None:
+        forest.append(root)
+    return forest
+
+```
+
+</TabItem>
+
+</Tabs>

@@ -1,0 +1,228 @@
+---
+sidebar_position: 42
+---
+
+# 8.5 随机与取样
+
+## [384. Shuffle an Array](https://leetcode.com/problems/shuffle-an-array/)
+
+### 題目描述
+
+给定一个数组，要求实现两个指令函数。第一个函数“shuﬄe”可以随机打乱这个数组，第二个函数“reset”可以恢复原来的顺序。
+
+### 輸入輸出範例
+
+输入是一个存有整数数字的数组，和一个包含指令函数名称的数组。输出是一个二维数组，表示每个指令生成的数组。
+
+```
+Input: nums = [1,2,3], actions: ["shuffle","shuffle","reset"]
+Output: [[2,1,3],[3,2,1],[1,2,3]]
+```
+
+在这个样例中，前两次打乱的结果只要是随机生成即可。
+
+### 題解
+
+我们采用经典的 `Fisher-Yates 洗牌算法`，原理是通过随机交换位置来实现随机打乱，有正向和反向两种写法，且实现非常方便。注意这里“reset”函数以及 Solution 类的构造函数的实现细节。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+class Solution {
+   public:
+    Solution(vector<int> nums) : nums_(nums) {}
+
+    vector<int> reset() { return nums_; }
+
+    vector<int> shuffle() {
+        vector<int> shuffled(nums_);
+        int n = nums_.size();
+        // 可以使用反向或者正向洗牌，效果相同。
+        // 反向洗牌：
+        for (int i = n - 1; i >= 0; --i) {
+            swap(shuffled[i], shuffled[rand() % (i + 1)]);
+        }
+        // 正向洗牌：
+        // for (int i = 0; i < n; ++i) {
+        // int pos = rand() % (n - i);
+        // swap(shuffled[i], shuffled[i+pos]);
+        // }
+        return shuffled;
+    }
+
+   private:
+    vector<int> nums_;
+};
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+class Solution:
+    def __init__(self, nums: List[int]):
+        self.base = nums[:]
+
+    def reset(self) -> List[int]:
+        return self.base[:]
+
+    def shuffle(self) -> List[int]:
+        shuffled = self.base[:]
+        n = len(self.base)
+        # 可以使用反向或者正向洗牌，效果相同。
+        # 反向洗牌：
+        for i in range(n - 1, -1, -1):
+            j = random.randint(0, i)
+            shuffled[i], shuffled[j] = shuffled[j], shuffled[i]
+        # 正向洗牌：
+        # for i in range(n):
+        #   j = i + random.randint(0, n - i - 1)
+        #   shuffled[i], shuffled[j] = shuffled[j], shuffled[i]
+        return shuffled
+```
+
+</TabItem>
+
+</Tabs>
+
+## [528. Random Pick with Weight](https://leetcode.com/problems/random-pick-with-weight/)
+
+### 題目描述
+
+给定一个数组，数组每个位置的值表示该位置的权重，要求按照权重的概率去随机采样。
+
+### 輸入輸出範例
+
+输入是一维正整数数组，表示权重；和一个包含指令字符串的一维数组，表示运行几次随机采样。输出是一维整数数组，表示随机采样的整数在数组中的位置。
+
+```
+Input: weights = [1,3], actions: ["pickIndex","pickIndex","pickIndex"]
+Output: [0,1,1]
+```
+
+在这个样例中，每次选择的位置都是不确定的，但选择第 0 个位置的期望为 1/4，选择第 1 个位置的期望为 3/4。
+
+### 題解
+
+我们可以先使用 partial_sum求前缀和（即到每个位置为止之前所有数字的和），这个结果对于正整数数组是单调递增的。每当需要采样时，我们可以先随机产生一个数字，然后使用二分法查找其在前缀和中的位置，以模拟加权采样的过程。这里的二分法可以用 lower_bound 实现。
+
+以样例为例，权重数组 [1,3] 的前缀和为 [1,4]。如果我们随机生成的数字为 1，那么 lower_bound 返回的位置为 0；如果我们随机生成的数字是 2、3、4，那么 lower_bound 返回的位置为 1。
+
+关于前缀和的更多技巧，我们将在接下来的章节中继续深入讲解。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+class Solution {
+   public:
+    Solution(vector<int> weights) : cumsum_(weights) {
+        partial_sum(cumsum_.begin(), cumsum_.end(), cumsum_.begin());
+    }
+
+    int pickIndex() {
+        int val = (rand() % cumsum_.back()) + 1;
+        return lower_bound(cumsum_.begin(), cumsum_.end(), val) -
+               cumsum_.begin();
+    }
+
+   private:
+    vector<int> cumsum_;
+};
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+class Solution:
+    def __init__(self, weights: List[int]):
+        self.cumsum = weights[:]
+        for i in range(1, len(weights)):
+            self.cumsum[i] += self.cumsum[i - 1]
+
+        def pickIndex(self) -> int:
+            val = random.randint(1, self.cumsum[-1])
+            return bisect.bisect_left(self.cumsum, val, 0, len(self.cumsum))
+```
+
+</TabItem>
+
+</Tabs>
+
+## [382. Linked List Random Node](https://leetcode.com/problems/linked-list-random-node/)
+
+### 題目描述
+
+给定一个单向链表，要求设计一个算法，可以随机取得其中的一个数字。
+
+### 輸入輸出範例
+
+输入是一个单向链表，输出是一个数字，表示链表里其中一个节点的值。
+
+```
+Input: 1->2->3->4->5
+Output: 3
+```
+
+在这个样例中，我们有均等的概率得到任意一个节点，比如 3。
+
+### 題解
+
+不同于数组，在未遍历完链表前，我们无法知道链表的总长度。这里我们就可以使用水库采样：遍历一次链表，在遍历到第 m 个节点时，有 $\frac{1}{m}$ 的概率选择这个节点覆盖掉之前的节点选择。
+
+我们提供一个简单的，对于水库算法随机性的证明。对于长度为 n 的链表的第 m 个节点，最后被采样的充要条件是它被选择，且之后的节点都没有被选择。这种情况发生的概率为 $\frac{1}{m} × \frac{m}{m+1} × \frac{m}{m+2} × · · · × \frac{n−1}{n} = \frac{1}{n}$。因此每个点都有均等的概率被选择。
+
+当然，这道题我们也可以预处理链表，遍历一遍之后把它转化成数组。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+class Solution {
+   public:
+    Solution(ListNode* node) : head_(node) {}
+
+    int getRandom() {
+        int pick = head_->val;
+        ListNode* node = head_->next;
+        int i = 2;
+        while (node) {
+            if (rand() % i == 0) {
+                pick = node->val;
+            }
+            ++i;
+            node = node->next;
+        }
+        return pick;
+    }
+
+   private:
+    ListNode* head_;
+};
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+class Solution:
+    def __init__(self, head: Optional[ListNode]):
+        self.head = head
+
+    def getRandom(self) -> int:
+        pick = self.head.val
+        node = self.head.next
+        i = 2
+        while node is not None:
+            if random.randint(0, i - 1) == 0:
+                pick = node.val
+            i += 1
+            node = node.next
+        return pick
+```
+
+</TabItem>
+
+</Tabs>

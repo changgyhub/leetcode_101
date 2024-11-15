@@ -1,0 +1,347 @@
+---
+sidebar_position: 29
+---
+
+# 6.4 分割类型题
+
+## [279. Perfect Squares](https://leetcode.com/problems/perfect-squares/)
+
+### 題目描述
+
+给定一个正整数，求其最少可以由几个完全平方数相加构成。
+
+### 輸入輸出範例
+
+输入是给定的正整数，输出也是一个正整数，表示输入的数字最少可以由几个完全平方数相加构成。
+
+```
+Input: n = 13
+Output: 2
+```
+
+在这个样例中，13 的最少构成方法为 4+9。
+
+### 題解
+
+对于分割类型题，动态规划的状态转移方程通常并不依赖相邻的位置，而是依赖于满足分割条件的位置。我们定义一个一维矩阵 dp，其中 dp[i] 表示数字 i 最少可以由几个完全平方数相加构成。在本题中，位置 i 只依赖 $i - j^2$ 的位置，如 i - 1、i - 4、i - 9 等等，才能满足完全平方分割的条件。因此 dp[i] 可以取的最小值即为 1+ min(dp[i-1], dp[i-4], dp[i-9] · · · )。注意边界条件的处理。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int numSquares(int n) {
+    vector<int> dp(n + 1, numeric_limits<int>::max());
+    dp[0] = 0;
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j * j <= i; ++j) {
+            dp[i] = min(dp[i], dp[i - j * j] + 1);
+        }
+    }
+    return dp[n];
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def numSquares(n: int) -> int:
+    dp = [0] + [sys.maxsize] * n
+    for i in range(1, n + 1):
+        for j in range(1, int(floor(sqrt(i))) + 1):
+            dp[i] = min(dp[i], dp[i - j * j] + 1)
+    return dp[n]
+```
+
+</TabItem>
+
+</Tabs>
+
+## [91. Decode Ways](https://leetcode.com/problems/decode-ways/)
+
+### 題目描述
+
+已知字母 A-Z 可以表示成数字 1-26。给定一个数字串，求有多少种不同的字符串等价于这个数字串。
+
+### 輸入輸出範例
+
+输入是一个由数字组成的字符串，输出是满足条件的解码方式总数。
+
+```
+Input: "226"
+Output: 3
+```
+
+在这个样例中，有三种解码方式：BZ(2 26)、VF(22 6) 或 BBF(2 2 6)。
+
+### 題解
+
+这是一道很经典的动态规划题，难度不大但是十分考验耐心。这是因为只有 1-26 可以表示字母，因此对于一些特殊情况，比如数字 0 或者当相邻两数字大于 26 时，需要有不同的状态转移方程，详见如下代码。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int numDecodings(string s) {
+    int n = s.length();
+    int prev = s[0] - ’0’;
+    if (prev == 0) {
+        return 0;
+    }
+    if (n == 1) {
+        return 1;
+    }
+    vector<int> dp(n + 1, 1);
+    for (int i = 2; i <= n; ++i) {
+        int cur = s[i - 1] - ’0’;
+        if ((prev == 0 || prev > 2) && cur == 0) {
+            // 00, 30, 40, ..., 90, 非法。
+            return 0;
+        }
+        if ((prev < 2 && prev > 0) || (prev == 2 && cur <= 6)) {
+            // 10, 11, ..., 25, 26.
+            if (cur == 0) {
+                // 10, 20，只能连续解码两位。
+                dp[i] = dp[i - 2];
+            } else {
+                // 可以解码当前位，也可以连续解码两位。
+                dp[i] = dp[i - 2] + dp[i - 1];
+            }
+        } else {
+            // 合法，但只能解码当前位。
+            dp[i] = dp[i - 1];
+        }
+        prev = cur;
+    }
+    return dp[n];
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def numDecodings(s: str) -> int:
+    n = len(s)
+    prev = ord(s[0]) - ord("0")
+    if prev == 0:
+        return 0
+    if n == 1:
+        return 1
+    dp = [1] * (n + 1)
+    for i in range(2, n + 1):
+        cur = ord(s[i - 1]) - ord("0")
+        if (prev == 0 or prev > 2) and cur == 0:
+            # 00, 30, 40, ..., 90, 非法。
+            return 0
+        if 0 < prev < 2 or (prev == 2 and cur <= 6):
+            # 10, 11, ..., 25, 26.
+            if cur == 0:
+                # 10, 20，只能连续解码两位。
+                dp[i] = dp[i - 2]
+            else:
+                # 可以解码当前位，也可以连续解码两位。
+                dp[i] = dp[i - 2] + dp[i - 1]
+        else:
+            # 合法，但只能解码当前位。
+            dp[i] = dp[i - 1]
+        prev = cur
+    return dp[n]
+```
+
+</TabItem>
+
+</Tabs>
+
+## [139. Word Break](https://leetcode.com/problems/word-break/)
+
+### 題目描述
+
+给定一个字符串和一个字符串集合，求是否存在一种分割方式，使得原字符串分割后的子字符串都可以在集合内找到。
+
+### 輸入輸出範例
+
+```
+Input: s = "applepenapple", wordDict = ["apple", "pen"]
+Output: true
+```
+
+在这个样例中，字符串可以被分割为 [“apple”,“pen”,“apple”]。
+
+### 題解
+
+类似于完全平方数分割问题，这道题的分割条件由集合内的字符串决定，因此在考虑每个分割位置时，需要遍历字符串集合，以确定当前位置是否可以成功分割。注意对于位置 0，需要初始化值为真。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+bool wordBreak(string s, vector<string>& wordDict) {
+    int n = s.length();
+    vector<bool> dp(n + 1, false);
+    dp[0] = true;
+    for (int i = 1; i <= n; ++i) {
+        for (const string& word : wordDict) {
+            int m = word.length();
+            if (i >= m && s.substr(i - m, m) == word) {
+                dp[i] = dp[i - m];
+            }
+            // 提前剪枝，略微加速运算。
+            // 如果不剪枝，上一行代码需要变更为 dp[i] = dp[i] || dp[i - m];
+            if (dp[i]) {
+                break;
+            }
+        }
+    }
+    return dp[n];
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def wordBreak(s: str, wordDict: List[str]) -> bool:
+    n = len(s)
+    dp = [True] + [False] * n
+    for i in range(1, n + 1):
+        for word in wordDict:
+            m = len(word)
+            if i >= m and s[i - m : i] == word:
+                dp[i] = dp[i - m]
+            # 提前剪枝，略微加速运算。
+            # 如果不剪枝，上一行代码需要变更为 dp[i] = dp[i] or dp[i-m]
+            if dp[i]:
+                break
+    return dp[n]
+```
+
+</TabItem>
+
+</Tabs>
+
+## [1105. Filling Bookcase Shelves](https://leetcode.com/problems/filling-bookcase-shelves/)
+
+### 題目描述
+
+给定一个数组，每个元素代表一本书的厚度和高度。问对于一个固定宽度的书架，如果按照数组中书的顺序从左到右、从上到下摆放，最小总高度是多少。
+
+### 輸入輸出範例
+
+
+```
+Input: books = [[1,1],[2,3],[2,3],[1,1],[1,1],[1,1],[1,2]], shelfWidth = 4
+Output: 6
+```
+
+
+<figure>
+  <span style={{ display: 'block', width: '25%', margin: '0 auto' }}>
+    ![](https://assets.leetcode.com/uploads/2019/06/24/shelves.png)
+  </span>
+  <figcaption style={{ textAlign: 'center' }}>图 6.2: 书架摆放问题 - 样例图解</figcaption>
+</figure>
+
+### 題解
+
+令 dp[i] 表示放置第 i 本书时的最小总高度，则 dp[i] 可以是在第 i-1 本书下面重新放一排，也可以是在满足不超过前一排宽度的情况下放在前一排。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int minHeightShelves(vector<vector<int>>& books, int shelfWidth) {
+    int n = books.size();
+    vector<int> dp(n + 1, 0);
+    for (int i = 1; i <= n; ++i) {
+        int w = books[i - 1][0], h = books[i - 1][1];
+        dp[i] = dp[i - 1] + h;
+        for (int j = i - 1; j > 0; --j) {
+            int prev_w = books[j - 1][0], prev_h = books[j - 1][1];
+            w += prev_w;
+            if (w > shelfWidth) {
+                break;
+            }
+            h = max(h, prev_h);
+            dp[i] = min(dp[i], dp[j - 1] + h);
+        }
+    }
+    return dp[n];
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def minHeightShelves(books: List[List[int]], shelfWidth: int) -> int:
+    n = len(books)
+    dp = [0] * (n + 1)
+    for i, (w, h) in enumerate(books, 1):
+        dp[i] = dp[i - 1] + h
+        for j in range(i - 1, 0, -1):
+            prev_w, prev_h = books[j - 1]
+            w += prev_w
+            if w > shelfWidth:
+                break
+            h = max(h, prev_h)
+            dp[i] = min(dp[i], dp[j - 1] + h)
+    return dp[n]
+```
+
+</TabItem>
+
+</Tabs>
+
+## [377. Combination Sum IV](https://leetcode.com/problems/combination-sum-iv/)
+
+### 題目描述
+
+给定一个不重复数字的数组和一个目标数，求加起来是目标数的所有排列的总数量。（虽然这道题叫做 Combination Sum，但是不同顺序的组合会被当作不同答案，因此本质上是排列。）
+
+### 輸入輸出範例
+
+```
+Input: nums = [1,2,3], target = 4
+Output: 7
+```
+
+七种不同的排列为 (1, 1, 1, 1)、(1, 1, 2)、(1, 2, 1)、(1, 3)、(2, 1, 1)、(2, 2) 和 (3, 1)。
+
+
+### 題解
+
+令 dp[i] 表示加起来和为 i 时，满足条件的排列数量。在内循环中我们可以直接对所有合法数字进行拿取。这里注意，在 C++ 题解中，因为求和时很容易超过 int 上界，我们这里用 double 存储 dp 数组。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int combinationSum4(vector<int>& nums, int target) {
+    vector<double> dp(target + 1, 0);
+    dp[0] = 1;
+    for (int i = 1; i <= target; ++i) {
+        for (int num : nums) {
+            if (num <= i) {
+                dp[i] += dp[i - num];
+            }
+        }
+    }
+    return dp[target];
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def combinationSum4(nums: List[int], target: int) -> int:
+    dp = [1] + [0] * target
+    for i in range(1, target + 1):
+        dp[i] = sum(dp[i - num] for num in nums if i >= num)
+    return dp[target]
+```
+
+</TabItem>
+
+</Tabs>

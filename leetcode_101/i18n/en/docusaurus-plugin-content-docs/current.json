@@ -4,31 +4,123 @@
     "description": "The label for version current"
   },
   "sidebar.tutorialSidebar.category.1. 最易懂的贪心算法": {
-    "message": "1. greedy",
+    "message": "1. The Easiest Greedy Algorithm",
     "description": "The label for category 1. 最易懂的贪心算法 in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.1. 最易懂的贪心算法.link.generated-index.description": {
-    "message": "5 minutes to learn the most important Docusaurus concepts.",
+    "message": "Chapter 1: The Easiest Greedy Algorithm",
     "description": "The generated-index page description for category 1. 最易懂的贪心算法 in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.2. 玩转双指针": {
-    "message": "2. 玩转双指针",
+    "message": "2. Mastering Two Pointers",
     "description": "The label for category 2. 玩转双指针 in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.2. 玩转双指针.link.generated-index.description": {
-    "message": "5 minutes to learn the most important Docusaurus concepts.",
+    "message": "Chapter 2: Mastering Two Pointers",
     "description": "The generated-index page description for category 2. 玩转双指针 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Tutorial - Basics": {
-    "message": "Tutorial - Basics",
-    "description": "The label for category Tutorial - Basics in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.3. 居合斩！二分查找": {
+    "message": "3. Iaido! Binary Search",
+    "description": "The label for category 3. 居合斩！二分查找 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Tutorial - Basics.link.generated-index.description": {
-    "message": "5 minutes to learn the most important Docusaurus concepts.",
-    "description": "The generated-index page description for category Tutorial - Basics in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.3. 居合斩！二分查找.link.generated-index.description": {
+    "message": "Chapter 3: Iaido! Binary Search",
+    "description": "The generated-index page description for category 3. 居合斩！二分查找 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Tutorial - Extras": {
-    "message": "Tutorial - Extras",
-    "description": "The label for category Tutorial - Extras in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.4. 千奇百怪的排序算法": {
+    "message": "4. Peculiar Sorting Algorithms",
+    "description": "The label for category 4. 千奇百怪的排序算法 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.4. 千奇百怪的排序算法.link.generated-index.description": {
+    "message": "Chapter 4: Peculiar Sorting Algorithms",
+    "description": "The generated-index page description for category 4. 千奇百怪的排序算法 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.5. 一切皆可搜索": {
+    "message": "5. Everything is Searchable",
+    "description": "The label for category 5. 一切皆可搜索 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.5. 一切皆可搜索.link.generated-index.description": {
+    "message": "Chapter 5: Everything is Searchable",
+    "description": "The generated-index page description for category 5. 一切皆可搜索 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.6. 深入浅出动态规划": {
+    "message": "6. Dynamic Programming Made Simple",
+    "description": "The label for category 6. 深入浅出动态规划 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.6. 深入浅出动态规划.link.generated-index.description": {
+    "message": "Chapter 6: Dynamic Programming Made Simple",
+    "description": "The generated-index page description for category 6. 深入浅出动态规划 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.7. 化繁为简的分治法": {
+    "message": "7. Simplifying with Divide and Conquer",
+    "description": "The label for category 7. 化繁为简的分治法 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.7. 化繁为简的分治法.link.generated-index.description": {
+    "message": "Chapter 7: Simplifying with Divide and Conquer",
+    "description": "The generated-index page description for category 7. 化繁为简的分治法 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.8. 巧解数学问题 ": {
+    "message": "8. Clever Math Problem Solving",
+    "description": "The label for category 8. 巧解数学问题 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.8. 巧解数学问题 .link.generated-index.description": {
+    "message": "Chapter 8: Clever Math Problem Solving",
+    "description": "The generated-index page description for category 8. 巧解数学问题 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.9. 神奇的位运算 ": {
+    "message": "9. Magical Bit Manipulation",
+    "description": "The label for category 9. 神奇的位运算 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.9. 神奇的位运算 .link.generated-index.description": {
+    "message": "Chapter 9: Magical Bit Manipulation",
+    "description": "The generated-index page description for category 9. 神奇的位运算 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.10. 妙用数据结构 ": {
+    "message": "10. Ingenious Use of Data Structures",
+    "description": "The label for category 10. 妙用数据结构 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.10. 妙用数据结构 .link.generated-index.description": {
+    "message": "Chapter 10: Ingenious Use of Data Structures",
+    "description": "The generated-index page description for category 10. 妙用数据结构 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.11. 令人头大的字符串 ": {
+    "message": "11. Tricky String Problems",
+    "description": "The label for category 11. 令人头大的字符串 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.11. 令人头大的字符串 .link.generated-index.description": {
+    "message": "Chapter 11: Tricky String Problems",
+    "description": "The generated-index page description for category 11. 令人头大的字符串 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.12. 指针三剑客之一：链表": {
+    "message": "12. The Three Musketeers of Pointers: Linked Lists",
+    "description": "The label for category 12. 指针三剑客之一：链表 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.12. 指针三剑客之一：链表.link.generated-index.description": {
+    "message": "Chapter 12: The Three Musketeers of Pointers: Linked Lists",
+    "description": "The generated-index page description for category 12. 指针三剑客之一：链表 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.13. 指针三剑客之二：树": {
+    "message": "13. The Three Musketeers of Pointers: Trees",
+    "description": "The label for category 13. 指针三剑客之二：树 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.13. 指针三剑客之二：树.link.generated-index.description": {
+    "message": "Chapter 13: The Three Musketeers of Pointers: Trees",
+    "description": "The generated-index page description for category 13. 指针三剑客之二：树 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.14. 指针三剑客之三：图": {
+    "message": "14. The Three Musketeers of Pointers: Graphs",
+    "description": "The label for category 14. 指针三剑客之三：图 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.14. 指针三剑客之三：图.link.generated-index.description": {
+    "message": "Chapter 14: The Three Musketeers of Pointers: Graphs",
+    "description": "The generated-index page description for category 14. 指针三剑客之三：图 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.15. 更加复杂的数据结构 ": {
+    "message": "15. More Complex Data Structures",
+    "description": "The label for category 15. 更加复杂的数据结构 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.15. 更加复杂的数据结构 .link.generated-index.description": {
+    "message": "Chapter 15: More Complex Data Structures",
+    "description": "The generated-index page description for category 15. 更加复杂的数据结构 in sidebar tutorialSidebar"
   }
 }

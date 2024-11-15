@@ -1,0 +1,98 @@
+---
+sidebar_position: 9
+---
+
+# 2.5 快慢指針
+
+## [142. Linked List Cycle II](https://leetcode.com/problems/linked-list-cycle-ii/)
+
+### 題目描述
+
+給定一個鏈表，如果存在環路，找到環路的起始點。
+
+### 輸入輸出範例
+
+輸入是一個鏈表，輸出是鏈表中的一個節點。如果沒有環路，返回一個空指針。  
+在這個範例中，值為 2 的節點即為環路的起始點。  
+如果沒有特別說明，LeetCode 採用如下的數據結構表示鏈表。
+
+![alt](https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist.png)
+
+```cpp
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+```
+
+```py
+class ListNode:
+    def __init__(self, x):
+        self.val = x
+        self.next = None # or a ListNode
+```
+
+### 題解
+
+針對鏈表找環路的問題，有一個通用解法——快慢指針（Floyd 判圈法）。給定兩個指針，分別命名為 slow 和 fast，起始位置在鏈表的開頭。每次 fast 前進兩步，slow 前進一步。如果 fast 可以走到盡頭，則說明沒有環路；如果 fast 可以無限走下去，則說明一定有環路，且必然存在一個時刻 slow 和 fast 相遇。當 slow 和 fast 第一次相遇時，將 fast 重新移動到鏈表開頭，並 讓 slow 和 fast 每次都前進一步。當 slow 和 fast 第二次相遇時，相遇的節點即為環路的起始點。
+
+:::warning
+
+針對某些只需要判斷是否存在環路的問題，也可以通過建立雜湊表來檢查重複。
+
+:::
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+ListNode *detectCycle(ListNode *head) {
+    ListNode *slow = head, *fast = head;
+    bool is_first_cycle = true;
+    // 檢查環路。
+    while (fast != slow || is_first_cycle) {
+        if (fast == nullptr || fast->next == nullptr) {
+            return nullptr;
+        }
+        fast = fast->next->next;
+        slow = slow->next;
+        is_first_cycle = false;
+    }
+    // 尋找節點。
+    fast = head;
+    while (fast != slow) {
+        slow = slow->next;
+        fast = fast->next;
+    }
+    return fast;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def detectCycle(head: Optional[ListNode]) -> Optional[ListNode]:
+    slow = head
+    fast = head
+    is_first_cycle = True
+    # 檢查環路。
+    while fast != slow or is_first_cycle:
+        if fast is None or fast.next is None:
+            return None
+        fast = fast.next.next
+        slow = slow.next
+        is_first_cycle = False
+    # 尋找節點。
+    fast = head
+    while fast != slow:
+        fast = fast.next
+        slow = slow.next
+    return fast
+```
+
+</TabItem>
+
+</Tabs>

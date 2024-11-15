@@ -1,0 +1,106 @@
+---
+sidebar_position: 62
+---
+
+# 11.4 字符串匹配
+
+## [28. Implement strStr()](https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/)
+
+### Problem Description
+
+判断一个字符串是不是另一个字符串的子字符串，并返回其位置。
+
+### Input and Output Example
+
+输入一个母字符串和一个子字符串，输出一个整数，表示子字符串在母字符串的位置，若不存在则返回-1。
+
+```
+Input: haystack = "hello", needle = "ll"
+Output: 2
+```
+
+### Solution Explanation
+
+使用著名的Knuth-Morris-Pratt（KMP）算法，可以在 $O(m +n)$ 时间利用动态规划完成匹配。这里我们定义 dp 数组为，dp[i] 表示 needle 中以 i 位置截止的片段（即后缀），最长可以匹配到needle 从头开始的哪个位置（即前缀）。例如，ababaca 的 dp 数组是 [-1,-1,0,1,2,-1,0]，表示每个位置最长可以匹配 [无, 无, a, ab, aba, 无, a]。
+
+这道题比较复杂，初学者可以暂时跳过。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// Auxiliary function
+vector<int> computeDp(const string &needle) {
+    int n = needle.length();
+    vector<int> dp(n, -1);
+    for (int j = 1, k = -1; j < n; ++j) {
+        while (k > -1 && needle[k + 1] != needle[j]) {
+            k = dp[k];  // 如果下一位不同，回溯到前一个前缀片段
+        }
+        if (needle[k + 1] == needle[j]) {
+            ++k;  // 前缀和后缀片段相同，匹配长度加1
+        }
+        dp[j] = k;  // 更新前缀匹配位置
+    }
+    return dp;
+}
+// Main function
+int strStr(const string &haystack, const string &needle) {
+    int m = haystack.length(), n = needle.length();
+    vector<int> dp = computeDp(needle);
+    for (int i = 0, k = -1; i < m; ++i) {
+        while (k > -1 && needle[k + 1] != haystack[i]) {
+            k = dp[k];  // 如果下一位不同，回溯到前一个相同片段
+        }
+        if (needle[k + 1] == haystack[i]) {
+            ++k;  // 片段相同，匹配长度加1
+        }
+        if (k == n - 1) {
+            return i - n + 1;  // 匹配结束
+        }
+    }
+    return -1;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+from typing import List
+
+# Auxiliary function
+def computeDp(needle: str) -> List[int]:
+    n = len(needle)
+    dp = [-1] * n
+    k = -1
+    for j in range(1, n):
+        while k > -1 and needle[k + 1] != needle[j]:
+            k = dp[k]  # 如果下一位不同，回溯到前一个前缀片段
+        if needle[k + 1] == needle[j]:
+            k += 1  # 前缀和后缀片段相同，匹配长度加1
+        dp[j] = k  # 更新前缀匹配位置
+    return dp
+
+# Main function
+def strStr(haystack: str, needle: str) -> int:
+    m, n = len(haystack), len(needle)
+    if n == 0:
+        return 0  # Edge case for an empty needle
+    
+    dp = computeDp(needle)
+    k = -1
+    for i in range(m):
+        while k > -1 and needle[k + 1] != haystack[i]:
+            k = dp[k]  # 如果下一位不同，回溯到前一个相同片段
+        if needle[k + 1] == haystack[i]:
+            k += 1  # 片段相同，匹配长度加1
+        if k == n - 1:
+            return i - n + 1  # 匹配结束
+    return -1
+
+```
+
+</TabItem>
+
+</Tabs>

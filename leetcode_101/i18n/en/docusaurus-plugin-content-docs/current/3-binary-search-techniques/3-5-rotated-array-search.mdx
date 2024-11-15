@@ -1,0 +1,99 @@
+---
+sidebar_position: 15
+---
+
+# 3.5 Search in Rotated Array
+
+## [81. Search in Rotated Sorted Array II](https://leetcode.com/problems/search-in-rotated-sorted-array-ii/)
+
+### Problem Description
+
+An originally sorted array is connected end-to-end and then broken at some position (e.g., [1,2,2,3,4,5] → [2,3,4,5,1,2], broken between the first and second positions). We call this a rotated array. Given a target value, determine whether this value exists in the rotated array.
+
+### Input and Output Example
+
+The input is an array and a value, and the output is a boolean indicating whether the target exists in the array.
+
+```
+Input: nums = [2,5,6,0,0,1,2], target = 0
+Output: true
+```
+
+Even though the array is rotated, we can still use its sorted property to perform binary search. At the current midpoint, if its value is less than or equal to the right endpoint, the right interval is sorted. Otherwise, the left interval is sorted. If the target value is in the sorted interval, continue the binary search in that interval. Otherwise, proceed with the other interval. Here, we adopt a left-closed, right-closed interval approach.
+
+
+### Solution Explanation
+
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+bool search(vector<int>& nums, int target) {
+    int l = 0, r = nums.size() - 1;
+    while (l <= r) {
+        int mid = l + (r - l) / 2;
+        if (nums[mid] == target) {
+            return true;
+        }
+        if (nums[mid] == nums[l]) {
+            // Cannot determine which interval is sorted, but l cannot be target.
+            ++l;
+        } else if (nums[mid] == nums[r]) {
+            // Cannot determine which interval is sorted, but r cannot be target.
+            --r;
+        } else if (nums[mid] < nums[r]) {
+            // Right interval is sorted.
+            if (target > nums[mid] && target <= nums[r]) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        } else {
+            // Left interval is sorted.
+            if (target >= nums[l] && target < nums[mid]) {
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+    }
+    return false;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def search(nums: List[int], target: int) -> bool:
+    l, r = 0, len(nums) - 1
+    while l <= r:
+        mid = (l + r) // 2
+        if nums[mid] == target:
+            return True
+        if nums[mid] == nums[l]:
+            # Cannot determine which interval is sorted, but l cannot be target.
+            l += 1
+        elif nums[mid] == nums[r]:
+            # Cannot determine which interval is sorted, but r cannot be target.
+            r -= 1
+        elif nums[mid] < nums[r]:
+            # Right interval is sorted.
+            if nums[mid] < target <= nums[r]:
+                l = mid + 1
+            else:
+                r = mid - 1
+        else:
+            # Left interval is sorted.
+            if nums[l] <= target < nums[mid]:
+                r = mid - 1
+            else:
+                l = mid + 1
+    return False
+```
+
+</TabItem>
+
+</Tabs>
