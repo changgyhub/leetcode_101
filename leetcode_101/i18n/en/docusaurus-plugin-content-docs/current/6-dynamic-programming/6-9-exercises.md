@@ -8,38 +8,38 @@ sidebar_position: 34
 
 ### [213. House Robber II](https://leetcode.com/problems/house-robber-ii/)
 
-强盗抢劫题目的 follow-up，如何处理环形数组呢？
+Follow-up of the robber problem: how to handle circular arrays?
 
 ### [53. Maximum Subarray](https://leetcode.com/problems/maximum-subarray/)
 
-经典的一维动态规划题目，试着把一维空间优化为常量吧。
+A classic one-dimensional dynamic programming problem. Try optimizing the space complexity to a constant.
 
 ### [343. Integer Break](https://leetcode.com/problems/integer-break/)
 
-分割类型题，先尝试用动态规划求解，再思考是否有更简单的解法。
+A partition problem. First, solve it using dynamic programming, then think about whether there's a simpler approach.
 
 ### [583. Delete Operation for Two Strings](https://leetcode.com/problems/delete-operation-for-two-strings/)
 
-最长公共子序列的变种题。
+A variation of the longest common subsequence problem.
 
 ## Advanced Difficulty
 
 ### [646. Maximum Length of Pair Chain](https://leetcode.com/problems/maximum-length-of-pair-chain/)
 
-最长递增子序列的变种题，同样的，尝试用二分进行加速。
+A variation of the longest increasing subsequence problem. Similarly, try speeding it up using binary search.
 
 ### [10. Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/)
 
-正则表达式匹配，非常考验耐心。需要根据正则表达式的不同情况，即字符、星号，点号等，分情况讨论。
+Regex matching is a test of patience. You need to handle different cases, such as characters, asterisks, dots, etc., with careful condition discussions.
 
 ### [376. Wiggle Subsequence](https://leetcode.com/problems/wiggle-subsequence/)
 
-最长摆动子序列，通项公式比较特殊，需要仔细思考。
+The longest wiggle subsequence has a special formula. Think it through carefully.
 
 ### [494. Target Sum](https://leetcode.com/problems/target-sum/)
 
-如果告诉你这道题是 0-1 背包，你是否会有一些思路？
+If told this is a 0-1 knapsack problem, does that give you any ideas?
 
 ### [714. Best Time to Buy and Sell Stock with Transaction Fee](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/)
 
-建立状态机，股票交易类问题就会迎刃而解。
+Build a state machine, and stock trading problems will become much easier to solve.

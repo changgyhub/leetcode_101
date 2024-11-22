@@ -2,32 +2,37 @@
 sidebar_position: 27
 ---
 
-# 6.2 基本动态规划：一维
+# 6.2 Basic Dynamic Programming: One-Dimensional
 
 ## [70. Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)
 
 ### Problem Description
 
-给定 $n$ 节台阶，每次可以走一步或走两步，求一共有多少种方式可以走完这些台阶。
+Given $n$ steps of stairs, you can either take one step or two steps at a time. Determine how many ways there are to climb to the top.
+
 
 ### Input and Output Example
 
-输入是一个数字，表示台阶数量；输出是爬台阶的总方式。
+Input is a single number representing the number of steps; output is the total number of ways to climb the stairs.
 
 ```
 Input: 3
 Output: 3
 ```
 
-在这个样例中，一共有三种方法走完这三节台阶：每次走一步；先走一步，再走两步；先走两步，再走一步。
+In this example, there are three ways to climb the three steps:
+1. Take one step three times.
+2. Take one step, then two steps.
+3. Take two steps, then one step.
 
 ### Solution Explanation
 
-这是十分经典的斐波那契数列题。定义一个数组 dp，dp[i] 表示走到第 i 阶的方法数。因为我们每次可以走一步或者两步，所以第 i 阶可以从第 i-1 或 i-2 阶到达。换句话说，走到第 i 阶的方法数即为走到第 i-1 阶的方法数加上走到第 i-2 阶的方法数。这样我们就得到了状态转移方程 dp[i] = dp[i-1] + dp[i-2]。注意边界条件的处理。
+This is a classic Fibonacci sequence problem. Define an array `dp` where `dp[i]` represents the number of ways to reach the $i^{th}$ step. Since you can either take one step or two steps, the $i^{th}$ step can be reached from the $(i-1)^{th}$ or the $(i-2)^{th}$ step. In other words, the number of ways to reach the $i^{th}$ step is the sum of the ways to reach the $(i-1)^{th}$ and $(i-2)^{th}$ steps. This gives us the state transition equation: `dp[i] = dp[i-1] + dp[i-2]`. Pay attention to the initial conditions.
+
 
 :::warning
 
-有的时候为了方便处理边界情况，我们可以在构造 dp 数组时多留一个位置，用来处理初始状态。本题即多留了一个第 0 阶的初始位置。
+To handle boundary cases conveniently, we can reserve an extra position in the `dp` array to represent the initial state. In this problem, an extra initial position for step 0 is added.
 
 :::
 
@@ -59,7 +64,8 @@ def climbStairs(n: int) -> int:
 
 </Tabs>
 
-进一步的，我们可以对动态规划进行空间压缩。因为 dp[i] 只与 dp[i-1] 和 dp[i-2] 有关，因此可以只用两个变量来存储 dp[i-1] 和 dp[i-2]，使得原来的 $O(n)$ 空间复杂度优化为 $O(1)$ 复杂度。
+Furthermore, we can apply space optimization to dynamic programming. Since dp[i] only depends on dp[i-1] and dp[i-2], we can use just two variables to store dp[i-1] and dp[i-2], reducing the original $O(n)$ space complexity to $O(1)$.
+
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -98,22 +104,31 @@ def climbStairs(n: int) -> int:
 
 ### Problem Description
 
-假如你是一个劫匪，并且决定抢劫一条街上的房子，每个房子内的钱财数量各不相同。如果你抢了两栋相邻的房子，则会触发警报机关。求在不触发机关的情况下最多可以抢劫多少钱。
+Suppose you are a robber deciding to rob houses along a street, where each house has a different amount of money. If you rob two adjacent houses, an alarm will be triggered. Determine the maximum amount of money you can rob without triggering the alarm.
 
 ### Input and Output Example
 
-输入是一个一维数组，表示每个房子的钱财数量；输出是劫匪可以最多抢劫的钱财数量。
+The input is a one-dimensional array `nums` representing the amount of money in each house; the output is the maximum amount of money the robber can steal.
 
 ```
 Input: [2,7,9,3,1]
 Output: 12
 ```
 
-在这个样例中，最多的抢劫方式为抢劫第 1、3、5 个房子。
+In this example, the optimal way to rob is to rob houses 1, 3, and 5.
 
 ### Solution Explanation
 
-定义一个数组 dp，dp[i] 表示抢劫到第 i 个房子时，可以抢劫的最大数量。我们考虑 dp[i]，此时可以抢劫的最大数量有两种可能，一种是我们选择不抢劫这个房子，此时累计的金额即为 dp[i-1]；另一种是我们选择抢劫这个房子，那么此前累计的最大金额只能是 dp[i-2]，因为我们不能够抢劫第 i-1 个房子，否则会触发警报机关。因此本题的状态转移方程为 dp[i] = max(dp[i-1], nums[i-1] + dp[i-2])。
+Define an array `dp`, where `dp[i]` represents the maximum amount of money that can be robbed up to the `i`-th house. To determine the value of `dp[i]`, there are two possible scenarios:
+
+1. **Do not rob this house**: In this case, the accumulated amount is `dp[i-1]`.
+2. **Rob this house**: The previously accumulated maximum amount can only be `dp[i-2]`, because robbing the `i-1`-th house would trigger the alarm.
+
+Thus, the state transition equation for this problem is:
+
+$$
+dp[i] = \max(dp[i-1], dp[i-2] + \text{nums}[i-1])
+$$
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -147,7 +162,7 @@ def rob(nums: List[int]) -> int:
 
 </Tabs>
 
-同样的，我们可以像题目 70 那样，对空间进行压缩。
+Similarly, we can optimize space complexity just like in Problem 70. Since `dp[i]` only depends on `dp[i-1]` and `dp[i-2]`, we can use only two variables to store these two values, reducing the original $O(n)$ space complexity to $O(1)$ space complexity.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -185,22 +200,23 @@ def rob(nums: List[int]) -> int:
 
 ### Problem Description
 
-给定一个数组，求这个数组中连续且等差的子数组一共有多少个。
+Given an array, calculate the total number of continuous arithmetic subarrays.
 
 ### Input and Output Example
 
-输入是一个一维数组，输出是满足等差条件的连续子数组个数。
+Input is a one-dimensional array, and output is the number of continuous subarrays that meet the arithmetic condition.
 
 ```
 Input: nums = [1,2,3,4]
 Output: 3
 ```
 
-在这个样例中，等差数列有 [1,2,3]、[2,3,4] 和 [1,2,3,4]。
+In this example, the arithmetic subarrays are [1,2,3], [2,3,4], and [1,2,3,4].
 
 ### Solution Explanation
 
-因为要求是等差数列，可以很自然地想到子数组必定满足 num[i] - num[i-1] = num[i-1] - num[i-2]。这里我们对于 dp 数组的定义是以 i 结尾的，满足该条件的子数组数量。因为等差子数组可以在任意一个位置终结，所以我们需要对 dp 数组求和进行子数组统计。
+Since the requirement is for arithmetic subarrays, it naturally follows that the subarray must satisfy the condition `num[i] - num[i-1] = num[i-1] - num[i-2]`. Here, we define the `dp` array such that `dp[i]` represents the number of subarrays ending at index `i` that satisfy this condition. Because arithmetic subarrays can end at any position, we need to sum up the `dp` array to calculate the total number of subarrays.
+
 
 <Tabs>
 <TabItem value="cpp" label="C++">

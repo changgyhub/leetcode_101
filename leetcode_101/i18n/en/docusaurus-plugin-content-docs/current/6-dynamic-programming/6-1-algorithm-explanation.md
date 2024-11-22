@@ -2,12 +2,12 @@
 sidebar_position: 26
 ---
 
-# 6.1 算法解释
+# 6.1 Algorithm Explanation
 
-这里我们引用一下维基百科的描述：“`动态规划`（Dynamic Programming, DP）在查找有很多`重叠子问题`的情况的最优解时有效。它将问题重新组合成子问题。为了避免多次解决这些子问题，它们的结果都逐渐被计算并被保存，从简单的问题直到整个问题都被解决。因此，动态规划保存递归时的结果，因而不会在解决同样的问题时花费时间 · · · · · · 动态规划只能应用于有`最优子结构`的问题。最优子结构的意思是局部最优解能决定全局最优解（对有些问题这个要求并不能完全满足，故有时需要引入一定的近似）。简单地说，问题能够分解成子问题来解决。”
+Here, we quote Wikipedia’s description: "`Dynamic Programming` (DP) is effective in finding the optimal solution for problems with many `overlapping subproblems`. It redefines the problem into subproblems. To avoid repeatedly solving these subproblems, their results are progressively computed and stored, starting from simpler problems until the entire problem is resolved. Therefore, dynamic programming saves the results of recursion and avoids spending time solving the same problems repeatedly. Dynamic programming can only be applied to problems with an `optimal substructure`. The optimal substructure means that the local optimal solution can determine the global optimal solution (this requirement is not always completely met for some problems, so certain approximations may be introduced). Simply put, the problem can be broken down into subproblems to solve."
 
-通俗一点来讲，动态规划和其它遍历算法（如深/广度优先搜索）都是将原问题拆成多个子问题然后求解，他们之间最本质的区别是，动态规划`保存子问题的解，避免重复计算`。解决动态规划问题的关键是找到`状态转移方程`，这样我们可以通过计算和储存子问题的解来求解最终问题。
+In simple terms, dynamic programming differs from other traversal algorithms (e.g., depth-first search or breadth-first search) in that it `stores the solutions of subproblems to avoid redundant calculations`. The key to solving dynamic programming problems lies in finding the `state transition equation`, which allows us to solve the final problem by computing and storing the solutions to subproblems.
 
-同时，我们也可以对动态规划进行`空间压缩`，起到节省空间消耗的效果。这一技巧笔者将在之后的题目中介绍。
+Additionally, we can apply `space optimization` techniques to dynamic programming to reduce space usage. This technique will be introduced in subsequent problems.
 
-在一些情况下，动态规划可以看成是带有`状态记录`（memoization）的优先搜索。状态记录的意思为，如果一个子问题在优先搜索时已经计算过一次，我们可以把它的结果储存下来，之后遍历到该子问题的时候可以直接返回储存的结果。动态规划是自下而上的，即先解决子问题，再解决父问题；而用带有状态记录的优先搜索是自上而下的，即从父问题搜索到子问题，若重复搜索到同一个子问题则进行状态记录，防止重复计算。如果题目需求的是最终状态，那么使用动态搜索比较方便；如果题目需要输出所有的路径，那么使用带有状态记录的优先搜索会比较方便。
+In some cases, dynamic programming can be considered a form of `memoized` traversal. Memoization means that if a subproblem has been solved during traversal, its result can be stored and reused later when the same subproblem is encountered again. Dynamic programming is bottom-up, solving subproblems first and then the parent problem. Memoized traversal is top-down, starting from the parent problem and solving subproblems as they are encountered. If the problem requires only the final state, dynamic programming is more convenient; if the problem requires all possible paths, memoized traversal is more suitable.

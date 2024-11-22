@@ -8,38 +8,38 @@ sidebar_position: 34
 
 ### [213. House Robber II](https://leetcode.com/problems/house-robber-ii/)
 
-强盗抢劫题目的 follow-up，如何处理环形数组呢？
+強盜搶劫問題的 follow-up，如何處理環形數組呢？
 
 ### [53. Maximum Subarray](https://leetcode.com/problems/maximum-subarray/)
 
-经典的一维动态规划题目，试着把一维空间优化为常量吧。
+經典的一維動態規劃題目，試著把一維空間優化為常量吧。
 
 ### [343. Integer Break](https://leetcode.com/problems/integer-break/)
 
-分割类型题，先尝试用动态规划求解，再思考是否有更简单的解法。
+分割類型題，先嘗試用動態規劃求解，再思考是否有更簡單的解法。
 
 ### [583. Delete Operation for Two Strings](https://leetcode.com/problems/delete-operation-for-two-strings/)
 
-最长公共子序列的变种题。
+最長公共子序列的變種題。
 
 ## 進階難度
 
 ### [646. Maximum Length of Pair Chain](https://leetcode.com/problems/maximum-length-of-pair-chain/)
 
-最长递增子序列的变种题，同样的，尝试用二分进行加速。
+最長遞增子序列的變種題，同樣的，嘗試用二分進行加速。
 
 ### [10. Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/)
 
-正则表达式匹配，非常考验耐心。需要根据正则表达式的不同情况，即字符、星号，点号等，分情况讨论。
+正則表達式匹配，非常考驗耐心。需要根據正則表達式的不同情況，即字符、星號，點號等，分情況討論。
 
 ### [376. Wiggle Subsequence](https://leetcode.com/problems/wiggle-subsequence/)
 
-最长摆动子序列，通项公式比较特殊，需要仔细思考。
+最長擺動子序列，通項公式比較特殊，需要仔細思考。
 
 ### [494. Target Sum](https://leetcode.com/problems/target-sum/)
 
-如果告诉你这道题是 0-1 背包，你是否会有一些思路？
+如果告訴你這道題是 0-1 背包，你是否會有一些思路？
 
 ### [714. Best Time to Buy and Sell Stock with Transaction Fee](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/)
 
-建立状态机，股票交易类问题就会迎刃而解。
+建立狀態機，股票交易類問題就會迎刃而解。

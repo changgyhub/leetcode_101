@@ -2,30 +2,31 @@
 sidebar_position: 33
 ---
 
-# 6.8 股票交易
+# 6.8 Stock Trading
 
-`股票交易`类问题通常可以用动态规划来解决。对于稍微复杂一些的股票交易类问题，比如需要冷却时间或者交易费用，则可以用通过动态规划实现的`状态机`来解决。
+`Stock trading` problems can often be solved using dynamic programming. For more complex stock trading scenarios, such as requiring cooldown periods or transaction fees, a `state machine` implemented with dynamic programming is a common approach.
 
 ## [121. Best Time to Buy and Sell Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/)
 
 ### Problem Description
 
-给定一段时间内每天某只股票的固定价格，已知你只可以买卖各一次，求最大的收益。
+Given the fixed prices of a stock over a period of days, where you can only buy and sell once, find the maximum profit.
 
 ### Input and Output Example
 
-输入一个一维整数数组，表示每天的股票价格；输出一个整数，表示最大的收益。
+The input is a one-dimensional array of integers representing daily stock prices, and the output is an integer representing the maximum profit.
 
 ```
 Input: [7,1,5,3,6,4]
 Output: 5
 ```
 
-在这个样例中，最大的利润为在第二天价格为 1 时买入，在第五天价格为 6 时卖出。
+In this example, the maximum profit is achieved by buying on day 2 (price = 1) and selling on day 5 (price = 6).
 
 ### Solution Explanation
 
-我们可以遍历一遍数组，在每一个位置 i 时，记录 i 位置之前所有价格中的最低价格，然后将当前的价格作为售出价格，查看当前收益是不是最大收益即可。注意本题中以及之后题目中的buy 和 sell 表示买卖操作时，用户账户的收益。因此买时为负，卖时为正。
+We can traverse the array once, maintaining a record of the lowest price encountered before each day `i`. For each price, calculate the profit as the difference between the current price and the minimum price seen so far. Update the maximum profit accordingly. Note that in this problem, as well as others, `buy` and `sell` represent account operations: buying decreases account value (negative), and selling increases it (positive).
+
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -61,23 +62,22 @@ def maxProfit(prices: List[int]) -> int:
 
 ### Problem Description
 
-给定一段时间内每天某只股票的固定价格，已知你只可以买卖各 $k$ 次，且每次只能拥有一支股票，求最大的收益。
+Given the fixed prices of a stock over a period of days, you can buy and sell at most $k$ times, holding at most one stock at a time. Find the maximum profit.
 
 ### Input and Output Example
 
-输入一个一维整数数组，表示每天的股票价格；以及一个整数，表示可以买卖的次数 $k$。输出一个整数，表示最大的收益。
+The input is a one-dimensional array of integers representing daily stock prices, and an integer $k$ representing the number of allowed transactions. The output is an integer representing the maximum profit.
 
 ```
 Input: [3,2,6,5,0,3], k = 2
 Output: 7
 ```
 
-在这个样例中，最大的利润为在第二天价格为 2 时买入，在第三天价格为 6 时卖出；再在第五天价格为 0 时买入，在第六天价格为 3 时卖出。
+In this example, the maximum profit is achieved by buying on day 2 (price = 2) and selling on day 3 (price = 6); then buying again on day 5 (price = 0) and selling on day 6 (price = 3).
 
 ### Solution Explanation
 
-类似地，我们可以建立两个动态规划数组 buy 和 sell，对于每天的股票价格，buy[j] 表示在第 j 次买入时的最大收益，sell[j] 表示在第 j 次卖出时的最大收益。
-
+Similarly, we can define two dynamic programming arrays, `buy` and `sell`. For each day, `buy[j]` represents the maximum profit after the $j$-th buy, and `sell[j]` represents the maximum profit after the $j$-th sell.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -118,28 +118,28 @@ def maxProfit(k: int, prices: List[int]) -> int:
 
 ### Problem Description
 
-给定一段时间内每天某只股票的固定价格，已知每次卖出之后必须冷却一天，且每次只能拥有一支股票，求最大的收益。
+Given the fixed prices of a stock over a period of days, you can only own one stock at a time, and after selling a stock, you must wait one day (cooldown) before buying again. Find the maximum profit.
 
 ### Input and Output Example
 
-输入一个一维整数数组，表示每天的股票价格；输出一个整数，表示最大的收益。
+The input is a one-dimensional array of integers representing daily stock prices. The output is an integer representing the maximum profit.
 
 ```
 Input: [1,2,3,0,2]
 Output: 3
 ```
 
-在这个样例中，最大的利润获取操作是买入、卖出、冷却、买入、卖出。
+In this example, the optimal sequence of operations is buy, sell, cooldown, buy, sell.
 
 ### Solution Explanation
 
-我们可以使用状态机来解决这类复杂的状态转移问题，通过建立多个状态以及它们的转移方式，我们可以很容易地推导出各个状态的转移方程。如图所示，我们可以建立四个状态来表示带有冷却的股票交易，以及它们的之间的转移方式。
+We can solve such complex state transition problems using a **state machine**. By defining multiple states and their transitions, we can derive the transition equations for each state. As illustrated, we can define four states to represent stock transactions with cooldowns, along with their transitions.
 
 <figure>
   <span style={{ display: 'block', width: '40%', margin: '0 auto' }}>
     ![](6.5.png)
   </span>
-  <figcaption style={{ textAlign: 'center' }}>图 6.5: 题目 309 - 状态机状态转移</figcaption>
+  <figcaption style={{ textAlign: 'center' }}>Figure 6.5: Problem 309 - State Machine Transitions</figcaption>
 </figure>
 
 <Tabs>

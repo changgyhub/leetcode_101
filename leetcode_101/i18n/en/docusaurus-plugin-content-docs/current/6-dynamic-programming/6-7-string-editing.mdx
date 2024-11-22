@@ -2,28 +2,34 @@
 sidebar_position: 32
 ---
 
-# 6.7 字符串编辑
+# 6.7 String Editing
 
 ## [72. Edit Distance](https://leetcode.com/problems/edit-distance/)
 
 ### Problem Description
 
-给定两个字符串，已知你可以删除、替换和插入任意字符串的任意字符，求最少编辑几步可以将两个字符串变成相同。
+Given two strings, you can delete, replace, or insert any character from either string. Find the minimum number of steps required to make the two strings identical.
 
 ### Input and Output Example
 
-输入是两个字符串，输出是一个整数，表示最少的步骤。
+Input consists of two strings, and the output is an integer representing the minimum number of steps.
 
 ```
 Input: word1 = "horse", word2 = "ros"
 Output: 3
 ```
 
-在这个样例中，一种最优编辑方法是 horse -> rorse -> rose -> ros。
+In this example, one optimal sequence of edits is horse -> rorse -> rose -> ros.
 
 ### Solution Explanation
 
-类似于题目 1143，我们使用一个二维数组 dp[i][j]，表示将第一个字符串到位置 i 为止，和第二个字符串到位置 j 为止，最多需要几步编辑。当第 i 位和第 j 位对应的字符相同时，dp[i][j] 等于 dp[i-1][j-1]；当二者对应的字符不同时，修改的消耗是 dp[i-1][j-1]+1，插入 i 位置/删除 j 位置的消耗是 dp[i][j-1] + 1，插入 j 位置/删除 i 位置的消耗是 dp[i-1][j] + 1。
+Similar to problem 1143, we use a two-dimensional array `dp[i][j]`, where `dp[i][j]` represents the minimum number of edits required to transform the first string up to position `i` and the second string up to position `j`.
+
+- If the characters at position `i` and `j` are the same, then `dp[i][j] = dp[i-1][j-1]`.
+- If the characters differ:
+  - The cost of modification is `dp[i-1][j-1] + 1`.
+  - The cost of inserting at position `i`/deleting at position `j` is `dp[i][j-1] + 1`.
+  - The cost of inserting at position `j`/deleting at position `i` is `dp[i-1][j] + 1`.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -75,22 +81,23 @@ def minDistance(word1: str, word2: str) -> int:
 
 ### Problem Description
 
-给定一个字母 A，已知你可以每次选择复制全部字符，或者粘贴之前复制的字符，求最少需要几次操作可以把字符串延展到指定长度。
+Given the letter `A`, you can either copy all characters or paste the previously copied characters. Find the minimum number of operations needed to extend the string to the specified length.
 
 ### Input and Output Example
 
-输入是一个正整数，代表指定长度；输出是一个整数，表示最少操作次数。
+The input is a positive integer representing the target length, and the output is an integer representing the minimum number of operations required.
 
 ```
 Input: 3
 Output: 3
 ```
 
-在这个样例中，一种最优的操作方法是先复制一次，再粘贴两次。
+In this example, one optimal sequence of operations is to copy once and paste twice.
 
 ### Solution Explanation
 
-不同于以往通过加减实现的动态规划，这里需要乘除法来计算位置，因为粘贴操作是倍数增加的。我们使用一个一维数组 dp，其中位置 i 表示延展到长度 i 的最少操作次数。对于每个位置 j，如果 j 可以被 i 整除，那么长度 i 就可以由长度 j 操作得到，其操作次数等价于把一个长度为 j 的 A 延展到长度为 i/j。因此我们可以得到递推公式 dp[i] = dp[j] + dp[i/j]。
+Unlike typical dynamic programming problems that use addition or subtraction, this problem requires multiplication and division for state transitions because the paste operation doubles the length. We use a one-dimensional array `dp`, where `dp[i]` represents the minimum number of operations needed to extend the string to length `i`. For each position `j`, if `j` divides `i`, then length `i` can be achieved by operating on length `j`. The number of operations needed is equivalent to extending length `j` to length `i / j`. Thus, the recursive formula is `dp[i] = dp[j] + dp[i / j]`.
+
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -103,7 +110,7 @@ int minSteps(int n) {
         for (int j = 2; j * j <= i; ++j) {
             if (i % j == 0) {
                 dp[i] = dp[j] + dp[i / j];
-                // 提前剪枝，因为j从小到大，因此操作数量一定最小。
+                // Early pruning since smaller j guarantees the minimal operations.
                 break;
             }
         }
@@ -122,7 +129,7 @@ def minSteps(n: int) -> int:
         for j in range(2, floor(sqrt(i)) + 1):
             if i % j == 0:
                 dp[i] = dp[j] + dp[i // j]
-                # 提前剪枝，因为j从小到大，因此操作数量一定最小。
+                # Early pruning since smaller j guarantees the minimal operations.
                 break
     return dp[n]
 ```

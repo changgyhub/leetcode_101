@@ -2,28 +2,29 @@
 sidebar_position: 29
 ---
 
-# 6.4 分割类型题
+# 6.4 Partition Type Problems
 
 ## [279. Perfect Squares](https://leetcode.com/problems/perfect-squares/)
 
 ### Problem Description
 
-给定一个正整数，求其最少可以由几个完全平方数相加构成。
+Given a positive integer, find the minimum number of perfect square numbers that sum up to the given number.
 
 ### Input and Output Example
 
-输入是给定的正整数，输出也是一个正整数，表示输入的数字最少可以由几个完全平方数相加构成。
+The input is a given positive integer, and the output is also a positive integer, representing the minimum number of perfect square numbers that sum up to the input number.
 
 ```
 Input: n = 13
 Output: 2
 ```
 
-在这个样例中，13 的最少构成方法为 4+9。
+In this example, the minimal representation of 13 is 4 + 9.
 
 ### Solution Explanation
 
-对于分割类型题，动态规划的状态转移方程通常并不依赖相邻的位置，而是依赖于满足分割条件的位置。我们定义一个一维矩阵 dp，其中 dp[i] 表示数字 i 最少可以由几个完全平方数相加构成。在本题中，位置 i 只依赖 $i - j^2$ 的位置，如 i - 1、i - 4、i - 9 等等，才能满足完全平方分割的条件。因此 dp[i] 可以取的最小值即为 1+ min(dp[i-1], dp[i-4], dp[i-9] · · · )。注意边界条件的处理。
+For partition-type problems, the dynamic programming state transition equation usually does not depend on adjacent positions but on positions that satisfy the partition condition. We define a 1D array `dp`, where `dp[i]` represents the minimum number of perfect square numbers that sum up to `i`. In this problem, position `i` only depends on positions like $i - j^2$, such as `i - 1`, `i - 4`, `i - 9`, and so on, to meet the perfect square partition condition. Therefore, `dp[i]` can take the minimum value as $1 + \min(dp[i-1], dp[i-4], dp[i-9] · · · )$. Note the handling of boundary conditions.
+
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -61,22 +62,22 @@ def numSquares(n: int) -> int:
 
 ### Problem Description
 
-已知字母 A-Z 可以表示成数字 1-26。给定一个数字串，求有多少种不同的字符串等价于这个数字串。
+Given that letters A-Z can be represented as numbers 1-26, find the number of ways a given numeric string can be decoded into valid strings.
 
 ### Input and Output Example
 
-输入是一个由数字组成的字符串，输出是满足条件的解码方式总数。
+The input is a numeric string, and the output is the total number of decoding ways that satisfy the conditions.
 
 ```
 Input: "226"
 Output: 3
 ```
 
-在这个样例中，有三种解码方式：BZ(2 26)、VF(22 6) 或 BBF(2 2 6)。
+In this example, there are three decoding ways: BZ(2 26), VF(22 6), or BBF(2 2 6).
 
 ### Solution Explanation
 
-这是一道很经典的动态规划题，难度不大但是十分考验耐心。这是因为只有 1-26 可以表示字母，因此对于一些特殊情况，比如数字 0 或者当相邻两数字大于 26 时，需要有不同的状态转移方程，详见如下代码。
+This is a classic dynamic programming problem. While not difficult, it requires careful handling of edge cases. Only numbers 1-26 can represent letters, so special conditions such as `0` or adjacent numbers greater than 26 require different state transition formulas, as shown in the code below.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -84,7 +85,7 @@ Output: 3
 ```cpp
 int numDecodings(string s) {
     int n = s.length();
-    int prev = s[0] - ’0’;
+    int prev = s[0] - '0';
     if (prev == 0) {
         return 0;
     }
@@ -93,22 +94,22 @@ int numDecodings(string s) {
     }
     vector<int> dp(n + 1, 1);
     for (int i = 2; i <= n; ++i) {
-        int cur = s[i - 1] - ’0’;
+        int cur = s[i - 1] - '0';
         if ((prev == 0 || prev > 2) && cur == 0) {
-            // 00, 30, 40, ..., 90, 非法。
+            // 00, 30, 40, ..., 90 are invalid combinations.
             return 0;
         }
         if ((prev < 2 && prev > 0) || (prev == 2 && cur <= 6)) {
             // 10, 11, ..., 25, 26.
             if (cur == 0) {
-                // 10, 20，只能连续解码两位。
+                // 10, 20 can only be decoded as two-digit numbers.
                 dp[i] = dp[i - 2];
             } else {
-                // 可以解码当前位，也可以连续解码两位。
+                // Can be decoded as a single-digit or two-digit number.
                 dp[i] = dp[i - 2] + dp[i - 1];
             }
         } else {
-            // 合法，但只能解码当前位。
+            // Valid, but can only be decoded as a single-digit number.
             dp[i] = dp[i - 1];
         }
         prev = cur;
@@ -132,18 +133,18 @@ def numDecodings(s: str) -> int:
     for i in range(2, n + 1):
         cur = ord(s[i - 1]) - ord("0")
         if (prev == 0 or prev > 2) and cur == 0:
-            # 00, 30, 40, ..., 90, 非法。
+            # 00, 30, 40, ..., 90 are invalid combinations.
             return 0
         if 0 < prev < 2 or (prev == 2 and cur <= 6):
             # 10, 11, ..., 25, 26.
             if cur == 0:
-                # 10, 20，只能连续解码两位。
+                # 10, 20 can only be decoded as two-digit numbers.
                 dp[i] = dp[i - 2]
             else:
-                # 可以解码当前位，也可以连续解码两位。
+                # Can be decoded as a single-digit or two-digit number.
                 dp[i] = dp[i - 2] + dp[i - 1]
         else:
-            # 合法，但只能解码当前位。
+            # Valid, but can only be decoded as a single-digit number.
             dp[i] = dp[i - 1]
         prev = cur
     return dp[n]
@@ -157,7 +158,7 @@ def numDecodings(s: str) -> int:
 
 ### Problem Description
 
-给定一个字符串和一个字符串集合，求是否存在一种分割方式，使得原字符串分割后的子字符串都可以在集合内找到。
+Given a string and a set of strings, determine if there is a way to split the string such that every substring after splitting can be found in the set.
 
 ### Input and Output Example
 
@@ -166,11 +167,11 @@ Input: s = "applepenapple", wordDict = ["apple", "pen"]
 Output: true
 ```
 
-在这个样例中，字符串可以被分割为 [“apple”,“pen”,“apple”]。
+In this example, the string can be split into [“apple”,“pen”,“apple”].
 
 ### Solution Explanation
 
-类似于完全平方数分割问题，这道题的分割条件由集合内的字符串决定，因此在考虑每个分割位置时，需要遍历字符串集合，以确定当前位置是否可以成功分割。注意对于位置 0，需要初始化值为真。
+Similar to the problem of splitting into perfect squares, the splitting condition in this problem is determined by the strings in the set. When considering each splitting position, we need to iterate through the set of strings to check if the current position can be successfully split. Note that for position 0, the value needs to be initialized to true.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -186,8 +187,8 @@ bool wordBreak(string s, vector<string>& wordDict) {
             if (i >= m && s.substr(i - m, m) == word) {
                 dp[i] = dp[i - m];
             }
-            // 提前剪枝，略微加速运算。
-            // 如果不剪枝，上一行代码需要变更为 dp[i] = dp[i] || dp[i - m];
+            // Early pruning to slightly speed up.
+            // Without pruning, the above line should be dp[i] = dp[i] || dp[i - m];
             if (dp[i]) {
                 break;
             }
@@ -209,8 +210,8 @@ def wordBreak(s: str, wordDict: List[str]) -> bool:
             m = len(word)
             if i >= m and s[i - m : i] == word:
                 dp[i] = dp[i - m]
-            # 提前剪枝，略微加速运算。
-            # 如果不剪枝，上一行代码需要变更为 dp[i] = dp[i] or dp[i-m]
+            # Early pruning to slightly speed up.
+            # Without pruning, the above line should be dp[i] = dp[i] or dp[i-m]
             if dp[i]:
                 break
     return dp[n]
@@ -224,7 +225,7 @@ def wordBreak(s: str, wordDict: List[str]) -> bool:
 
 ### Problem Description
 
-给定一个数组，每个元素代表一本书的厚度和高度。问对于一个固定宽度的书架，如果按照数组中书的顺序从左到右、从上到下摆放，最小总高度是多少。
+Given an array, where each element represents the width and height of a book, determine the minimum total height of a bookshelf with fixed width, where books are placed in the given order from left to right and top to bottom.
 
 ### Input and Output Example
 
@@ -239,12 +240,12 @@ Output: 6
   <span style={{ display: 'block', width: '25%', margin: '0 auto' }}>
     ![](https://assets.leetcode.com/uploads/2019/06/24/shelves.png)
   </span>
-  <figcaption style={{ textAlign: 'center' }}>图 6.2: 书架摆放问题 - 样例图解</figcaption>
+  <figcaption style={{ textAlign: 'center' }}>Figure 6.2: Bookcase Arrangement Problem - Example Illustration</figcaption>
 </figure>
 
 ### Solution Explanation
 
-令 dp[i] 表示放置第 i 本书时的最小总高度，则 dp[i] 可以是在第 i-1 本书下面重新放一排，也可以是在满足不超过前一排宽度的情况下放在前一排。
+Let dp[i] represent the minimum total height when placing the i-th book. dp[i] can either represent placing the i-th book on a new row or on the previous row, provided the row width constraint is satisfied.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -297,7 +298,8 @@ def minHeightShelves(books: List[List[int]], shelfWidth: int) -> int:
 
 ### Problem Description
 
-给定一个不重复数字的数组和一个目标数，求加起来是目标数的所有排列的总数量。（虽然这道题叫做 Combination Sum，但是不同顺序的组合会被当作不同答案，因此本质上是排列。）
+Given an array of unique numbers and a target number, find the total number of permutations that sum up to the target. (Although the problem is named "Combination Sum," different orderings of the same combination are considered distinct, so this is essentially a permutation problem.)
+
 
 ### Input and Output Example
 
@@ -306,12 +308,13 @@ Input: nums = [1,2,3], target = 4
 Output: 7
 ```
 
-七种不同的排列为 (1, 1, 1, 1)、(1, 1, 2)、(1, 2, 1)、(1, 3)、(2, 1, 1)、(2, 2) 和 (3, 1)。
+The seven different permutations are (1, 1, 1, 1), (1, 1, 2), (1, 2, 1), (1, 3), (2, 1, 1), (2, 2), and (3, 1).
 
 
 ### Solution Explanation
 
-令 dp[i] 表示加起来和为 i 时，满足条件的排列数量。在内循环中我们可以直接对所有合法数字进行拿取。这里注意，在 C++ 题解中，因为求和时很容易超过 int 上界，我们这里用 double 存储 dp 数组。
+Let dp[i] represent the number of permutations that sum up to i. In the inner loop, we directly consider all valid numbers from the array. Note that in the C++ solution, since summing can easily exceed the `int` limit, we use `double` to store the dp array.
+
 
 <Tabs>
 <TabItem value="cpp" label="C++">

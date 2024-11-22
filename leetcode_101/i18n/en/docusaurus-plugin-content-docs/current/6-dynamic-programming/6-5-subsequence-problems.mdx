@@ -2,36 +2,36 @@
 sidebar_position: 30
 ---
 
-# 6.5 子序列问题
+# 6.5 Subsequence Problem
 
 ## [300. Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/)
 
 ### Problem Description
 
-给定一个未排序的整数数组，求最长的递增子序列。
+Given an unsorted array of integers, find the length of the longest increasing subsequence.
 
 :::warning
 
-按照 LeetCode 的习惯，子序列（subsequence）不必连续，子数组（subarray）或子字符串（substring）必须连续。
+According to LeetCode conventions, a subsequence does not need to be contiguous, while a subarray or substring must be contiguous.
 
 :::
 
 ### Input and Output Example
 
-输入是一个一维数组，输出是一个正整数，表示最长递增子序列的长度。
+Input is a 1D array, and output is a positive integer representing the length of the longest increasing subsequence.
 
 ```
 Input: [10,9,2,5,3,7,101,4]
 Output: 4
 ```
 
-在这个样例中，最长递增子序列之一是 [2,3,7,101]。
+In this example, one of the longest increasing subsequences is [2,3,7,101].
 
 ### Solution Explanation
 
-对于子序列问题，第一种动态规划方法是，定义一个 dp 数组，其中 dp[i] 表示以 i 结尾的子序列的性质。在处理好每个位置后，统计一遍各个位置的结果即可得到题目要求的结果。
+For subsequence problems, a common dynamic programming approach is to define a dp array where dp[i] represents the property of a subsequence ending at index i. After processing each position, summing up the results of all positions will yield the required result.
 
-在本题中，dp[i] 可以表示以 i 结尾的、最长子序列长度。对于每一个位置 i，如果其之前的某个位置 j 所对应的数字小于位置 i 所对应的数字，则我们可以获得一个以 i 结尾的、长度为 dp[j] + 1 的子序列。为了遍历所有情况，我们需要 i 和 j 进行两层循环，其时间复杂度为 $O(n^2)$。
+In this problem, dp[i] represents the length of the longest subsequence ending at index i. For each position i, if a previous position j has a smaller value than nums[i], we can form a subsequence of length dp[j] + 1 ending at i. To check all possibilities, we use a nested loop with i and j, resulting in a time complexity of $O(n^2)$.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -70,9 +70,10 @@ def lengthOfLIS(nums: List[int]) -> int:
 
 </Tabs>
 
-本题还可以使用二分查找将时间复杂度降低为 $O(n \log n)$。我们定义一个 dp 数组，其中 dp[k] 存储长度为 k+1 的最长递增子序列的最后一个数字。我们遍历每一个位置 i，如果其对应的数字大于 dp 数组中所有数字的值，那么我们把它放在 dp 数组尾部，表示最长递增子序列长度加 1；如果我们发现这个数字在 dp 数组中比数字 a 大、比数字 b 小，则我们将 b 更新为此数字，使得之后构成递增序列的可能性增大。以这种方式维护的 dp 数组永远是递增的，因此可以用二分查找加速搜索。
+This problem can also be solved using binary search to reduce the time complexity to $O(n \log n)$. We define a `dp` array where `dp[k]` stores the last number of the longest increasing subsequence of length `k+1`. As we iterate through each position `i`, if the number is larger than all numbers in the `dp` array, we append it to the end of `dp`, indicating that the length of the longest increasing subsequence has increased by 1. If the number lies between two numbers `a` and `b` in the `dp` array, we replace `b` with this number to increase the possibility of forming a longer increasing subsequence. Using this method, the `dp` array is always maintained in increasing order, allowing us to use binary search to speed up the process.
 
-以样例为例，对于数组 [10,9,2,5,3,7,101,4]，我们每轮的更新查找情况为：
+
+For example, for the array [10,9,2,5,3,7,101,4], the updates in each round are as follows:
 
 ```
 num    dp
@@ -86,9 +87,9 @@ num    dp
 4      [2,3,4,101]
 ```
 
-最终我们知道最长递增子序列的长度是 4。注意 dp 数组最终的形式并不一定是合法的排列形式，如 [2,3,4,101] 并不是子序列；但之前覆盖掉的 [2,3,7,101] 是最优解之一。
+Finally, we determine that the length of the longest increasing subsequence is 4. Note that the final form of the `dp` array does not necessarily represent a valid subsequence, e.g., [2,3,4,101] is not a subsequence, but the previously updated [2,3,7,101] is one of the optimal solutions.
 
-类似的，对于其他题目，如果状态转移方程的结果递增或递减，且需要进行插入或查找操作，我们也可以使用二分法进行加速。
+Similarly, for other problems, if the results of the state transition equation are increasing or decreasing and require insertion or search operations, we can also use binary search to speed up the solution.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -129,24 +130,24 @@ def lengthOfLIS(nums: List[int]) -> int:
 
 ### Problem Description
 
-给定两个字符串，求它们最长的公共子序列长度。
+Given two strings, find the length of their longest common subsequence.
 
 ### Input and Output Example
 
-输入是两个字符串，输出是一个整数，表示它们满足题目条件的长度。
+Input consists of two strings, and the output is an integer representing the length of their longest common subsequence.
 
 ```
 Input: text1 = "abcde", text2 = "ace"
 Output: 3
 ```
 
-在这个样例中，最长公共子序列是“ace”。
+In this example, the longest common subsequence is "ace."
 
 ### Solution Explanation
 
-对于子序列问题，第二种动态规划方法是，定义一个 dp 数组，其中 dp[i] 表示到位置 i 为止的子序列的性质，并不必须以 i 结尾。这样 dp 数组的最后一位结果即为题目所求，不需要再对每个位置进行统计。
+For subsequence problems, the second dynamic programming approach defines a dp array where dp[i] represents the property of the subsequence up to position i, without requiring it to end at i. The final result is the last value of the dp array, eliminating the need to compute each position.
 
-在本题中，我们可以建立一个二维数组 dp，其中 dp[i][j] 表示到第一个字符串位置 i 为止、到第二个字符串位置 j 为止、最长的公共子序列长度。这样一来我们就可以很方便地分情况讨论这两个位置对应的字母相同与不同的情况了。
+In this problem, we use a 2D array dp, where dp[i][j] represents the length of the longest common subsequence up to position i in the first string and position j in the second string. This makes it straightforward to handle the cases where the letters at these positions are the same or different.
 
 <Tabs>
 <TabItem value="cpp" label="C++">

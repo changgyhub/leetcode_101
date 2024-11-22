@@ -2,7 +2,7 @@
 sidebar_position: 5
 ---
 
-# 2.1 算法解释
+# 2.1 Algorithm Explanation
 
 The two-pointer technique is primarily used for traversing arrays, where two pointers point to different elements to collaborate on a task. It can also be extended to multiple pointers across multiple arrays.
 

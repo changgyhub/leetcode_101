@@ -78,6 +78,17 @@ def findContentChildren(children: List[int], cookies: List[int]) -> int:
 
 </Tabs>
 
+### 複雜度分析
+
+- **時間複雜度**：排序的時間為 $O(n \log n)$，雙指針遍歷的時間為 $O(n)$，因此總時間複雜度為：
+  $$
+  O(n_{\text{children}} \log n_{\text{children}} + n_{\text{cookies}} \log n_{\text{cookies}})
+  $$
+- **空間複雜度**：排序需要額外的 $O(n)$ 空間，總空間複雜度為：
+  $$
+  O(n_{\text{children}} + n_{\text{cookies}})
+  $$
+
 ## [135. Candy](https://leetcode.com/problems/candy/)
 
 ### 題目描述
@@ -141,3 +152,12 @@ def candy(ratings_list: List[int]) -> int:
 </TabItem>
 
 </Tabs>
+
+### 複雜度分析
+
+- 時間複雜度
+    - 從左到右遍歷和從右到左遍歷各需花費 $O(n)$ 的時間。
+    - 總時間複雜度為 $O(n)$。
+
+- 空間複雜度
+    - 使用一個額外的陣列 `candies` 來儲存每個小孩的糖果數量，因此空間複雜度為 $O(n)$。

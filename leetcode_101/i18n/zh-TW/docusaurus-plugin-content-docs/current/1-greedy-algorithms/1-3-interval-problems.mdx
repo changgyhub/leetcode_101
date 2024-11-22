@@ -73,3 +73,15 @@ def eraseOverlapIntervals(intervals: List[List[int]]) -> int:
 </TabItem>
 
 </Tabs>
+
+### 複雜度分析
+
+- **時間複雜度**
+    - 將區間依照結束時間進行排序需花費 $O(n \log n)$ 的時間。
+    - 遍歷排序後的區間需花費 $O(n)$ 的時間。
+    - 總時間複雜度為 $O(n \log n)$。
+
+- **空間複雜度**
+    - 排序操作可能需要 $O(n)$ 的額外空間（基於 Timsort 實現）。
+    - 其他變數（如 `removed` 和 `prev_end`）僅需 $O(1)$ 空間。
+    - 總空間複雜度為 $O(n)$。
