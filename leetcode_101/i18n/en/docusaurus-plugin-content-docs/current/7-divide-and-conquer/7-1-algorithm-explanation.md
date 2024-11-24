@@ -2,21 +2,21 @@
 sidebar_position: 35
 ---
 
-# 7.1 算法解释
+# 7.1 Algorithm Explanation
 
-顾名思义，`分治问题`由“分”（divide）和“治”（conquer）两部分组成，通过把原问题分为子问题，再将子问题进行处理合并，从而实现对原问题的求解。我们在排序章节展示的归并排序就是典型的分治问题，其中“分”即为把大数组平均分成两个小数组，通过递归实现，最终我们会得到多个长度为 1 的子数组;“治”即为把已经排好序的两个小数组合成为一个排好序的大数组从长度为 1 的子数组开始，最终合成一个大数组。
+As the name suggests, `divide and conquer` problems consist of two parts: "divide" and "conquer." By breaking the original problem into subproblems and then solving and merging these subproblems, we can solve the original problem. Merge sort, introduced in the sorting chapter, is a classic example of divide and conquer. In merge sort, the "divide" step splits the array into two smaller arrays using recursion until we get multiple arrays of length 1. The "conquer" step merges two sorted arrays into a single sorted array, starting from arrays of length 1 and eventually forming the final array.
 
-我们也使用数学表达式来表示这个过程。定义 $T(n)$ 表示处理一个长度为 $n$ 的数组的时间复杂度，则归并排序的时间复杂度递推公式为 $T(n) =2T(n/2) +O(n)$。其中 $2T(n/2)$ 表示我们分成了两个长度减半的子问题，$O(n)$ 则为合并两个长度为 $n/2$ 数组的时间复杂度。
+We can also use a mathematical expression to describe this process. Let $T(n)$ represent the time complexity of processing an array of length $n$. The recurrence relation for merge sort is $T(n) = 2T(n/2) + O(n)$. Here, $2T(n/2)$ represents splitting the array into two halves, and $O(n)$ represents the time complexity of merging two arrays of length $n/2$.
 
-:::info 定理 7.1. 主定理
+:::info Theorem 7.1. Master Theorem
 
-考虑 $T(n) =aT(n/b) + f (n)$，定义 $k =\log_{b} a$
-1. 如果 $f (n) =O(n^p)$ 且 $p < k$，那么 $T(n) =O(n^K)$
-2. 如果存在 $c ≥ 0$ 满足 $f (n) =O(n^k \log^c n)$，那么 $T(n) = O(n^k \log^{c+1} n)$
-3. 如果 $f (n) =O(n^p)$ 且 $p > k$，那么 $T(n) =O( f (n))$
+For $T(n) = aT(n/b) + f(n)$, define $k = \log_{b} a$:  
+1. If $f(n) = O(n^p)$ and $p < k$, then $T(n) = O(n^k)$  
+2. If there exists $c \geq 0$ such that $f(n) = O(n^k \log^c n)$, then $T(n) = O(n^k \log^{c+1} n)$  
+3. If $f(n) = O(n^p)$ and $p > k$, then $T(n) = O(f(n))$  
 
 :::
 
-通过主定理我们可以知道，归并排序属于第二种情况，且时间复杂度为 $O(n \log n)$。其他的分治问题也可以通过主定理求得时间复杂度。
+Using the master theorem, we can deduce that merge sort falls into the second category with a time complexity of $O(n \log n)$. Other divide-and-conquer problems can also use the master theorem to determine their time complexities.
 
-另外，自上而下的分治可以和 memoization 结合，避免重复遍历相同的子问题。如果方便推导，也可以换用自下而上的动态规划方法求解。
+Additionally, top-down divide-and-conquer can be combined with memoization to avoid redundant traversal of identical subproblems. Alternatively, if it's convenient for derivation, a bottom-up dynamic programming approach can be used instead.

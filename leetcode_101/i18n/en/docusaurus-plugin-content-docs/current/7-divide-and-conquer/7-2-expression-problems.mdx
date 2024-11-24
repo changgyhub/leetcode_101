@@ -2,28 +2,28 @@
 sidebar_position: 36
 ---
 
-# 7.2 表达式问题
+# 7.2 Expression Problems
 
 ## [241. Diﬀerent Ways to Add Parentheses](https://leetcode.com/problems/different-ways-to-add-parentheses/)
 
 ### Problem Description
 
-给定一个只包含加、减和乘法的数学表达式，求通过加括号可以得到多少种不同的结果。
+Given a mathematical expression containing addition, subtraction, and multiplication, find all possible results by adding parentheses in different ways.
 
 ### Input and Output Example
 
-输入是一个字符串，表示数学表达式；输出是一个数组，存储所有不同的加括号结果。
+The input is a string representing a mathematical expression, and the output is an array containing all unique results.
 
 ```
 Input: "2-1-1"
 Output: [0, 2]
 ```
 
-在这个样例中，有两种加括号结果：((2-1)-1) = 0 和 (2-(1-1)) = 2。
+In this example, there are two ways to add parentheses: ((2-1)-1) = 0 and (2-(1-1)) = 2.
 
 ### Solution Explanation
 
-利用分治思想，我们可以把加括号转化为，对于每个运算符号，先执行处理两侧的数学表达式，再处理此运算符号。注意边界情况，即字符串内无运算符号，只有数字。
+Using the divide-and-conquer approach, we can break down the problem by considering each operator, first solving the sub-expressions on both sides of the operator, and then combining the results using the operator. Special attention is needed for the base case where the input string contains no operators, only a single number.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -76,14 +76,15 @@ def diffWaysToCompute(expression: str) -> List[int]:
 
 </Tabs>
 
-我们发现，某些被 divide 的子字符串可能重复出现多次，因此我们可以用 memoization 来去重。比如建立一个哈希表，key 是 (l, r)，value 是 ways。每次遇到相同的 (l, r)，我们可以直接返回已经计算过的 ways。或者与其我们从上到下用分治处理 +memoization，不如直接从下到上用动态规划处理。
+We observe that some substrings produced by the `divide` step may appear multiple times. To avoid redundant calculations, we can use `memoization`. For instance, we can create a hash table where the `key` is `(l, r)` and the `value` is `ways`. Whenever the same `(l, r)` appears again, we can directly return the previously computed `ways`. Alternatively, instead of using a top-down divide-and-conquer approach with `memoization`, we could adopt a bottom-up dynamic programming approach.
+
 
 <Tabs>
 <TabItem value="cpp" label="C++">
 
 ```cpp
 vector<int> diffWaysToCompute(string expression) {
-    // 利用istringstream, 将数字和操作符进行分词。
+    // Use istringstream to split numbers and operators.
     vector<int> nums;
     vector<char> ops;
     int num = 0;
@@ -125,7 +126,7 @@ vector<int> diffWaysToCompute(string expression) {
 
 ```py
 def diffWaysToCompute(expression: str) -> List[int]:
-    # re.split可以将操作符（\D）和数字直接分开。
+    # re.split can directly separate operators (\D) and numbers.
     sections = re.split(r"(\D)", expression)
     nums = [int(num) for num in sections if num.isdigit()]
     ops = [op for op in sections if not op.isdigit()]

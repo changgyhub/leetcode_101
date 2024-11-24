@@ -2,28 +2,28 @@
 sidebar_position: 36
 ---
 
-# 7.2 表达式问题
+# 7.2 表達式問題
 
 ## [241. Diﬀerent Ways to Add Parentheses](https://leetcode.com/problems/different-ways-to-add-parentheses/)
 
 ### 題目描述
 
-给定一个只包含加、减和乘法的数学表达式，求通过加括号可以得到多少种不同的结果。
+給定一個只包含加、減和乘法的數學表達式，求通過加括號可以得到多少種不同的結果。
 
 ### 輸入輸出範例
 
-输入是一个字符串，表示数学表达式；输出是一个数组，存储所有不同的加括号结果。
+輸入是一個字符串，表示數學表達式；輸出是一個數組，儲存所有不同的加括號結果。
 
 ```
 Input: "2-1-1"
 Output: [0, 2]
 ```
 
-在这个样例中，有两种加括号结果：((2-1)-1) = 0 和 (2-(1-1)) = 2。
+在這個範例中，有兩種加括號結果：((2-1)-1) = 0 和 (2-(1-1)) = 2。
 
 ### 題解
 
-利用分治思想，我们可以把加括号转化为，对于每个运算符号，先执行处理两侧的数学表达式，再处理此运算符号。注意边界情况，即字符串内无运算符号，只有数字。
+利用分治思想，我們可以把加括號轉化為，對於每個運算符號，先執行處理兩側的數學表達式，再處理此運算符號。注意邊界情況，即字符串內無運算符號，只有數字。
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -76,14 +76,14 @@ def diffWaysToCompute(expression: str) -> List[int]:
 
 </Tabs>
 
-我们发现，某些被 divide 的子字符串可能重复出现多次，因此我们可以用 memoization 来去重。比如建立一个哈希表，key 是 (l, r)，value 是 ways。每次遇到相同的 (l, r)，我们可以直接返回已经计算过的 ways。或者与其我们从上到下用分治处理 +memoization，不如直接从下到上用动态规划处理。
+我們發現，某些被 `divide` 的子字串可能重複出現多次，因此我們可以利用 `memoization` 來避免重複計算。例如，我們可以建立一個哈希表，`key` 是 `(l, r)`，`value` 是 `ways`。當再次遇到相同的 `(l, r)` 時，我們可以直接返回已經計算過的 `ways`。或者，與其我們從上到下用分治法結合 `memoization`，不如直接從下到上使用動態規劃處理。
 
 <Tabs>
 <TabItem value="cpp" label="C++">
 
 ```cpp
 vector<int> diffWaysToCompute(string expression) {
-    // 利用istringstream, 将数字和操作符进行分词。
+    // 利用 istringstream，將數字和運算符進行分詞。
     vector<int> nums;
     vector<char> ops;
     int num = 0;
@@ -125,7 +125,7 @@ vector<int> diffWaysToCompute(string expression) {
 
 ```py
 def diffWaysToCompute(expression: str) -> List[int]:
-    # re.split可以将操作符（\D）和数字直接分开。
+    # re.split 可以直接將運算符（\D）和數字分開。
     sections = re.split(r"(\D)", expression)
     nums = [int(num) for num in sections if num.isdigit()]
     ops = [op for op in sections if not op.isdigit()]

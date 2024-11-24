@@ -8,10 +8,10 @@ sidebar_position: 37
 
 ### [932. Beautiful Array](https://leetcode.com/problems/beautiful-array/)
 
-试着用从上到下的分治（递归）写法求解，最好加上 memoization；再用从下到上的动态规划写法求解。
+Try solving this using a top-down divide-and-conquer (recursive) approach with `memoization` for optimization; then attempt a bottom-up dynamic programming approach.
 
 ## Advanced Difficulty
 
 ### [312. Burst Balloons](https://leetcode.com/problems/burst-balloons/)
 
-试着用从上到下的分治（递归）写法求解，最好加上 memoization；再用从下到上的动态规划写法求解。
+Try solving this using a top-down divide-and-conquer (recursive) approach with `memoization` for optimization; then attempt a bottom-up dynamic programming approach.
