@@ -4,4 +4,4 @@ sidebar_position: 38
 
 # 8.1 引言
 
-对于 LeetCode 上数量不少的数学题，我们尽量将其按照类型划分讲解。然而很多数学题的解法并不通用，我们也很难一口气把所有的套路讲清楚，因此我们只选择了几道经典或是典型的题目，供大家参考。
+For the numerous math problems on LeetCode, we strive to categorize and explain them by type. However, many math problems have solutions that are not universally applicable, making it challenging to summarize all problem-solving techniques in one go. Therefore, we have selected a few classic or representative problems for your reference.

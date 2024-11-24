@@ -2,31 +2,32 @@
 sidebar_position: 40
 ---
 
-# 8.3 质数
+# 8.3 Prime Numbers
 
-质数又称素数，指的是指在大于 1 的自然数中，除了 1 和它本身以外不再有其他因数的自然数。值得注意的是，每一个数都可以分解成质数的乘积。
+Prime numbers are integers greater than 1 that have no divisors other than 1 and themselves. It is important to note that every number can be expressed as a product of prime numbers.
 
 
 ## [204. Count Primes](https://leetcode.com/problems/count-primes/)
 
 ### Problem Description
 
-给定一个数字 n，求小于 n 的质数的个数。
+Given a number \( n \), find the count of prime numbers less than \( n \).
 
 ### Input and Output Example
 
-输入一个整数，输出也是一个整数，表示小于输入数的质数的个数。
+Input an integer and output another integer representing the count of prime numbers less than the input number.
 
 ```
 Input: 10
 Output: 4
 ```
 
-在这个样例中，小于 10 的质数只有 [2,3,5,7]。
+In this example, the prime numbers less than 10 are [2, 3, 5, 7].
 
 ### Solution Explanation
 
-`埃拉托斯特尼筛法`（Sieve of Eratosthenes，简称埃氏筛法）是非常常用的，判断一个整数是否是质数的方法。并且它可以在判断一个整数 n 时，同时判断所小于 n 的整数，因此非常适合这道题。其原理也十分易懂：从 1 到 n 遍历，假设当前遍历到 m，则把所有小于 n 的、且是 m 的倍数的整数标为和数；遍历完成后，没有被标为和数的数字即为质数。
+The `Sieve of Eratosthenes` is a widely used algorithm for determining whether an integer is a prime number. It is particularly efficient for determining all prime numbers less than a given integer $n$. The principle is simple: iterate through numbers from $1$ to $n$, and for the current number $m$, mark all multiples of $m$ (less than $n$) as composite numbers. After processing, the numbers not marked as composite are prime.
+
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -37,7 +38,7 @@ int countPrimes(int n) {
         return 0;
     }
     vector<bool> primes(n, true);
-    int count = n - 2;  // 去掉不是质数的1
+    int count = n - 2;  // Remove the non-prime number 1
     for (int i = 2; i < n; ++i) {
         if (primes[i]) {
             for (int j = 2 * i; j < n; j += i) {
@@ -60,7 +61,7 @@ def countPrimes(n: int) -> int:
     if n <= 2:
         return 0
     primes = [True for _ in range(n)]
-    count = n - 2 # 去掉不是质数的1
+    count = n - 2 # Remove the non-prime number 1
     for i in range(2, n):
         if primes[i]:
             for j in range(2 * i, n, i):
@@ -74,8 +75,7 @@ def countPrimes(n: int) -> int:
 
 </Tabs>
 
-利用质数的一些性质，我们可以进一步优化该算法。
-
+By leveraging certain properties of prime numbers, we can further optimize this algorithm.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -87,11 +87,11 @@ int countPrimes(int n) {
     }
     vector<bool> primes(n, true);
     int sqrtn = sqrt(n);
-    int count = n / 2;  // 偶数一定不是质数
+    int count = n / 2;  // Even numbers are not prime
     int i = 3;
-    // 最小质因子一定小于等于开方数。
+    // The smallest prime factor is always less than or equal to the square root.
     while (i <= sqrtn) {
-        // 向右找倍数，注意避免偶数和重复遍历。
+        // Find multiples to the right, avoiding even numbers and redundant checks.
         for (int j = i * i; j < n; j += 2 * i) {
             if (primes[j]) {
                 --count;
@@ -99,7 +99,7 @@ int countPrimes(int n) {
             }
         }
         i += 2;
-        // 向右前进查找位置，注意避免偶数和重复遍历。
+        // Move to the next position to the right, avoiding even numbers and redundant checks.
         while (i <= sqrtn && !primes[i]) {
             i += 2;
         }
@@ -117,17 +117,17 @@ def countPrimes(n: int) -> int:
         return 0
     primes = [True for _ in range(n)]
     sqrtn = sqrt(n)
-    count = n // 2 # 偶数一定不是质数
+    count = n // 2  # Even numbers are not prime
     i = 3
-    # 最小质因子一定小于等于开方数。
+    # The smallest prime factor is always less than or equal to the square root.
     while i <= sqrtn:
-        # 向右找倍数，注意避免偶数和重复遍历。
+        # Find multiples to the right, avoiding even numbers and redundant checks.
         for j in range(i * i, n, 2 * i):
             if primes[j]:
                 count -= 1
                 primes[j] = False
         i += 2
-        # 向右前进查找位置，注意避免偶数和重复遍历。
+        # Move to the next position to the right, avoiding even numbers and redundant checks.
         while i <= sqrtn and not primes[i]:
             i += 2
     return count

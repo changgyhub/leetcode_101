@@ -2,10 +2,9 @@
 sidebar_position: 39
 ---
 
-# 8.2 公倍数与公因数
+# 8.2 公倍數與公因數
 
-利用`辗转相除法`，我们可以很方便地求得两个数的最大公因数（greatest common divisor，GCD）；将两个数相乘再除以最大公因数即可得到最小公倍数（least common multiple, LCM）。
-
+利用`輾轉相除法`，我們可以很方便地求得兩個數的最大公因數（greatest common divisor，GCD）；將兩個數相乘再除以最大公因數即可得到最小公倍數（least common multiple, LCM）。
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -35,7 +34,7 @@ def lcm(a: int, b: int) -> int:
 
 </Tabs>
 
-进一步地，我们也可以通过扩展欧几里得算法（extended gcd）在求得 a 和 b 最大公因数的同时，也得到它们的系数 x 和 y，从而使 ax + by = gcd(a, b)。因为 Python 中 int 只能按值传递，我们可以用一个长度固定为 1 的 list() 来进行传递引用的操作。
+進一步地，我們也可以通過擴展歐幾里得算法（extended gcd）在求得 a 和 b 最大公因數的同時，也得到它們的係數 x 和 y，從而使 ax + by = gcd(a, b)。因為 Python 中 int 只能按值傳遞，我們可以用一個長度固定為 1 的 list() 來進行傳遞引用的操作。
 
 <Tabs>
 <TabItem value="cpp" label="C++">

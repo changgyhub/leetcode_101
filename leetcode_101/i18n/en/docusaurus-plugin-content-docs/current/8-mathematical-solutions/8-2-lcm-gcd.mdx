@@ -2,9 +2,9 @@
 sidebar_position: 39
 ---
 
-# 8.2 公倍数与公因数
+# 8.2 Least Common Multiple and Greatest Common Divisor
 
-利用`辗转相除法`，我们可以很方便地求得两个数的最大公因数（greatest common divisor，GCD）；将两个数相乘再除以最大公因数即可得到最小公倍数（least common multiple, LCM）。
+Using the `Euclidean algorithm`, we can efficiently calculate the greatest common divisor (GCD) of two numbers. Multiplying the two numbers and dividing the product by their GCD gives the least common multiple (LCM).
 
 
 <Tabs>
@@ -35,7 +35,7 @@ def lcm(a: int, b: int) -> int:
 
 </Tabs>
 
-进一步地，我们也可以通过扩展欧几里得算法（extended gcd）在求得 a 和 b 最大公因数的同时，也得到它们的系数 x 和 y，从而使 ax + by = gcd(a, b)。因为 Python 中 int 只能按值传递，我们可以用一个长度固定为 1 的 list() 来进行传递引用的操作。
+Furthermore, using the extended Euclidean algorithm (extended GCD), we can calculate not only the GCD of a and b but also their coefficients x and y such that ax + by = gcd(a, b). In Python, since int is passed by value, we can use a fixed-length list() to achieve reference passing.
 
 <Tabs>
 <TabItem value="cpp" label="C++">

@@ -2,28 +2,28 @@
 sidebar_position: 41
 ---
 
-# 8.4 数字处理
+# 8.4 Numerical Processing
 
 ## [504. Base 7](https://leetcode.com/problems/base-7/)
 
 ### Problem Description
 
-给定一个十进制整数，求它在七进制下的表示。
+Given a decimal integer, convert it to its base-7 representation.
 
 ### Input and Output Example
 
-输入一个整数，输出一个字符串，表示其七进制。
+Input a decimal integer and output a string representing its base-7 format.
 
 ```
 Input: 100
 Output: "202"
 ```
 
-在这个样例中，100 的七进制表示法来源于 101 = 2 * 49 + 0 * 7 + 2 * 1。
+In this example, 100 in base-7 comes from 100 = 2 * 49 + 0 * 7 + 2 * 1.
 
 ### Solution Explanation
 
-`进制转换`类型的题，通常是利用除法和取模（mod）来进行计算，同时也要注意一些细节，如负数和零。如果输出是数字类型而非字符串，则也需要考虑是否会超出整数上下界。
+For `base conversion` problems, division and modulus (mod) are typically used for calculations. Special attention is needed for edge cases such as negative numbers and zero. If the output is expected as a numeric type rather than a string, consider whether it might exceed integer bounds.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -70,22 +70,22 @@ def convertToBase7(num: int) -> str:
 
 ### Problem Description
 
-给定一个非负整数，判断它的阶乘结果的结尾有几个 0。
+Given a non-negative integer, determine how many trailing zeroes are in its factorial result.
 
 ### Input and Output Example
 
-输入一个非负整数，输出一个非负整数，表示输入的阶乘结果的结尾有几个 0。
+Input a non-negative integer and output a non-negative integer representing the number of trailing zeroes in the factorial result.
 
 ```
 Input: 12
 Output: 2
 ```
 
-在这个样例中，12 != 479001600 的结尾有两个 0。
+In this example, 12! = 479001600 has two trailing zeroes.
 
 ### Solution Explanation
 
-每个尾部的 0 由 2 × 5 =10 而来，因此我们可以把阶乘的每一个元素拆成质数相乘，统计有多少个 2 和 5。明显的，质因子 2 的数量远多于质因子 5 的数量，因此我们可以只统计阶乘结果里有多少个质因子 5。
+Each trailing 0 is produced by a factor of 2 × 5 = 10. Therefore, we can decompose each element in the factorial into its prime factors and count how many 2s and 5s there are. It is evident that the number of factor 2s is far greater than the number of factor 5s, so we only need to count the number of factor 5s in the factorial result.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -112,22 +112,20 @@ def trailingZeroes(n: int) -> int:
 
 ### Problem Description
 
-给定两个由数字组成的字符串，求它们相加的结果。
+Given two strings composed of digits, find their sum as a result.
 
 ### Input and Output Example
 
-输入是两个字符串，输出是一个整数，表示输入的数字和。
+Input consists of two strings, and output is an integer representing the sum of the input numbers.
 
 ```
 Input: num1 = "99", num2 = "1"
 Output: 100
 ```
 
-因为相加运算是从后往前进行的，所以可以先翻转字符串，再逐位计算。这种类型的题考察的是细节，如进位、位数差等等。
+Since addition proceeds from right to left, the strings can be reversed first, then calculated digit by digit. This type of problem tests attention to details, such as carrying and handling different string lengths.
 
 ### Solution Explanation
-
-
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -188,11 +186,11 @@ def addStrings(num1: str, num2: str) -> str:
 
 ### Problem Description
 
-判断一个数字是否是 3 的次方。
+Determine whether a number is a power of 3.
 
 ### Input and Output Example
 
-输入一个整数，输出一个布尔值。
+Input an integer, output a boolean value.
 
 ```
 Input: n = 27
@@ -201,7 +199,7 @@ Output: true
 
 ### Solution Explanation
 
-有两种方法，一种是利用对数。设 log3 n =m，如果 n 是 3 的整数次方，那么 m 一定是整数。
+There are two methods. One is using logarithms. Let log3 n = m, if n is an integer power of 3, then m must be an integer.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -224,7 +222,7 @@ def isPowerOfThree(n: int) -> bool:
 
 </Tabs>
 
-另一种方法是，因为在 C++ int 范围内 3 的最大次方是 $3^{19} = 1162261467$，如果 n 是 3 的整数次方，那么 1162261467 除以 n 的余数一定是零；反之亦然。然而对于 Python 来说，因为 int 理论上可以取无穷大，我们只能循环判断。
+Another method is that, within the range of a C++ `int`, the maximum power of 3 is $3^{19} = 1162261467$. If `n` is an integer power of 3, then `1162261467 % n` must equal zero; otherwise, it is not. However, in Python, since `int` can theoretically represent arbitrarily large numbers, we can only use a loop to verify.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -255,11 +253,11 @@ def isPowerOfThree(n: int) -> bool:
 
 ### Problem Description
 
-计算 x 的 n 次方。
+Compute `x` raised to the power `n`.
 
 ### Input and Output Example
 
-输入一个浮点数表示 x 和一个整数表示 n，输出一个浮点数表示次方结果。
+Input a floating-point number `x` and an integer `n`, output a floating-point number representing the result of the power computation.
 
 ```
 Input: x = 2.00000, n = 10
@@ -269,7 +267,7 @@ Output: 1024.00000
 ### Solution Explanation
 
 
-利用递归，我们可以较为轻松地解决本题。注意边界条件的处理。
+Using recursion, we can solve this problem relatively easily. Pay attention to handling edge cases.
 
 <Tabs>
 <TabItem value="cpp" label="C++">

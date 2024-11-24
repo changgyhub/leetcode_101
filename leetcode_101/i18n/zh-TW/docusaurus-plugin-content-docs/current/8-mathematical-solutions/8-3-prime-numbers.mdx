@@ -2,31 +2,30 @@
 sidebar_position: 40
 ---
 
-# 8.3 质数
+# 8.3 質數
 
-质数又称素数，指的是指在大于 1 的自然数中，除了 1 和它本身以外不再有其他因数的自然数。值得注意的是，每一个数都可以分解成质数的乘积。
-
+質數又稱素數，指的是在大於 1 的自然數中，除了 1 和它本身以外不再有其他因數的自然數。值得注意的是，每一個數都可以分解成質數的乘積。
 
 ## [204. Count Primes](https://leetcode.com/problems/count-primes/)
 
 ### 題目描述
 
-给定一个数字 n，求小于 n 的质数的个数。
+給定一個數字 n，求小於 n 的質數的個數。
 
 ### 輸入輸出範例
 
-输入一个整数，输出也是一个整数，表示小于输入数的质数的个数。
+輸入一個整數，輸出也是一個整數，表示小於輸入數的質數的個數。
 
 ```
 Input: 10
 Output: 4
 ```
 
-在这个样例中，小于 10 的质数只有 [2,3,5,7]。
+在這個範例中，小於 10 的質數只有 [2, 3, 5, 7]。
 
 ### 題解
 
-`埃拉托斯特尼筛法`（Sieve of Eratosthenes，简称埃氏筛法）是非常常用的，判断一个整数是否是质数的方法。并且它可以在判断一个整数 n 时，同时判断所小于 n 的整数，因此非常适合这道题。其原理也十分易懂：从 1 到 n 遍历，假设当前遍历到 m，则把所有小于 n 的、且是 m 的倍数的整数标为和数；遍历完成后，没有被标为和数的数字即为质数。
+`埃拉托斯特尼篩法`（Sieve of Eratosthenes，簡稱埃氏篩法）是非常常用的，用於判斷一個整數是否為質數的方法。它也可以在判斷一個整數 $n$ 時，同時判斷所有小於 $n$ 的整數，因此非常適合這道題目。其原理也十分簡單：從 $1$ 到 $n$ 遍歷，假設當前遍歷到 $m$，則把所有小於 $n$ 且是 $m$ 的倍數的整數標記為和數；遍歷完成後，沒有被標記為和數的數字即為質數。
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -37,7 +36,7 @@ int countPrimes(int n) {
         return 0;
     }
     vector<bool> primes(n, true);
-    int count = n - 2;  // 去掉不是质数的1
+    int count = n - 2;  // 移除不是質數的 1
     for (int i = 2; i < n; ++i) {
         if (primes[i]) {
             for (int j = 2 * i; j < n; j += i) {
@@ -60,7 +59,7 @@ def countPrimes(n: int) -> int:
     if n <= 2:
         return 0
     primes = [True for _ in range(n)]
-    count = n - 2 # 去掉不是质数的1
+    count = n - 2 # 移除不是質數的 1
     for i in range(2, n):
         if primes[i]:
             for j in range(2 * i, n, i):
@@ -74,8 +73,7 @@ def countPrimes(n: int) -> int:
 
 </Tabs>
 
-利用质数的一些性质，我们可以进一步优化该算法。
-
+利用質數的一些性質，我們可以進一步優化該演算法。
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -87,11 +85,11 @@ int countPrimes(int n) {
     }
     vector<bool> primes(n, true);
     int sqrtn = sqrt(n);
-    int count = n / 2;  // 偶数一定不是质数
+    int count = n / 2;  // 偶數一定不是質數
     int i = 3;
-    // 最小质因子一定小于等于开方数。
+    // 最小質因子一定小於等於平方根。
     while (i <= sqrtn) {
-        // 向右找倍数，注意避免偶数和重复遍历。
+        // 向右找倍數，注意避免偶數和重複遍歷。
         for (int j = i * i; j < n; j += 2 * i) {
             if (primes[j]) {
                 --count;
@@ -99,7 +97,7 @@ int countPrimes(int n) {
             }
         }
         i += 2;
-        // 向右前进查找位置，注意避免偶数和重复遍历。
+        // 向右前進查找位置，注意避免偶數和重複遍歷。
         while (i <= sqrtn && !primes[i]) {
             i += 2;
         }
@@ -117,17 +115,17 @@ def countPrimes(n: int) -> int:
         return 0
     primes = [True for _ in range(n)]
     sqrtn = sqrt(n)
-    count = n // 2 # 偶数一定不是质数
+    count = n // 2  # 偶數一定不是質數
     i = 3
-    # 最小质因子一定小于等于开方数。
+    # 最小質因子一定小於等於平方根。
     while i <= sqrtn:
-        # 向右找倍数，注意避免偶数和重复遍历。
+        # 向右找倍數，注意避免偶數和重複遍歷。
         for j in range(i * i, n, 2 * i):
             if primes[j]:
                 count -= 1
                 primes[j] = False
         i += 2
-        # 向右前进查找位置，注意避免偶数和重复遍历。
+        # 向右前進查找位置，注意避免偶數和重複遍歷。
         while i <= sqrtn and not primes[i]:
             i += 2
     return count
