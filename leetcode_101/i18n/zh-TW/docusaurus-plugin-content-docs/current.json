@@ -59,35 +59,35 @@
     "message": "第 7 章 化繁為簡的分治法",
     "description": "The generated-index page description for category 7. 化繁為簡的分治法 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.8. 巧解数学问题 ": {
+  "sidebar.tutorialSidebar.category.8. 巧解数学问题": {
     "message": "8. 巧解數學問題",
     "description": "The label for category 8. 巧解數學問題 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.8. 巧解数学问题 .link.generated-index.description": {
+  "sidebar.tutorialSidebar.category.8. 巧解数学问题.link.generated-index.description": {
     "message": "第 8 章 巧解數學問題",
     "description": "The generated-index page description for category 8. 巧解數學問題 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.9. 神奇的位运算 ": {
+  "sidebar.tutorialSidebar.category.9. 神奇的位运算": {
     "message": "9. 神奇的位元運算",
     "description": "The label for category 9. 神奇的位元運算 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.9. 神奇的位运算 .link.generated-index.description": {
+  "sidebar.tutorialSidebar.category.9. 神奇的位运算.link.generated-index.description": {
     "message": "第 9 章 神奇的位元運算",
     "description": "The generated-index page description for category 9. 神奇的位元運算 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.10. 妙用数据结构 ": {
+  "sidebar.tutorialSidebar.category.10. 妙用数据结构": {
     "message": "10. 巧用資料結構",
     "description": "The label for category 10. 巧用資料結構 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.10. 妙用数据结构 .link.generated-index.description": {
+  "sidebar.tutorialSidebar.category.10. 妙用数据结构.link.generated-index.description": {
     "message": "第 10 章 巧用資料結構",
     "description": "The generated-index page description for category 10. 巧用資料結構 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.11. 令人头大的字符串 ": {
+  "sidebar.tutorialSidebar.category.11. 令人头大的字符串": {
     "message": "11. 頭痛的字串處理",
     "description": "The label for category 11. 頭痛的字串處理 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.11. 令人头大的字符串 .link.generated-index.description": {
+  "sidebar.tutorialSidebar.category.11. 令人头大的字符串.link.generated-index.description": {
     "message": "第 11 章 頭痛的字串處理",
     "description": "The generated-index page description for category 11. 頭痛的字串處理 in sidebar tutorialSidebar"
   },
@@ -115,11 +115,11 @@
     "message": "第 14 章 指標三劍客之三：圖",
     "description": "The generated-index page description for category 14. 指標三劍客之三：圖 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.15. 更加复杂的数据结构 ": {
+  "sidebar.tutorialSidebar.category.15. 更加复杂的数据结构": {
     "message": "15. 更加複雜的資料結構",
     "description": "The label for category 15. 更加複雜的資料結構 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.15. 更加复杂的数据结构 .link.generated-index.description": {
+  "sidebar.tutorialSidebar.category.15. 更加复杂的数据结构.link.generated-index.description": {
     "message": "第 15 章 更加複雜的資料結構",
     "description": "The generated-index page description for category 15. 更加複雜的資料結構in sidebar tutorialSidebar"
   }
