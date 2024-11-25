@@ -2,28 +2,28 @@
 sidebar_position: 45
 ---
 
-# 9.2 位运算基础问题
+# 9.2 Basic Problems in Bit Manipulation
 
 ## [461. Hamming Distance](https://leetcode.com/problems/hamming-distance/)
 
 ### Problem Description
 
-给定两个十进制数字，求它们二进制表示的汉明距离（Hamming distance，即不同位的个数）。
+Given two decimal numbers, calculate the Hamming distance between their binary representations (i.e., the number of differing bits).
 
 ### Input and Output Example
 
-输入是两个十进制整数，输出是一个十进制整数，表示两个输入数字的汉明距离。
+The input consists of two decimal integers, and the output is a decimal integer representing their Hamming distance.
 
 ```
 Input: x = 1, y = 4
 Output: 2
 ```
 
-在这个样例中，1 的二进制是 0001，4 的二进制是 0100，一共有两位不同。
+In this example, the binary representation of 1 is `0001`, and that of 4 is `0100`, with two differing bits.
 
 ### Solution Explanation
 
-对两个数进行按位异或操作，统计有多少个 1 即可。
+Perform a bitwise XOR operation on the two numbers and count the number of `1`s in the result.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -60,22 +60,20 @@ def hammingDistance(x: int, y: int) -> int:
 
 ### Problem Description
 
-给定一个十进制正整数，输出它在二进制下的翻转结果。
+Given a decimal positive integer, output its reversed binary representation.
 
 ### Input and Output Example
 
-输入和输出都是十进制正整数。
+Both input and output are decimal positive integers.
 
 ```
 Input: 43261596 (00000010100101000001111010011100)
 Output: 964176192 (00111001011110000010100101000000)
 ```
 
-使用算术左移和右移，可以很轻易地实现二进制的翻转。
+Using arithmetic left shift and right shift, binary reversal can be easily implemented.
 
 ### Solution Explanation
-
-
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -113,11 +111,11 @@ def reverseBits(n: int) -> int:
 
 ### Problem Description
 
-给定一个整数数组，这个数组里只有一个数次出现了一次，其余数字出现了两次，求这个只出现一次的数字。
+Given an integer array, only one number in this array appears exactly once, while all other numbers appear twice. Find the number that appears only once.
 
 ### Input and Output Example
 
-输入是一个一维整数数组，输出是该数组内的一个整数。
+The input is a one-dimensional integer array, and the output is an integer from the array.
 
 ```
 Input: [4,1,2,1,2]
@@ -126,7 +124,7 @@ Output: 4
 
 ### Solution Explanation
 
-我们可以利用 x ∧ x = 0 和 x ∧ 0 = x 的特点，将数组内所有的数字进行按位异或。出现两次的所有数字按位异或的结果是 0，0 与出现一次的数字异或可以得到这个数字本身。
+We can use the properties of x ∧ x = 0 and x ∧ 0 = x to solve this. By performing a bitwise XOR on all numbers in the array, the result of XORing all numbers that appear twice is 0. XORing 0 with the number that appears once gives the number itself.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -156,7 +154,7 @@ def singleNumber(nums: List[int]) -> int:
 
 </Tabs>
 
-这里我们也可以直接使用 reduce 函数：
+Here, we can also directly use the `reduce` function:
 
 <Tabs>
 <TabItem value="cpp" label="C++">
