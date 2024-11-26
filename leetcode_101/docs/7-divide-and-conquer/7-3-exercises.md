@@ -10,6 +10,8 @@ sidebar_position: 37
 
 试着用从上到下的分治（递归）写法求解，最好加上 memoization；再用从下到上的动态规划写法求解。
 
+---
+
 ## 进阶难度
 
 ### [312. Burst Balloons](https://leetcode.com/problems/burst-balloons/)

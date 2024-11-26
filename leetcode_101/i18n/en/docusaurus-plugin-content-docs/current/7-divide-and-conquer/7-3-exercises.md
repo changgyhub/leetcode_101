@@ -10,6 +10,8 @@ sidebar_position: 37
 
 Try solving this using a top-down divide-and-conquer (recursive) approach with `memoization` for optimization; then attempt a bottom-up dynamic programming approach.
 
+---
+
 ## Advanced Difficulty
 
 ### [312. Burst Balloons](https://leetcode.com/problems/burst-balloons/)

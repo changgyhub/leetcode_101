@@ -10,6 +10,8 @@ sidebar_position: 20
 
 桶排序的变形题。
 
+---
+
 ## 进阶难度
 
 ### [75. Sort Colors](https://leetcode.com/problems/sort-colors/)

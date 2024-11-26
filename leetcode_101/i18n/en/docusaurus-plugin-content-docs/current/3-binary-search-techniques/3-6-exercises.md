@@ -10,9 +10,13 @@ sidebar_position: 16
 
 A variation of the rotated array problem.
 
+---
+
 ### [540. Single Element in a Sorted Array](https://leetcode.com/problems/single-element-in-a-sorted-array/)
 
 What changes occur in the parity (odd/even positions) of values before and after the unique element?
+
+---
 
 ## Advanced Difficulty
 

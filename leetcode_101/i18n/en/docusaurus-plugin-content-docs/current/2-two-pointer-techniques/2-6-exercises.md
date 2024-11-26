@@ -10,13 +10,19 @@ sidebar_position: 10
 
 A variation of the Two Sum problem.
 
+---
+
 ### [680. Valid Palindrome II](https://leetcode.com/problems/valid-palindrome-ii/)
 
 Another variation of the Two Sum problem.
 
+---
+
 ### [524. Longest Word in Dictionary through Deleting](https://leetcode.com/problems/longest-word-in-dictionary-through-deleting/)
 
 A variation of the Merge Sorted Array problem.
+
+---
 
 ## Advanced Difficulty
 

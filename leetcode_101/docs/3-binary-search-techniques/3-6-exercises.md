@@ -10,9 +10,13 @@ sidebar_position: 16
 
 旋转数组的变形题之一。
 
+---
+
 ### [540. Single Element in a Sorted Array](https://leetcode.com/problems/single-element-in-a-sorted-array/)
 
 在出现独立数之前和之后，奇偶位数的值发生了什么变化？
+
+---
 
 ## 进阶难度
 

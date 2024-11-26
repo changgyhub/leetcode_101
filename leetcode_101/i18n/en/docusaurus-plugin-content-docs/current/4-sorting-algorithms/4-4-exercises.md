@@ -10,6 +10,8 @@ sidebar_position: 20
 
 A variant of the bucket sort problem.
 
+---
+
 ## Advanced Difficulty
 
 ### [75. Sort Colors](https://leetcode.com/problems/sort-colors/)

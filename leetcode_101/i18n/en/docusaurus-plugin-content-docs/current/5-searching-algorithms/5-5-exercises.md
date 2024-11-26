@@ -10,9 +10,13 @@ sidebar_position: 25
 
 Start by filling from the outer edges, then consider the inner regions.
 
+---
+
 ### [257. Binary Tree Paths](https://leetcode.com/problems/binary-tree-paths/)
 
 Output all paths from the root to the leaves in a binary tree. What is the difference if backtracking is used?
+
+---
 
 ## Advanced Difficulty
 
@@ -20,13 +24,19 @@ Output all paths from the root to the leaves in a binary tree. What is the diffe
 
 A follow-up to the permutations problem. How to handle duplicate elements?
 
+---
+
 ### [40. Combination Sum II](https://leetcode.com/problems/combination-sum-ii/)
 
 A follow-up to the combination problem. How to handle duplicate elements?
 
+---
+
 ### [37. Sudoku Solver](https://leetcode.com/problems/sudoku-solver/)
 
 A very classic Sudoku problem that can be solved using backtracking. In fact, there are many advanced search methods and pruning strategies, such as heuristic search, to improve speed for Sudoku-related problems.
+
+---
 
 ### [310. Minimum Height Trees](https://leetcode.com/problems/minimum-height-trees/)
 

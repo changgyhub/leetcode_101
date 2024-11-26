@@ -10,13 +10,19 @@ sidebar_position: 10
 
 Two Sum 题目的变形题之一。
 
+---
+
 ### [680. Valid Palindrome II](https://leetcode.com/problems/valid-palindrome-ii/)
 
 Two Sum 题目的变形题之二。
 
+---
+
 ### [524. Longest Word in Dictionary through Deleting](https://leetcode.com/problems/longest-word-in-dictionary-through-deleting/)
 
 归并两个有序数组的变形题。
+
+---
 
 ## 进阶难度
 

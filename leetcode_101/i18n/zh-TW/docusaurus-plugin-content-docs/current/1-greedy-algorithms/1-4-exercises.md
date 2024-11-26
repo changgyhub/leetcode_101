@@ -45,6 +45,8 @@ sidebar_position: 4
 
 </details> 
 
+---
+
 ### [452. Minimum Number of Arrows to Burst Balloons](https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/)
 
 這道題和題目 435 十分類似，但是稍有不同，具體是哪裡不同呢？
@@ -81,6 +83,8 @@ class Solution:
 - **空間複雜度**: $O(1)$，除了排序使用的額外空間外，程式只使用了常數額外空間。
 
 </details> 
+
+---
 
 ### [763. Partition Labels](https://leetcode.com/problems/partition-labels/)
 
@@ -125,6 +129,7 @@ class Solution:
 
 </details>
 
+---
 
 ### [122. Best Time to Buy and Sell Stock II](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/)
 
@@ -157,6 +162,8 @@ class Solution:
 - **空間複雜度**: $O(1)$，只使用了常數額外空間。
 
 </details>
+
+---
 
 ## 進階難度
 
@@ -195,6 +202,8 @@ class Solution:
 
 - **空間複雜度**: $O(n)$，用於儲存重建的隊列。
 </details>
+
+---
 
 ### [665. Non-decreasing Array](https://leetcode.com/problems/non-decreasing-array/)
 

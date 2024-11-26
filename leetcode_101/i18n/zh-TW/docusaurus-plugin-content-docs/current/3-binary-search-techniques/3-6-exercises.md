@@ -10,9 +10,13 @@ sidebar_position: 16
 
 旋轉陣列的變形題之一。
 
+---
+
 ### [540. Single Element in a Sorted Array](https://leetcode.com/problems/single-element-in-a-sorted-array/)
 
 在出現單獨數之前和之後，奇數位與偶數位的值發生了什麼變化？
+
+---
 
 ## 進階難度
 

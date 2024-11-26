@@ -46,9 +46,9 @@ A variant of the `Longest Consecutive Sequence` problem.
 
 Since the complexity of sorting is $O(n \log n) < O(n^2)$, we can either sort the array first and then perform an $O(n^2)$ pointer search, or directly use a hash table for an $O(n^2)$ search.
 
-## Advanced Difficulty
-
 ---
+
+## Advanced Difficulty
 
 ### [287. Find the Duplicate Number](https://leetcode.com/problems/find-the-duplicate-number/)
 

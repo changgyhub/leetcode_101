@@ -10,13 +10,19 @@ sidebar_position: 47
 
 A variation of the Single Number problem. Besides using bitwise operations, the problem can also be solved using the Gaussian summation formula.
 
+---
+
 ### [693. Binary Number with Alternating Bits](https://leetcode.com/problems/binary-number-with-alternating-bits/)
 
 Use bitwise operations to determine whether a number's binary representation alternates between `0` and `1`.
 
+---
+
 ### [476. Number Complement](https://leetcode.com/problems/number-complement/)
 
 A variation of binary flipping problems.
+
+---
 
 ## Advanced Difficulty
 
