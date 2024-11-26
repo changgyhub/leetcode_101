@@ -2,19 +2,19 @@
 sidebar_position: 52
 ---
 
-# 10.5 单调栈
+# 10.5 Monotonic Stack
 
-`单调栈`通过维持栈内值的单调递增（递减）性，在整体 $O(n)$ 的时间内处理需要大小比较的问题。
+`Monotonic Stack` is a technique that maintains the monotonic increasing (or decreasing) property of a stack to solve comparison problems in $O(n)$ time complexity.
 
 ## [739. Daily Temperatures](https://leetcode.com/problems/daily-temperatures/)
 
 ### Problem Description
 
-给定每天的温度，求对于每一天需要等几天才可以等到更暖和的一天。如果该天之后不存在更暖和的天气，则记为 0。
+Given the daily temperatures, determine how many days you need to wait for a warmer day. If there is no such day, return 0 for that day.
 
 ### Input and Output Example
 
-输入是一个一维整数数组，输出是同样长度的整数数组，表示对于每天需要等待多少天。
+The input is a one-dimensional integer array, and the output is an array of the same length, indicating how many days you need to wait for each day.
 
 ```
 Input: [73, 74, 75, 71, 69, 72, 76, 73]
@@ -23,7 +23,7 @@ Output: [1, 1, 4, 2, 1, 1, 0, 0]
 
 ### Solution Explanation
 
-我们可以维持一个单调递减的栈，表示每天的温度；为了方便计算天数差，我们这里存放位置（即日期）而非温度本身。我们从左向右遍历温度数组，对于每个日期 p，如果 p 的温度比栈顶存储位置 q 的温度高，则我们取出 q，并记录 q 需要等待的天数为 p − q；我们重复这一过程，直到 p 的温度小于等于栈顶存储位置的温度（或空栈）时，我们将 p 插入栈顶，然后考虑下一天。在这个过程中，栈内数组永远保持单调递减，避免了使用排序进行比较。最后若栈内剩余一些日期，则说明它们之后都没有出现更暖和的日期。
+We can maintain a monotonic decreasing stack that stores the temperatures. To facilitate calculating the day differences, we store indices (dates) instead of the temperatures themselves. As we iterate through the temperature array from left to right, for each day $p$, if the temperature on day $p$ is higher than the temperature of the day stored at the stack top $q$, we pop $q$ and record the waiting days for $q$ as $p - q$. We repeat this process until the temperature of day $p$ is less than or equal to the temperature at the stack top (or the stack becomes empty), then push $p$ into the stack and move to the next day. During this process, the stack always maintains a monotonic decreasing order, avoiding the need for sorting. Finally, if there are remaining indices in the stack, it means those days do not have warmer days in the future.
 
 <Tabs>
 <TabItem value="cpp" label="C++">

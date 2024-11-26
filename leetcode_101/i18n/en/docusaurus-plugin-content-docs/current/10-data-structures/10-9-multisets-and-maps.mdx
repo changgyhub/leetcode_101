@@ -2,17 +2,17 @@
 sidebar_position: 56
 ---
 
-# 10.9 多重集合和映射
+# 10.9 Multisets and Mappings
 
 ## [332. Reconstruct Itinerary](https://leetcode.com/problems/reconstruct-itinerary/)
 
 ### Problem Description
 
-给定一个人坐过的一些飞机的起止机场，已知这个人从 JFK 起飞，那么这个人是按什么顺序飞的；如果存在多种可能性，返回字母序最小的那种。
+Given a person's flight records with departure and arrival airports, starting from JFK, determine the flight order. If there are multiple possibilities, return the lexicographically smallest sequence.
 
 ### Input and Output Example
 
-输入是一个二维字符串数组，表示多个起止机场对子；输出是一个一维字符串数组，表示飞行顺序。
+Input is a 2D string array representing pairs of departure and arrival airports; output is a 1D string array representing the flight order.
 
 ```
 Input: [["MUC", "LHR"], ["JFK", "MUC"], ["SFO", "SJC"], ["LHR", "SFO"]]
@@ -21,9 +21,9 @@ Output: ["JFK", "MUC", "LHR", "SFO", "SJC"]
 
 ### Solution Explanation
 
-本题可以先用哈希表记录起止机场，其中键是起始机场，值是一个多重（有序）集合，表示对应的终止机场。因为一个人可能坐过重复的线路，所以我们需要使用多重集合储存重复值。储存完成之后，我们可以利用栈/DFS 来恢复从终点到起点飞行的顺序，再将结果逆序得到从起点到终点的顺序。
+We can first use a hash table to store the departure and arrival airports, where the key is the departure airport, and the value is a multiset (ordered set) representing the corresponding arrival airports. Since a person may take the same route multiple times, we need to use a multiset to store duplicate values. After storing, we can use a stack/DFS to reconstruct the flight order from the endpoint to the starting point, and then reverse the result to get the order from the start to the endpoint.
 
-因为 Python 没有默认的多重（有序）集合实现，我们可以直接存储一个数组，然后进行排序。也可以使用 Counter 结构，每次查找下一个机场时，返回 key 值最小的那个。
+Since Python doesn't have a built-in multiset implementation, we can store an array and sort it. Alternatively, we can use the `Counter` structure, selecting the smallest key each time we search for the next airport.
 
 <Tabs>
 <TabItem value="cpp" label="C++">

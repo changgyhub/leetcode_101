@@ -16,7 +16,7 @@ Two Sum 題目的變形題之二。
 
 ### [524. Longest Word in Dictionary through Deleting](https://leetcode.com/problems/longest-word-in-dictionary-through-deleting/)
 
-合併兩個有序數組的變形題。
+合併兩個有序陣列的變形題。
 
 ## 進階難度
 

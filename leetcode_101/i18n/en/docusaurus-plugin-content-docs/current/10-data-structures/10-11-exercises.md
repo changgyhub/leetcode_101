@@ -8,46 +8,66 @@ sidebar_position: 58
 
 ### [566. Reshape the Matrix](https://leetcode.com/problems/reshape-the-matrix/)
 
-没有什么难度，只是需要一点耐心。
+This problem is not particularly challenging; it only requires some patience.
+
+---
 
 ### [225. Implement Stack using Queues](https://leetcode.com/problems/implement-stack-using-queues/)
 
-利用相似的方法，我们也可以用 queue 实现 stack。
+Using a similar approach, we can also implement a stack using queues.
+
+---
 
 ### [503. Next Greater Element II](https://leetcode.com/problems/next-greater-element-ii/)
 
-Daily Temperature 的变种题。
+A variant of the `Daily Temperatures` problem.
+
+---
 
 ### [217. Contains Duplicate](https://leetcode.com/problems/contains-duplicate/)
 
-使用什么数据结构可以快速判断重复呢？
+Which data structure would allow us to quickly check for duplicates?
+
+---
 
 ### [697. Degree of an Array](https://leetcode.com/problems/degree-of-an-array/)
 
-如何对数组进行预处理才能正确并快速地计算子数组的长度？
+How can we preprocess an array to correctly and efficiently compute the length of a subarray?
+
+---
 
 ### [594. Longest Harmonious Subsequence](https://leetcode.com/problems/longest-harmonious-subsequence/)
 
-最长连续序列的变种题。
+A variant of the `Longest Consecutive Sequence` problem.
+
+---
 
 ### [15. 3Sum](https://leetcode.com/problems/3sum/)
 
-因为排序的复杂度是 $O(n \log n) < O(n^2)$，因此我们既可以排序后再进行 $O(n^2)$ 的指针搜索，也可以直接利用哈希表进行 $O(n^2)$ 的搜索。
+Since the complexity of sorting is $O(n \log n) < O(n^2)$, we can either sort the array first and then perform an $O(n^2)$ pointer search, or directly use a hash table for an $O(n^2)$ search.
 
 ## Advanced Difficulty
 
+---
+
 ### [287. Find the Duplicate Number](https://leetcode.com/problems/find-the-duplicate-number/)
 
-寻找丢失数字的变种题。除了标负位置，你还有没有其它算法可以解决这个问题？
+A variant of the `Find Missing Number` problem. Besides marking negative values, are there any other algorithms to solve this?
+
+---
 
 ### [313. Super Ugly Number](https://leetcode.com/problems/super-ugly-number/)
 
-尝试使用优先队列解决这一问题。
+Try solving this using a priority queue.
+
+---
 
 ### [870. Advantage Shuffle](https://leetcode.com/problems/advantage-shuffle/)
 
-如果我们需要比较大小关系，而且同一数字可能出现多次，那么应该用什么数据结构呢？
+If we need to compare relative sizes and the same number can appear multiple times, which data structure should we use?
+
+---
 
 ### [307. Range Sum Query - Mutable](https://leetcode.com/problems/range-sum-query-mutable/)
 
-前缀和的变种题。好吧我承认，这道题可能有些超纲，你或许需要搜索一下什么是线段树。
+A variant of the `Prefix Sum` problem. I admit this might be slightly advanced; you might want to look up what a `Segment Tree` is.

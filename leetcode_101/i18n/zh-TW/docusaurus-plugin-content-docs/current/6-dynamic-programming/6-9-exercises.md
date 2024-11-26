@@ -8,7 +8,7 @@ sidebar_position: 34
 
 ### [213. House Robber II](https://leetcode.com/problems/house-robber-ii/)
 
-強盜搶劫問題的 follow-up，如何處理環形數組呢？
+強盜搶劫問題的 follow-up，如何處理環形陣列呢？
 
 ### [53. Maximum Subarray](https://leetcode.com/problems/maximum-subarray/)
 

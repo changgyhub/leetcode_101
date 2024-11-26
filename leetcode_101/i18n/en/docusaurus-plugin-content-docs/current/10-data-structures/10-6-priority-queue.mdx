@@ -2,20 +2,20 @@
 sidebar_position: 53
 ---
 
-# 10.6 优先队列
+# 10.6 Priority Queue
 
-`优先队列`（priority queue）可以在 O(1) 时间内获得最大值，并且可以在 O(log n) 时间内取出最大值或插入任意值。
+`Priority queue` allows retrieving the maximum value in $O(1)$ time and inserting or removing the maximum value in $O(\log n)$ time.
 
 <figure>
   <span style={{ display: 'block', width: '50%', margin: '0 auto' }}>
     ![](10.2.png)
   </span>
-  <figcaption style={{ textAlign: 'center' }}>图 10.2: （最大）堆，维护的是数据结构中的大于关系</figcaption>
+  <figcaption style={{ textAlign: 'center' }}>Figure 10.2: (Max) Heap, maintaining the "greater than" relationship in the data structure</figcaption>
 </figure>
 
-优先队列常常用堆（heap）来实现。堆是一个完全二叉树，其每个节点的值总是大于等于子节点的值。实际实现堆时，我们通常用一个数组而不是用指针建立一个树。这是因为堆是完全二叉树，所以用数组表示时，位置 i 的节点的父节点位置一定为 (i-1)/2，而它的两个子节点的位置又一定分别为 2i+1 和 2i+2。
+Priority queues are often implemented using heaps. A heap is a complete binary tree in which each node's value is always greater than or equal to its child nodes. When implementing heaps, arrays are often used instead of pointers to build a tree. This is because heaps are complete binary trees, so in an array representation, the parent node of position $i$ is located at $(i-1)/2$, and its two child nodes are located at $2i+1$ and $2i+2$, respectively.
 
-以下是堆的实现方法，其中最核心的两个操作是上浮和下沉：如果一个节点比父节点大，那么需要交换这个两个节点；交换后还可能比它新的父节点大，因此需要不断地进行比较和交换操作，我们称之为上浮；类似地，如果一个节点比父节小，也需要不断地向下进行比较和交换操作我们称之为下沉。如果一个节点有两个子节点，我们总是交换最大的子节点。
+Here is the implementation of heaps. The two core operations are "swim" and "sink": if a node is greater than its parent node, we swap them; after swapping, it may still be greater than its new parent node, so we continue comparing and swapping, known as "swim." Similarly, if a node is smaller than its parent, it needs to compare and swap downward continuously, known as "sink." If a node has two child nodes, we always swap with the largest child node.
 
 
 <Tabs>
@@ -25,7 +25,7 @@ sidebar_position: 53
 class Heap {
    public:
     Heap() {}
-    // 上浮。
+    // Swim
     void swim(int pos) {
         int next_pos = (pos - 1) / 2;
         while (pos > 0 && heap_[next_pos] < heap_[pos]) {
@@ -34,7 +34,7 @@ class Heap {
             next_pos = (pos - 1) / 2;
         }
     }
-    // 下沉。
+    // Sink
     void sink(int pos) {
         int n = heap_.size();
         int next_pos = 2 * pos + 1;
@@ -50,18 +50,18 @@ class Heap {
             next_pos = 2 * pos + 1;
         }
     }
-    // 插入任意值：把新的数字放在最后一位，然后上浮。
+    // Insert any value: place the new number at the last position, then swim.
     void push(int k) {
         heap_.push_back(k);
         swim(heap_.size() - 1);
     }
-    // 删除最大值：把最后一个数字挪到开头，然后下沉。
+    // Delete the maximum value: move the last number to the front, then sink.
     void pop() {
         heap_[0] = heap_.back();
         heap_.pop_back();
         sink(0);
     }
-    // 获得最大值。
+    // Retrieve the maximum value.
     int top() { return heap_[0]; }
 
    private:
@@ -77,7 +77,7 @@ class Heap:
     def __init__(self):
         self.heap = []
 
-    # 上浮。
+    # Swim
     def swim(self, pos: int):
         next_pos = (pos - 1) // 2
         while pos > 0 and self.heap[next_pos] < self.heap[pos]:
@@ -85,7 +85,7 @@ class Heap:
             pos = next_pos
             next_pos = (pos - 1) // 2
 
-    # 下沉。
+    # Sink
     def sink(self, pos: int):
         n = len(self.heap)
         next_pos = 2 * pos + 1
@@ -98,17 +98,17 @@ class Heap:
             pos = next_pos
             next_pos = 2 * pos + 1
 
-    # 插入任意值：把新的数字放在最后一位，然后上浮。
+    # Insert any value: place the new number at the last position, then swim.
     def push(self, k: int):
         self.heap.append(k)
         self.swim(len(self.heap) - 1)
 
-    # 删除最大值：把最后一个数字挪到开头，然后下沉。
+    # Delete the maximum value: move the last number to the front, then sink.
     def pop(self):
         self.heap[0] = self.heap.pop()
         self.sink(0)
 
-    # 获得最大值。
+    # Retrieve the maximum value.
     def top(self) -> int:
         return self.heap[0]
 
@@ -118,17 +118,17 @@ class Heap:
 
 </Tabs>
 
-通过将算法中的大于号和小于号互换，我们也可以得到一个快速获得最小值的优先队列。
+By swapping the greater-than and less-than operators in the algorithm, we can also create a priority queue that retrieves the minimum value quickly.
 
 ## [23. Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/)
 
 ### Problem Description
 
-给定 k 个增序的链表，试将它们合并成一条增序链表。
+Given `k` sorted linked lists, try to merge them into one sorted linked list.
 
 ### Input and Output Example
 
-输入是一个一维数组，每个位置存储链表的头节点；输出是一条链表。
+The input is a one-dimensional array, where each position stores the head node of a linked list; the output is a single linked list.
 
 ```
 Input:
@@ -140,9 +140,9 @@ Output: 1->1->2->3->4->4->5->6
 
 ### Solution Explanation
 
-本题可以有很多中解法，比如类似于归并排序进行两两合并。我们这里展示一个速度比较快的方法，即把所有的链表存储在一个优先队列中，每次提取所有链表头部节点值最小的那个节点，直到所有链表都被提取完为止。
+There are multiple ways to solve this problem, such as using a merge sort-like approach to merge the lists pair by pair. Here, we demonstrate a faster method: store all the linked lists in a priority queue and extract the node with the smallest value from the head of all lists at each step until all lists have been completely merged.
 
-因为 C++ priority_queue 的比较函数默认是对最大堆进行比较并维持递增关系，如果我们想要获取最小的节点值，我们则需要实现一个最小堆。因此堆的比较函数应该维持递减关系，即 lambda 函数中返回时用大于号而不是递增关系时的小于号进行比较。
+Since the default comparison function of a C++ `priority_queue` is for a max-heap and maintains an increasing order, to get the smallest node values, we need to implement a min-heap. Thus, the comparison function for the heap should maintain a decreasing order, i.e., the lambda function should use the greater-than operator instead of the less-than operator used for increasing order.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -177,7 +177,7 @@ def mergeKLists(lists: List[Optional[ListNode]]) -> Optional[ListNode]:
     pq = []
     for idx, l in enumerate(lists):
         if l is not None:
-            # ListNode不可被哈希，所以这里我们直接记录它在lists中的位置。
+            # ListNode cannot be hashed, so we directly record its position in lists.
             pq.append((l.val, idx))
     heapq.heapify(pq)
     
@@ -204,17 +204,17 @@ def mergeKLists(lists: List[Optional[ListNode]]) -> Optional[ListNode]:
 
 ### Problem Description
 
-给定建筑物的起止位置和高度，返回建筑物轮廓（天际线）的拐点。
+Given the start and end positions along with the height of buildings, return the critical points of the building's silhouette (skyline).
 
 ### Input and Output Example
 
-输入是一个二维整数数组，表示每个建筑物的 [左端, 右端, 高度]；输出是一个二维整数数组，表示每个拐点的横纵坐标。
+The input is a 2D integer array representing each building as `[left, right, height]`; the output is a 2D integer array representing the x and y coordinates of the critical points of the skyline.
 
 <figure>
   <span style={{ display: 'block', width: '90%', margin: '0 auto' }}>
     ![](10.3.png)
   </span>
-  <figcaption style={{ textAlign: 'center' }}>图 10.3: 题目 218 - 建筑物及其天际线样例</figcaption>
+  <figcaption style={{ textAlign: 'center' }}>Figure 10.3: Problem 218 - Example of buildings and their skyline</figcaption>
 </figure>
 
 ```
@@ -224,11 +224,11 @@ Output: [[2 10], [3 15], [7 12], [12 0], [15 10], [20 8], [24, 0]]
 
 ### Solution Explanation
 
-我们可以使用优先队列储存每个建筑物的高度和右端（这里使用 pair，其默认比较函数是先比较第一个值，如果相等则再比较第二个值），从而获取目前会拔高天际线、且妨碍到前一个建筑物（的右端端点）的下一个建筑物。
+We can use a priority queue to store the height and the right endpoint of each building (using a pair). This helps us identify the next building that raises the skyline and interferes with the previous building's endpoint.
 
-因为 Python 中 heapq 是最小堆，所以我们在存值的时候可以存负值，这样就变成了最大堆。
+Since Python's `heapq` implements a min-heap, we store negative values for heights to simulate a max-heap.
 
-这道题比较复杂，如果实在难以理解，建议读者暂时跳过此题，或者在纸上举例子画一画。
+This problem is relatively complex. If you find it challenging to grasp, consider skipping it for now or illustrating examples on paper for better understanding.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -236,7 +236,7 @@ Output: [[2 10], [3 15], [7 12], [12 0], [15 10], [20 8], [24, 0]]
 ```cpp
 vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {
     vector<vector<int>> skyline;
-    priority_queue<pair<int, int>> pq;  // <高度, 右端>
+    priority_queue<pair<int, int>> pq;  // <height, right>
     int i = 0, n = buildings.size();
     int cur_x, cur_h;
     while (i < n || !pq.empty()) {
@@ -267,7 +267,7 @@ vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {
 ```py
 def getSkyline(buildings: List[List[int]]) -> List[List[int]]:
     skyline = []
-    pq = []  # <负高度，右端>
+    pq = []  # <negative height, right>
     heapq.heapify(pq)
     i, n = 0, len(buildings)
     

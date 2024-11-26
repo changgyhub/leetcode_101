@@ -2,17 +2,17 @@
 sidebar_position: 51
 ---
 
-# 10.4 栈和队列
+# 10.4 Stacks and Queues
 
 ## [232. Implement Queue using Stacks](https://leetcode.com/problems/implement-queue-using-stacks/)
 
 ### Problem Description
 
-尝试使用栈（stack）来实现队列（queue）。
+Try to implement a queue using stacks.
 
 ### Input and Output Example
 
-以下是数据结构的调用样例。
+Here is an example of how the data structure is used.
 
 ```
 MyQueue queue = new MyQueue();
@@ -25,7 +25,7 @@ queue.empty(); // returns false
 
 ### Solution Explanation
 
-我们可以用两个栈来实现一个队列：因为我们需要得到先入先出的结果，所以必定要通过一个额外栈翻转一次数组。这个翻转过程既可以在插入时完成，也可以在取值时完成。我们这里展示在取值时完成的写法。
+We can implement a queue using two stacks: since we need a first-in-first-out result, we must reverse the array once using an additional stack. This reversing process can be completed either during insertion or during retrieval. Below is an example of implementing the reversal during retrieval.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -105,11 +105,11 @@ class MyQueue:
 
 ### Problem Description
 
-设计一个最小栈，除了需要支持常规栈的操作外，还需要支持在 $O(1)$ 时间内查询栈内最小值的功能。
+Design a minimum stack that supports not only regular stack operations but also retrieving the minimum value in the stack in $O(1)$ time.
 
 ### Input and Output Example
 
-以下是数据结构的调用样例。
+Here is an example of how the data structure is used.
 
 ```
 MinStack minStack = new MinStack();
@@ -124,9 +124,9 @@ minStack.getMin(); // Returns -2.
 
 ### Solution Explanation
 
-我们可以额外建立一个新栈，栈顶表示原栈里所有值的最小值。每当在原栈里插入一个数字时，若该数字小于等于新栈栈顶，则表示这个数字在原栈里是最小值，我们将其同时插入新栈内。每当从原栈里取出一个数字时，若该数字等于新栈栈顶，则表示这个数是原栈里的最小值之一，我们同时取出新栈栈顶的值。
+We can maintain an additional stack where the top represents the minimum value of all elements in the main stack. Every time a number is pushed onto the main stack, if it is less than or equal to the top of the auxiliary stack, it is also pushed onto the auxiliary stack, indicating it is a minimum value in the main stack. Similarly, every time a number is popped from the main stack, if it equals the top of the auxiliary stack, the top value of the auxiliary stack is also popped.
 
-一个写起来更简单但是时间复杂度略高的方法是，我们每次插入原栈时，都向新栈插入一次原栈里所有值的最小值（新栈栈顶和待插入值中小的那一个）；每次从原栈里取出数字时，同样取出新栈的栈顶。这样可以避免判断，但是每次都要插入和取出。我们这里只展示第一种写法。
+An alternative method, which is simpler to write but has slightly higher time complexity, involves always pushing the minimum value of all elements in the main stack (the smaller of the top value of the auxiliary stack and the new value being pushed) onto the auxiliary stack. Similarly, every pop operation removes the top value from both stacks. This eliminates the need for conditionals but requires inserting and removing a value every time. Here, we only demonstrate the first approach.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -194,11 +194,11 @@ class MinStack:
 
 ### Problem Description
 
-给定一个只由左右圆括号、花括号和方括号组成的字符串，求这个字符串是否合法。合法的定义是每一个类型的左括号都有一个右括号一一对应，且括号内的字符串也满足此要求。
+Given a string containing only the characters `(`, `)`, `{`, `}`, `[`, and `]`, determine if the input string is valid. A valid string requires that every opening bracket has a corresponding closing bracket of the same type, and the substring enclosed by the brackets is also valid.
 
 ### Input and Output Example
 
-输入是一个字符串，输出是一个布尔值，表示字符串是否合法。
+The input is a string, and the output is a boolean value indicating whether the string is valid.
 
 ```
 Input: "{[]}()"
@@ -207,7 +207,7 @@ Output: true
 
 ### Solution Explanation
 
-括号匹配是典型的使用栈来解决的问题。我们从左往右遍历，每当遇到左括号便放入栈内，遇到右括号则判断其和栈顶的括号是否是统一类型，是则从栈内取出左括号，否则说明字符串不合法。
+Parenthesis matching is a classic problem that can be solved using a stack. As we iterate through the string from left to right, we push every opening bracket onto the stack. When encountering a closing bracket, we check if it matches the top of the stack. If it matches, we pop the stack; otherwise, the string is invalid.
 
 <Tabs>
 <TabItem value="cpp" label="C++">

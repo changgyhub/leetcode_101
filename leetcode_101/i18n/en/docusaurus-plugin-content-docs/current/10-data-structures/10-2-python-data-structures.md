@@ -2,21 +2,24 @@
 sidebar_position: 49
 ---
 
-# 10.2 Python 常用数据结构
+# 10.2 Python Common Data Structures
 
-类似于 C++ STL，Python 也提供了类似的数据结构（实际底层细节可能因编译器而异）：
+Similar to C++ STL, Python also provides various data structures (the underlying details may vary depending on the implementation):
 
-1. Sequence Containers：维持顺序的容器。
-   1. list：`动态数组`，是我们最常使用的数据结构之一，用于 $O(1)$ 的随机读取。因为大部分算法的时间复杂度都会大于 $O(n)$，因此我们经常新建 list 来存储各种数据或中间变量。因为在尾部增删的复杂度是 $O(1)$，我们也可以把它当作 stack 来用。
-   2. tuple: `元组`，immutable list，不可改变其中元素或总长度。
-   3. collections.deque：`双端队列`，这是一个非常强大的数据结构，既支持 $O(1)$ 随机读取，又支持 $O(1)$ 时间的头部增删和尾部增删（因此可以当作 stack 和 queue 来使用），不过有一定的额外开销。也可以用来近似一个双向链表来使用。
-2. Container Adaptors：基于其它容器实现的容器。
-   1. heapq：`最小堆（最小值先出的数据结构）`，默认基于 list 实现堆结构。它可以在 $O(n \log n)$ 的时间排序数组，$O(\log n)$ 的时间插入任意值，$O(1)$ 的时间获得最小值，$O(\log n)$ 的时间删除最小值。heapq 常用于维护数据结构并快速获取最小值，但不支持自定义比较函数。所以通常我们需要提前算好自定义值，再把 (自定义值，位置) 的 tuple 存进 heapq。这样进行比较时就会默认从左到右比较 tuple 中的元素，即先比较自定义值，再比较元素的插入次序。
-3. Ordered Associative Containers：有序关联容器。
-   1. collections.OrderedDict：`顺序映射或顺序表`，注意这里的 Ordered 不同于 C++ 中 map的按大小排序，而是按照插入的先后次序排序。OrderedDict 很适合用来做 LRU。
-4. Unordered Associative Containers：无序关联容器。
-   1. set：`哈希集合`，可以在 O(1) 的时间快速插入、查找、删除元素，常用于快速的查询一个元素是否在这个容器内。
-   2. dict：`哈希映射或哈希表`，在 set 的基础上加上映射关系，可以对每一个元素 key 存一个值 value。在某些情况下，如果 key 的范围已知且较小，我们也可以用 list 代替 dict，用位置表示 key，用每个位置的值表示 value。
-   3. collections.Counter：`计数器`，是 dict 的一个特殊版本，可以直接传入一个 list，并对其中的每一个元素进行计数统计，key 是元素值，value 是元素出现的频次。可以用来当作多重集合。
-   
-同样的，因为这并不是一本讲解 Python 原理的书，更多的数据结构细节请读者自行搜索。只有理解了这些数据结构的原理和使用方法，才能够更加游刃有余地解决算法和数据结构问题。
+1. **Sequence Containers**: Containers that maintain order.
+   1. **list**: A `dynamic array`, one of the most commonly used data structures for $O(1)$ random access. Since most algorithm complexities exceed $O(n)$, lists are frequently used to store data or intermediate results. As adding or removing elements at the end has $O(1)$ complexity, lists can also be used as stacks.
+   2. **tuple**: An `immutable list`, where neither the elements nor the length can be modified.
+   3. **collections.deque**: A `double-ended queue`, a powerful data structure supporting $O(1)$ random access as well as $O(1)$ insertion and deletion at both ends (making it useful as a stack or queue). It has some overhead but can approximate a doubly linked list.
+
+2. **Container Adaptors**: Containers built on top of other data structures.
+   1. **heapq**: A `min-heap` (a data structure where the smallest element is accessed first), implemented using lists. It supports array sorting in $O(n \log n)$, value insertion in $O(\log n)$, access to the smallest value in $O(1)$, and deletion of the smallest value in $O(\log n)$. `heapq` is often used for maintaining data structures and quickly accessing the smallest value, but it doesn't support custom comparison functions. Typically, we precompute the custom values and store them as tuples, like `(custom_value, index)`, in the heap. This way, tuple comparisons are done from left to right, comparing the custom value first and then the insertion order.
+
+3. **Ordered Associative Containers**:
+   1. **collections.OrderedDict**: `Ordered mapping or ordered table`. Note that "Ordered" here means maintaining the insertion order, unlike C++'s map, which sorts keys by size. `OrderedDict` is particularly useful for implementing LRU (Least Recently Used) caching.
+
+4. **Unordered Associative Containers**:
+   1. **set**: `Hash set`. Allows for fast insertion, lookup, and deletion of elements in O(1) time. Commonly used to quickly check if an element exists in the container.
+   2. **dict**: `Hash map or hash table`. Builds upon the set structure by adding key-value mapping. In some scenarios, if the key range is known and small, a list can replace a dict, using indices to represent keys and list values for their corresponding values.
+   3. **collections.Counter**: `Counter`. A specialized version of dict that accepts a list and counts the frequency of each element. Keys are the element values, and values are their frequencies. This can serve as a multiset.
+
+Similarly, since this is not a book on Python internals, readers are encouraged to explore more details about these data structures. Understanding their principles and usage will enable more effective problem-solving in algorithms and data structures.

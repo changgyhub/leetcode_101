@@ -8,7 +8,7 @@ sidebar_position: 16
 
 ### [154. Find Minimum in Rotated Sorted Array II](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array-ii/)
 
-旋轉數組的變形題之一。
+旋轉陣列的變形題之一。
 
 ### [540. Single Element in a Sorted Array](https://leetcode.com/problems/single-element-in-a-sorted-array/)
 
@@ -18,4 +18,4 @@ sidebar_position: 16
 
 ### [4. Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/)
 
-需要對兩個數組同時進行二分搜尋。
+需要對兩個陣列同時進行二分搜尋。
