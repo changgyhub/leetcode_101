@@ -1,6 +1,7 @@
 import { themes as prismThemes } from "prism-react-renderer";
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import localSearchPlugin from '@easyops-cn/docusaurus-search-local';
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
 
@@ -63,11 +64,14 @@ const config: Config = {
   ],
   themes: [
     [      
-      require.resolve("@easyops-cn/docusaurus-search-local"),
-      ({
+      localSearchPlugin,
+      {
         hashed: true, // Ensures search indexes are hashed for cache busting
         language: ['en', 'zh'], // Add languages as needed, e.g., ['en', 'zh']
-      }),
+        docsRouteBasePath: '/',
+        indexDocs: true,
+        indexBlog: false,
+      },
     ],
   ],
   stylesheets: [
