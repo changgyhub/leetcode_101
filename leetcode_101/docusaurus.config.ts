@@ -9,7 +9,7 @@ import type * as Preset from "@docusaurus/preset-classic";
 const config: Config = {
   title: "LeetCode 101 - A Grinding Guide",
   tagline: "LeetCode",
-  favicon: "img/favicon.ico",
+  favicon: "img/logo.png",
 
   // Set the production url of your site here
   url: "https://noworneverev.github.io/",
@@ -51,8 +51,8 @@ const config: Config = {
         docs: {
           routeBasePath: "/",
           sidebarPath: "./sidebars.ts",          
-          editUrl:
-            "https://github.com/noworneverev/leetcode_101/tree/master/leetcode_101",
+          // editUrl:
+          //   "https://github.com/noworneverev/leetcode_101/tree/master/leetcode_101",
           remarkPlugins: [remarkMath],
           rehypePlugins: [rehypeKatex],          
         },
@@ -84,15 +84,9 @@ const config: Config = {
       title: "LeetCode 101 - A Grinding Guide",
       logo: {
         alt: "My Site Logo",
-        src: "img/logo.svg",
+        src: "img/logo.png",
       },
       items: [
-        // {
-        //   type: "docSidebar",
-        //   sidebarId: "tutorialSidebar",
-        //   position: "left",
-        //   label: "Tutorial",
-        // },
         {
           type: "localeDropdown",
           position: "right",
@@ -147,7 +141,7 @@ const config: Config = {
       //     ],
       //   },
       // ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Chang Gao. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
