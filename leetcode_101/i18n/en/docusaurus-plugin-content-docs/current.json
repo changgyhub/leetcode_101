@@ -67,27 +67,27 @@
     "message": "Chapter 8: Clever Math Problem Solving",
     "description": "The generated-index page description for category 8. 巧解数学问题 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.9. 神奇的位运算 ": {
+  "sidebar.tutorialSidebar.category.9. 神奇的位运算": {
     "message": "9. Magical Bit Manipulation",
     "description": "The label for category 9. 神奇的位运算 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.9. 神奇的位运算 .link.generated-index.description": {
+  "sidebar.tutorialSidebar.category.9. 神奇的位运算.link.generated-index.description": {
     "message": "Chapter 9: Magical Bit Manipulation",
     "description": "The generated-index page description for category 9. 神奇的位运算 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.10. 妙用数据结构 ": {
+  "sidebar.tutorialSidebar.category.10. 妙用数据结构": {
     "message": "10. Ingenious Use of Data Structures",
     "description": "The label for category 10. 妙用数据结构 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.10. 妙用数据结构 .link.generated-index.description": {
+  "sidebar.tutorialSidebar.category.10. 妙用数据结构.link.generated-index.description": {
     "message": "Chapter 10: Ingenious Use of Data Structures",
     "description": "The generated-index page description for category 10. 妙用数据结构 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.11. 令人头大的字符串 ": {
+  "sidebar.tutorialSidebar.category.11. 令人头大的字符串": {
     "message": "11. Tricky String Problems",
     "description": "The label for category 11. 令人头大的字符串 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.11. 令人头大的字符串 .link.generated-index.description": {
+  "sidebar.tutorialSidebar.category.11. 令人头大的字符串.link.generated-index.description": {
     "message": "Chapter 11: Tricky String Problems",
     "description": "The generated-index page description for category 11. 令人头大的字符串 in sidebar tutorialSidebar"
   },
@@ -115,11 +115,11 @@
     "message": "Chapter 14: The Three Musketeers of Pointers: Graphs",
     "description": "The generated-index page description for category 14. 指针三剑客之三：图 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.15. 更加复杂的数据结构 ": {
+  "sidebar.tutorialSidebar.category.15. 更加复杂的数据结构": {
     "message": "15. More Complex Data Structures",
     "description": "The label for category 15. 更加复杂的数据结构 in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.15. 更加复杂的数据结构 .link.generated-index.description": {
+  "sidebar.tutorialSidebar.category.15. 更加复杂的数据结构.link.generated-index.description": {
     "message": "Chapter 15: More Complex Data Structures",
     "description": "The generated-index page description for category 15. 更加复杂的数据结构 in sidebar tutorialSidebar"
   }
