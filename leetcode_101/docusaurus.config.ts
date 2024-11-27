@@ -50,9 +50,7 @@ const config: Config = {
       {
         docs: {
           routeBasePath: "/",
-          sidebarPath: "./sidebars.ts",          
-          // editUrl:
-          //   "https://github.com/noworneverev/leetcode_101/tree/master/leetcode_101",
+          sidebarPath: "./sidebars.ts",                    
           remarkPlugins: [remarkMath],
           rehypePlugins: [rehypeKatex],          
         },
@@ -61,6 +59,15 @@ const config: Config = {
           customCss: "./src/css/custom.css",
         },
       } satisfies Preset.Options,
+    ],
+  ],
+  themes: [
+    [      
+      require.resolve("@easyops-cn/docusaurus-search-local"),
+      ({
+        hashed: true, // Ensures search indexes are hashed for cache busting
+        language: ['en', 'zh'], // Add languages as needed, e.g., ['en', 'zh']
+      }),
     ],
   ],
   stylesheets: [
