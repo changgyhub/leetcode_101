@@ -2,17 +2,17 @@
 sidebar_position: 66
 ---
 
-# 12.3 其它链表技巧
+# 12.3 Other Linked List Techniques
 
 ## [160. Intersection of Two Linked Lists](https://leetcode.com/problems/intersection-of-two-linked-lists/)
 
 ### Problem Description
 
-给定两个链表，判断它们是否相交于一点，并求这个相交节点。
+Given two linked lists, determine if they intersect at a point and find the intersecting node.
 
 ### Input and Output Example
 
-输入是两条链表，输出是一个节点。如无相交节点，则返回一个空节点。
+Input consists of two linked lists, output is a node. If there is no intersection, return `nullptr`.
 
 ```
 Input:
@@ -28,7 +28,9 @@ Output: c1
 
 ### Solution Explanation
 
-假设链表 A 的头节点到相交点的距离是 a，链表 B 的头节点到相交点的距离是 b，相交点到链表终点的距离为 c。我们使用两个指针，分别指向两个链表的头节点，并以相同的速度前进，若到达链表结尾，则移动到另一条链表的头节点继续前进。按照这种前进方法，两个指针会在 a + b + c 次前进后同时到达相交节点。
+Assume the distance from the head of linked list A to the intersection is `a`, the distance from the head of linked list B to the intersection is `b`, and the distance from the intersection to the end of the lists is `c`. 
+
+We use two pointers starting at the heads of the two linked lists and move them forward at the same speed. When a pointer reaches the end of a list, it continues from the head of the other list. With this approach, both pointers will meet at the intersection node after `a + b + c` steps.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -67,11 +69,12 @@ def getIntersectionNode(
 
 ### Problem Description
 
-以 $O(1)$ 的空间复杂度，判断链表是否回文。
+Determine if a linked list is a palindrome using $O(1)$ space complexity.
 
 ### Input and Output Example
 
-输入是一个链表，输出是一个布尔值，表示链表是否回文。
+Input: A linked list.  
+Output: A boolean indicating whether the linked list is a palindrome.
 
 ```
 Input: 1->2->3->2->1
@@ -80,7 +83,7 @@ Output: true
 
 ### Solution Explanation
 
-先使用快慢指针找到链表中点，再把链表切成两半；然后把后半段翻转；最后比较两半是否相等。
+First, use a slow and fast pointer to find the middle of the linked list. Then split the list into two halves. Reverse the second half and compare the two halves for equality.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -95,7 +98,7 @@ bool isPalindrome(ListNode* head) {
         slow = slow->next;
         fast = fast->next->next;
     }
-    slow->next = reverseList(slow->next);  // 见题目206
+    slow->next = reverseList(slow->next);  // Refer to problem 206.
     slow = slow->next;
     while (slow != nullptr) {
         if (head->val != slow->val) {
@@ -122,7 +125,7 @@ def isPalindrome(head: Optional[ListNode]) -> bool:
         slow = slow.next
         fast = fast.next.next
 
-    slow.next = reverseList(slow.next)  # 见题目206
+    slow.next = reverseList(slow.next)  # Refer to problem 206.
     slow = slow.next
 
     while slow is not None:
