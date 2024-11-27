@@ -2,7 +2,7 @@
 sidebar_position: 0
 ---
 
-# 0. LeetCode 101: 力扣刷题指南 (第二版)
+# LeetCode 101: 力扣刷题指南 (第二版)
 
 ![](https://github.com/changgyhub/leetcode_101/blob/master/misc/cover.jpg?raw=true)
 
