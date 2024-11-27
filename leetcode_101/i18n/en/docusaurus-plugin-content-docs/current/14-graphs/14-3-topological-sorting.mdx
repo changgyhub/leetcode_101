@@ -2,32 +2,39 @@
 sidebar_position: 77
 ---
 
-# 14.3 拓扑排序
+# 14.3 Topological Sort
 
-`拓扑排序`（topological sort）是一种常见的，对有向无环图排序的算法。给定有向无环图中的 $N$ 个节点，我们把它们排序成一个线性序列；若原图中节点 i 指向节点 j，则排序结果中 i 一定在 j 之前。拓扑排序的结果不是唯一的，只要满足以上条件即可。
+`Topological Sort` is a common algorithm used to order nodes in a directed acyclic graph (DAG). Given $N$ nodes in a DAG, the goal is to arrange them in a linear sequence such that if node $i$ points to node $j$, then $i$ appears before $j$ in the sequence. The result of a topological sort is not unique as long as the above condition is satisfied.
 
 ## [210. Course Schedule II](https://leetcode.com/problems/course-schedule-ii/)
 
 ### Problem Description
 
-给定 N 个课程和这些课程的前置必修课，求可以一次性上完所有课的顺序。
+Given $N$ courses and their prerequisites, determine an order in which all the courses can be completed.
 
 ### Input and Output Example
 
-输入是一个正整数，表示课程数量，和一个二维矩阵，表示所有的有向边（如 [1,0] 表示上课程 1 之前必须先上课程 0）。输出是一个一维数组，表示拓扑排序结果。
+The input consists of a positive integer representing the number of courses and a 2D array representing directed edges (e.g., `[1,0]` indicates course 1 must be taken after course 0). The output is a 1D array representing a topological order.
 
 ```
 Input: numCourses = 4, prerequisites = [[1,0],[2,0],[3,1],[3,2]]
 Output: [0,1,2,3]
 ```
 
-在这个样例中，另一种可行的顺序是 [0,2,1,3]。
+In this example, another valid order could be `[0,2,1,3]`.
 
 ### Solution Explanation
 
-我们可以先建立一个邻接矩阵表示图，方便进行直接查找。这里注意我们将所有的边反向，使得如果课程 i 指向课程 j，那么课程 i 需要在课程 j 前面先修完。这样更符合我们的直观理解。
+e can first build an adjacency matrix to represent the graph, facilitating direct lookups. Note that we reverse all edges, so if course $i$ points to course $j$, it means course $i$ must be completed before course $j$. This aligns with our intuitive understanding of prerequisites.
 
-拓扑排序也可以被看成是广度优先搜索的一种情况：我们先遍历一遍所有节点，把入度为 0 的节点（即没有前置课程要求）放在队列中。在每次从队列中获得节点时，我们将该节点放在目前排序的末尾，并且把它指向的课程的入度各减 1；如果在这个过程中有课程的所有前置必修课都已修完（即入度为 0），我们把这个节点加入队列中。当队列的节点都被处理完时，说明所有的节点都已排好序，或因图中存在循环而无法上完所有课程。
+Topological sorting can be viewed as a special case of breadth-first search (BFS): 
+
+1. Traverse all nodes and enqueue nodes with an in-degree of $0$ (i.e., nodes without prerequisites).
+2. While processing the queue:
+   - Add the current node to the sorted order.
+   - Decrease the in-degree of all nodes it points to by $1$.
+   - If a node’s in-degree becomes $0$, enqueue it.
+3. When the queue is empty, the nodes are either fully sorted, or a cycle exists in the graph, preventing all courses from being completed.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
