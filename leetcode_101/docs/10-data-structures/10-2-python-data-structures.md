@@ -15,7 +15,7 @@ sidebar_position: 49
 3. Ordered Associative Containers：有序关联容器。
    1. collections.OrderedDict：`顺序映射或顺序表`，注意这里的 Ordered 不同于 C++ 中 map的按大小排序，而是按照插入的先后次序排序。OrderedDict 很适合用来做 LRU。
 4. Unordered Associative Containers：无序关联容器。
-   1. set：`哈希集合`，可以在 O(1) 的时间快速插入、查找、删除元素，常用于快速的查询一个元素是否在这个容器内。
+   1. set：`哈希集合`，可以在 $O(1)$ 的时间快速插入、查找、删除元素，常用于快速的查询一个元素是否在这个容器内。
    2. dict：`哈希映射或哈希表`，在 set 的基础上加上映射关系，可以对每一个元素 key 存一个值 value。在某些情况下，如果 key 的范围已知且较小，我们也可以用 list 代替 dict，用位置表示 key，用每个位置的值表示 value。
    3. collections.Counter：`计数器`，是 dict 的一个特殊版本，可以直接传入一个 list，并对其中的每一个元素进行计数统计，key 是元素值，value 是元素出现的频次。可以用来当作多重集合。
    

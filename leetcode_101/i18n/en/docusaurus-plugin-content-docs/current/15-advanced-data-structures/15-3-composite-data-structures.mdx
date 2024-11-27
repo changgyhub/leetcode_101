@@ -2,36 +2,36 @@
 sidebar_position: 77
 ---
 
-# 15.3 复合数据结构
+# 15.3 Composite Data Structures
 
-这一类题通常采用哈希表或有序表辅助记录，从而加速寻址；再配上数组或者链表进行连续的数据储存，从而加速连续选址或删除值。
+This type of problem often uses a hash table or ordered map for auxiliary record-keeping to speed up lookups; paired with arrays or linked lists for continuous data storage to expedite sequential selection or value deletion.
 
 ## [146. LRU Cache](https://leetcode.com/problems/lru-cache/)
 
 ### Problem Description
 
-设计一个固定大小的，最近最少使用缓存 (least recently used cache, LRU)。每次将信息插入未满的缓存的时候，以及更新或查找一个缓存内存在的信息的时候，将该信息标为最近使用。在缓存满的情况下将一个新信息插入的时候，需要移除最旧的信息，插入新信息，并将该新信息标为最近使用。
+Design a fixed-size Least Recently Used Cache (LRU). When inserting data into a non-full cache or updating/retrieving existing data in the cache, mark the data as recently used. When the cache is full, evict the least recently used data, insert the new data, and mark it as recently used.
 
 ### Input and Output Example
 
-以下是数据结构的调用样例。给定一个大小为 n 的缓存，利用最近最少使用策略储存数据。
+Here is an example of calling this data structure. Given a cache with size `n`, store data using the least recently used strategy.
 
 ```
 LRUCache cache = new LRUCache( 2 /* capacity */ );
 cache.put(1, 1);
 cache.put(2, 2);
-cache.get(1); // 输出 value 1
-cache.put(3, 3); // 移除 key 2
-cache.get(2); // 输出 value -1 (未找到)
-cache.put(4, 4); // 移除 key 1
-cache.get(1); // 输出 value -1 (未找到)
-cache.get(3); // 输出 value 3
-cache.get(4); // 输出 value 4
+cache.get(1); // Output value 1
+cache.put(3, 3); // Evict  key 2
+cache.get(2); // Output value -1 (not found)
+cache.put(4, 4); // Evict  key 1
+cache.get(1); // Output value -1 (not found)
+cache.get(3); // Output value 3
+cache.get(4); // Output value 4
 ```
 
 ### Solution Explanation
 
-我们采用一个链表来储存信息的 key 和 value，链表的链接顺序即为最近使用的新旧顺序，最新的信息在链表头节点。同时我们需要一个哈希表进行查找，键是信息的 key，值是其在链表中的对应指针/迭代器。每次查找成功（cache hit）时，需要把指针/迭代器对应的节点移动到链表的头节点。
+We use a linked list to store the keys and values, with the order of the linked list representing the least-to-most recently used sequence. The most recently used data resides at the head of the list. Additionally, a hash table is used for lookups, where the key corresponds to the data key and the value points to the corresponding pointer/iterator in the linked list. On every cache hit (successful lookup), the corresponding node is moved to the head of the linked list.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -141,7 +141,7 @@ class LRUCache:
 
 </Tabs>
 
-对于 Python 而言，我们还可以直接利用 OrderedDict 函数实现 LRU，这将大大简化题目难度。这里笔者希望读者还是仔细研读一下以上题解，了解 LRU 实现的核心原理。
+In Python, we can directly use the `OrderedDict` function to implement LRU, which significantly simplifies the problem. However, the author encourages readers to carefully study the explanation above to understand the core principles behind LRU implementation.
 
 
 ```py
@@ -168,11 +168,11 @@ class LRUCache:
 
 ### Problem Description
 
-设计一个插入、删除和随机取值均为 $O(1)$ 时间复杂度的数据结构。
+Design a data structure that supports insertion, deletion, and random access, all in $O(1)$ time complexity.
 
 ### Input and Output Example
 
-以下是数据结构的调用样例。
+Here is an example of how the data structure is used:
 
 ```
 RandomizedSet randomizedSet = new RandomizedSet();
@@ -187,7 +187,7 @@ randomizedSet.getRandom(); // 100% 2
 
 ### Solution Explanation
 
-我们采用一个数组存储插入的数字，同时利用一个哈希表查找位置。每次插入数字时，直接加入数组，且将位置记录在哈希表中。每次删除数字时，将当前数组最后一位与删除位互换，并更新哈希表。随机取值时，则可以在数组内任意选取位置。
+We use an array to store the inserted numbers and a hash table to track their positions. When inserting a number, we add it directly to the array and record its position in the hash table. When deleting a number, we swap the current last element of the array with the element to be removed and update the hash table. For random access, we can simply select any position in the array.
 
 <Tabs>
 <TabItem value="cpp" label="C++">

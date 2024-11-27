@@ -16,7 +16,7 @@ sidebar_position: 78
 
 ### [432. All O`one Data Structure](https://leetcode.com/problems/all-oone-data-structure/)
 
-设计一个 increaseKey，decreaseKey，getMaxKey，getMinKey 均为 O(1) 时间复杂度的数据结构。
+设计一个 increaseKey，decreaseKey，getMaxKey，getMinKey 均为 $O(1)$ 时间复杂度的数据结构。
 
 ---
 

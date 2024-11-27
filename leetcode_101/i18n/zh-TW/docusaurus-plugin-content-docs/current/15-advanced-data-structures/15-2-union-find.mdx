@@ -2,26 +2,26 @@
 sidebar_position: 76
 ---
 
-# 15.2 并查集
+# 15.2 並查集
 
-`并查集`（union-ﬁnd, disjoint set）可以动态地连通两个点，并且可以非常快速地判断两个点是否连通。假设存在 n 个节点，我们先将所有节点的父节点标为自己；每次要连接节点 i 和 j 时，我们可以将秩较小一方的父节点标为另一方（按秩合并）；每次要查询两个节点是否相连时，我们可以查找 i 和 j 的祖先是否最终为同一个人，并减少祖先层级（路径压缩）。
+`並查集`（union-find, disjoint set）是一種用於動態連通性問題的數據結構，可以高效地實現動態連接兩個點，並快速判斷兩個點是否連通。假設有 n 個節點，我們初始化時將所有節點的父節點設為自身；每次需要連接節點 i 和 j 時，可以將秩較小一方的父節點標記為另一方（按秩合併）；每次需要查詢兩個節點是否相連時，可以查找 i 和 j 的祖先是否相同，並通過路徑壓縮減少祖先層級，從而加速後續的查詢操作。
 
 <figure>
   <span style={{ display: 'block', width: '30%', margin: '0 auto' }}>
     ![](15.1.png)
   </span>
-  <figcaption style={{ textAlign: 'center' }}>图 15.1: 并查集样例，其中 union 操作可以将两个集合按秩合并，ﬁnd 操作可以查找节点的祖先并压缩路径。</figcaption>
+  <figcaption style={{ textAlign: 'center' }}>圖 15.1: 並查集範例，其中 union 操作可以將兩個集合按秩合併，find 操作可以查找節點的祖先並壓縮路徑。</figcaption>
 </figure>
 
 ## [684. Redundant Connection](https://leetcode.com/problems/redundant-connection/)
 
 ### 題目描述
 
-在无向图找出一条边，移除它之后该图能够成为一棵树（即无向无环图）。如果有多个解，返回在原数组中位置最靠后的那条边。
+在無向圖中找出一條邊，移除後該圖可以成為一棵樹（即無向無環圖）。如果有多個解，返回原陣列中位置最靠後的那條邊。
 
 ### 輸入輸出範例
 
-输入是一个二维数组，表示所有的边（对应的两个节点）；输出是一个一维数组，表示需要移除的边（对应的两个节点）。
+輸入是一個二維陣列，表示所有的邊（對應的兩個節點）；輸出是一個一維陣列，表示需要移除的邊（對應的兩個節點）。
 
 ```
 Input: [[1,2], [1,3], [2,3]]
@@ -33,7 +33,7 @@ Output: [2,3]
 
 ### 題解
 
-因为需要判断是否两个节点被重复连通，所以我们可以使用并查集来解决此类问题。具体实现算法如下所示。
+由於需要判斷是否兩個節點被重複連通，我們可以使用並查集來解決此類問題。以下為實現細節：
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -60,7 +60,7 @@ class Solution {
 
    private:
     int find(int i) {
-        // 路径压缩。
+        // 路徑壓縮。
         while (i != id_[i]) {
             id_[i] = id_[id_[i]];
             i = id_[i];
@@ -73,7 +73,7 @@ class Solution {
         if (i == j) {
             return;
         }
-        // 按秩合并。
+        // 按秩合併。
         if (depth_[i] <= depth_[j]) {
             id_[i] = j;
             depth_[j] = max(depth_[j], depth_[i] + 1);
@@ -102,7 +102,7 @@ class Solution:
         self.depth = None
 
     def find(self, i: int) -> int:
-        # 路径压缩。
+        # 路徑壓縮。
         while i != self.id[i]:
             self.id[i] = self.id[self.id[i]]
             i = self.id[i]
@@ -113,7 +113,7 @@ class Solution:
         j = self.find(j)
         if i == j:
             return
-        # 按秩合并。
+        # 按秩合併。
         if self.depth[i] <= self.depth[j]:
             self.id[i] = j
             self.depth[j] = max(self.depth[j], self.depth[i] + 1)
