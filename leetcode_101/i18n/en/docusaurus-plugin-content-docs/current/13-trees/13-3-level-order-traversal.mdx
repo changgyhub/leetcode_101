@@ -2,19 +2,19 @@
 sidebar_position: 70
 ---
 
-# 13.3 层次遍历
+# 13.3 Level Order Traversal
 
-我们可以使用广度优先搜索进行层次遍历。注意，不需要使用两个队列来分别存储当前层的节点和下一层的节点，因为在开始遍历一层的节点时，当前队列中的节点数就是当前层的节点数，只要控制遍历这么多节点数，就能保证这次遍历的都是当前层的节点。
+We can use Breadth-First Search (BFS) for level order traversal. Note that it is unnecessary to use two queues to separately store the current layer's nodes and the next layer's nodes. At the beginning of each layer's traversal, the number of nodes in the current queue equals the number of nodes in the current layer. By controlling the traversal to only process that many nodes, we ensure that the traversal covers only the current layer.
 
 ## [637. Average of Levels in Binary Tree](https://leetcode.com/problems/average-of-levels-in-binary-tree/)
 
 ### Problem Description
 
-给定一个二叉树，求每一层的节点值的平均数。
+Given a binary tree, compute the average value of nodes at each level.
 
 ### Input and Output Example
 
-输入是一个二叉树，输出是一个一维数组，表示每层节点值的平均数。
+Input is a binary tree, and the output is a one-dimensional array representing the average value of nodes at each level.
 
 ```
 Input:
@@ -28,7 +28,7 @@ Output: [3, 14.5, 11]
 
 ### Solution Explanation
 
-利用广度优先搜索，我们可以很方便地求取每层的平均值。
+Using Breadth-First Search, we can conveniently calculate the average value for each level.
 
 <Tabs>
 <TabItem value="cpp" label="C++">

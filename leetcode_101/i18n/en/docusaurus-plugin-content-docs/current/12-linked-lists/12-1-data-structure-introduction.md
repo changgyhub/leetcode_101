@@ -2,7 +2,7 @@
 sidebar_position: 64
 ---
 
-# 12.1 Introduction to Data Structures
+# 12.1 Data Structure Introduction
 
 A (singly) `linked list` is a data structure composed of nodes and pointers. Each node contains a value and a pointer to the next node. As a result, many linked list problems can be solved using recursion. Unlike arrays, a linked list cannot directly access the value of any node; it must traverse through pointers to reach the desired node. Similarly, the length of a linked list cannot be determined unless it is fully traversed or tracked using another data structure. LeetCode’s default representation of a linked list is as follows.
 

@@ -2,9 +2,9 @@
 sidebar_position: 71
 ---
 
-# 13.4 前中后序遍历
+# 13.4  Preorder, Inorder, and Postorder Traversals
 
-前序遍历、中序遍历和后序遍历是三种利用深度优先搜索遍历二叉树的方式。它们是在对节点访问的顺序有一点不同，其它完全相同。考虑如下一棵树，
+Preorder traversal, inorder traversal, and postorder traversal are three ways to traverse a binary tree using Depth-First Search (DFS). They differ only in the order of node visits, while the rest remains the same. Consider the following binary tree:
 
 ```
     1
@@ -14,7 +14,7 @@ sidebar_position: 71
 4   5   6
 ```
 
-前序遍历先遍历父结点，再遍历左结点，最后遍历右节点，我们得到的遍历顺序是 [1 2 4 5 3 6]。
+In **preorder traversal**, the parent node is visited first, followed by the left node and then the right node. The traversal order is [1 2 4 5 3 6].
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -41,7 +41,7 @@ def preorder(root: TreeNode):
 
 </Tabs>
 
-中序遍历先遍历左节点，再遍历父结点，最后遍历右节点，我们得到的遍历顺序是 [4 2 5 1 3 6]。
+In **inorder traversal**, the left node is visited first, followed by the parent node and then the right node. The traversal order is [4 2 5 1 3 6].
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -68,7 +68,7 @@ def inorder(root: TreeNode):
 
 </Tabs>
 
-后序遍历先遍历左节点，再遍历右结点，最后遍历父节点，我们得到的遍历顺序是 [4 5 2 6 3 1]。
+In **postorder traversal**, the left node is visited first, followed by the right node and then the parent node. The traversal order is [4 5 2 6 3 1].
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -99,11 +99,11 @@ def postorder(root: TreeNode):
 
 ### Problem Description
 
-给定一个二叉树的前序遍历和中序遍历结果，尝试复原这个树。已知树里不存在重复值的节点。
+Given the preorder and inorder traversal results of a binary tree, reconstruct the tree. It is guaranteed that there are no duplicate values in the tree nodes.
 
 ### Input and Output Example
 
-输入是两个一维数组，分别表示树的前序遍历和中序遍历结果；输出是一个二叉树。
+Input consists of two 1D arrays representing the preorder and inorder traversal results of the tree. Output is the reconstructed binary tree.
 
 ```
 Input: preorder = [4,9,20,15,7], inorder = [9,4,15,20,7]
@@ -117,7 +117,12 @@ Output:
 
 ### Solution Explanation
 
-我们通过本题的样例讲解一下本题的思路。前序遍历的第一个节点是 4，意味着 4 是根节点。我们在中序遍历结果里找到 4 这个节点，根据中序遍历的性质可以得出，4 在中序遍历数组位置的左子数组为左子树，节点数为 1，对应的是前序排列数组里 4 之后的 1 个数字（9）；4 在中序遍历数组位置的右子数组为右子树，节点数为 3，对应的是前序排列数组里最后的 3 个数字。有了这些信息，我们就可以对左子树和右子树进行递归复原了。为了方便查找数字的位置，我们可以用哈希表预处理中序遍历的结果。
+Using the provided example, the first node in the preorder traversal is `4`, indicating that `4` is the root node. In the inorder traversal, locating `4` provides the following insights:
+
+- The left subarray in the inorder traversal corresponds to the left subtree. It contains `1` node (`9`), which maps to the next `1` element in the preorder traversal after `4`.
+- The right subarray in the inorder traversal corresponds to the right subtree. It contains `3` nodes (`15`, `20`, `7`), which map to the last `3` elements in the preorder traversal.
+
+With this information, the left and right subtrees can be recursively reconstructed. To simplify locating values, a hash map can be used to preprocess the inorder traversal results.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -180,11 +185,11 @@ def buildTree(preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
 
 ### Problem Description
 
-不使用递归，实现二叉树的前序遍历。
+Implement a binary tree preorder traversal without using recursion.
 
 ### Input and Output Example
 
-输入一个二叉树，输出一个数组，为二叉树前序遍历的结果，
+Input is a binary tree, and the output is an array representing the preorder traversal of the binary tree.
 
 ```
 Input:
@@ -198,7 +203,7 @@ Output: [1,2,3]
 
 ### Solution Explanation
 
-因为递归的本质是栈调用，因此我们可以通过栈来实现前序遍历。注意入栈的顺序。
+Since recursion inherently uses a stack, we can simulate the preorder traversal using an explicit stack. Note the order of stack operations.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -216,7 +221,7 @@ vector<int> preorderTraversal(TreeNode* root) {
         s.pop();
         po.push_back(node->val);
         if (node->right) {
-            s.push(node->right);  // 先右后左，保证左子树先遍历
+            s.push(node->right);  // Push the right child first, then the left child, to ensure the left subtree is traversed first.
         }
         if (node->left) {
             s.push(node->left);
@@ -239,7 +244,7 @@ def preorderTraversal(root: Optional[TreeNode]) -> List[int]:
         node = s.pop()
         po.append(node.val)
         if node.right is not None:
-            s.append(node.right)  # 先右后左，保证左子树先遍历
+            s.append(node.right)  # Push the right child first, then the left child, to ensure the left subtree is traversed first.
         if node.left is not None:
             s.append(node.left)
     return po

@@ -2,28 +2,28 @@
 sidebar_position: 73
 ---
 
-# 13.6 字典树
+# 13.6 字典樹
 
-字典树（Trie）用于判断字符串是否存在或者是否具有某种字符串前缀。
+字典樹（Trie）用於判斷字串是否存在或者是否具有某種字串前綴。
 
 <figure>
   <span style={{ display: 'block', width: '50%', margin: '0 auto' }}>
     ![](13.1.png)
   </span>
-  <figcaption style={{ textAlign: 'center' }}>图 13.1: 字典树，存储了单词 A、to、tea、ted、ten、i、in 和 inn，以及它们的频率</figcaption>
+  <figcaption style={{ textAlign: 'center' }}>圖 13.1: 字典樹，儲存了單字 A、to、tea、ted、ten、i、in 和 inn，以及它們的頻率</figcaption>
 </figure>
 
-为什么需要用字典树解决这类问题呢？假如我们有一个储存了近万个单词的字典，即使我们使用哈希，在其中搜索一个单词的实际开销也是非常大的，且无法轻易支持搜索单词前缀。然而由于一个英文单词的长度 n 通常在 10 以内，如果我们使用字典树，则可以在 $O(n)$——近似 $O(1)$ 的时间内完成搜索，且额外开销非常小。
+為什麼需要用字典樹解決這類問題呢？假如我們有一個儲存了近萬個單字的字典，即使我們使用雜湊表，在其中搜尋一個單字的實際開銷也是非常大的，且無法輕易支援搜尋單字前綴。然而由於一個英文單字的長度 n 通常在 10 以內，如果我們使用字典樹，則可以在 $O(n)$——近似 $O(1)$ 的時間內完成搜尋，且額外開銷非常小。
 
 ## [208. Implement Trie (Preﬁx Tree)](https://leetcode.com/problems/implement-trie-prefix-tree/)
 
 ### 題目描述
 
-尝试建立一个字典树，支持快速插入单词、查找单词、查找单词前缀的功能。
+嘗試建立一個字典樹，支援快速插入單字、查找單字、查找單字前綴的功能。
 
 ### 輸入輸出範例
 
-以下是数据结构的调用样例。
+以下是資料結構的調用範例。
 
 ```
 Trie trie = new Trie();
@@ -37,7 +37,7 @@ trie.search("app"); // true
 
 ### 題解
 
-以下是字典树的典型实现方法。
+以下是字典樹的典型實現方法。
 
 <Tabs>
 <TabItem value="cpp" label="C++">

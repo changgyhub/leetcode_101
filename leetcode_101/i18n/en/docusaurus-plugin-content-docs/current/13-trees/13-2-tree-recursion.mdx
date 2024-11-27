@@ -2,21 +2,21 @@
 sidebar_position: 69
 ---
 
-# 13.2 树的递归
+# 13.2 Tree Recursion
 
-对于一些简单的递归题，某些 LeetCode 达人喜欢写 one-line code，即用一行代码解决问题。我们也会展示一些这样的代码，但是对于新手，笔者仍然建议您使用多行的 if-else 判断语句。
+For simple recursion problems, some LeetCode experts prefer to write one-line code, solving problems with a single line. While we will showcase such solutions, beginners are still advised to use multi-line if-else statements.
 
-在很多时候，树递归的写法与深度优先搜索的递归写法相同，因此本书不会区分二者。
+In many cases, the recursive implementation for trees is similar to the recursive implementation for depth-first search. Hence, this book does not differentiate between the two.
 
 ## [104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/)
 
 ### Problem Description
 
-求一个二叉树的最大深度。
+Find the maximum depth of a binary tree.
 
 ### Input and Output Example
 
-输入是一个二叉树，输出是一个整数，表示该树的最大深度。
+The input is a binary tree, and the output is an integer representing the maximum depth of the tree.
 
 ```
 Input:
@@ -30,7 +30,7 @@ Output: 3
 
 ### Solution Explanation
 
-利用递归，我们可以很方便地求得最大深度。
+Using recursion, we can easily determine the maximum depth.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -62,11 +62,11 @@ def maxDepth(root: Optional[TreeNode]) -> int:
 
 ### Problem Description
 
-判断一个二叉树是否平衡。树平衡的定义是，对于树上的任意节点，其两侧节点的最大深度的差值不得大于 1。
+Determine whether a binary tree is balanced. A balanced tree is defined as a tree in which the maximum depth difference between any two child nodes of a node is no greater than 1.
 
 ### Input and Output Example
 
-输入是一个二叉树，输出一个布尔值，表示树是否平衡。
+The input is a binary tree, and the output is a boolean indicating whether the tree is balanced.
 
 ```
 Input:
@@ -82,7 +82,10 @@ Output: false
 
 ### Solution Explanation
 
-解法类似于求树的最大深度，但有两个不同的地方：一是我们需要先处理子树的深度再进行比较，二是如果我们在处理子树时发现其已经不平衡了，则可以返回一个-1，使得所有其长辈节点可以避免多余的判断（本题的判断比较简单，做差后取绝对值即可；但如果此处是一个开销较大的比较过程，则避免重复判断可以节省大量的计算时间）。
+The solution is similar to calculating the maximum depth of a tree but with two key differences: 
+
+1. The depth of the subtrees must be calculated first before performing the comparison.
+2. If an imbalance is detected while processing a subtree, return -1 immediately to signal imbalance. This allows ancestor nodes to avoid redundant checks. (In this problem, determining imbalance is straightforward by taking the absolute difference, but avoiding redundant computations is crucial in scenarios involving more costly comparisons.)
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -132,11 +135,11 @@ def isBalanced(root: Optional[TreeNode]) -> bool:
 
 ### Problem Description
 
-求一个二叉树的最长直径。直径的定义是二叉树上任意两节点之间的无向距离。
+Find the longest diameter of a binary tree. The diameter is defined as the undirected distance between any two nodes in the binary tree.
 
 ### Input and Output Example
 
-输入是一个二叉树，输出一个整数，表示最长直径。
+Input is a binary tree, and output is an integer representing the longest diameter.
 
 ```
 Input:
@@ -148,11 +151,13 @@ Input:
 Output: 3
 ```
 
-在这个样例中，最长直径是 [4,2,1,3] 和 [5,2,1,3]。
+In this example, the longest diameter is [4,2,1,3] and [5,2,1,3].
 
 ### Solution Explanation
 
-同样的，我们可以利用递归来处理树。解题时要注意，在我们处理某个子树时，我们更新的最长直径值和递归返回的值是不同的。这是因为待更新的最长直径值是经过该子树根节点的最长直径（即两侧长度）；而函数返回值是以该子树根节点为端点的最长直径值（即一侧长度），使用这样的返回值才可以通过递归更新父节点的最长直径值）。
+We can use recursion to solve this problem. It's important to note that when processing a subtree, the updated longest diameter and the returned value from the recursion are different.
+
+The updated longest diameter refers to the diameter passing through the root of the subtree (i.e., the sum of the lengths of the left and right subtrees). The function's return value, however, is the longest diameter with the root of the subtree as an endpoint (i.e., the length of one side of the subtree). This return value design allows the parent node's longest diameter to be updated recursively.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -205,11 +210,11 @@ def diameterOfBinaryTree(root: Optional[TreeNode]) -> int:
 
 ### Problem Description
 
-给定一个整数二叉树，求有多少条路径节点值的和等于给定值。
+Given a binary tree of integers, find the number of paths where the sum of the node values equals a given target.
 
 ### Input and Output Example
 
-输入一个二叉树和一个给定整数，输出一个整数，表示有多少条满足条件的路径。
+Input is a binary tree and a target integer. Output is an integer representing the number of paths that satisfy the condition.
 
 ```
 Input: sum = 8, tree =
@@ -223,18 +228,22 @@ Input: sum = 8, tree =
 Output: 3
 ```
 
-在这个样例中，和为 8 的路径一共有三个：[[5,3],[5,2,1],[-3,11]]。
+In this example, there are three paths where the sum equals 8: `[[5,3],[5,2,1],[-3,11]]`.
 
 ### Solution Explanation
 
-递归每个节点时，需要分情况考虑：（1）如果选取该节点加入路径，则之后必须继续加入连续节点，或停止加入节点（2）如果不选取该节点加入路径，则对其左右节点进行重新进行考虑。因此一个方便的方法是我们创建一个辅函数，专门用来计算连续加入节点的路径。
+When recursively processing each node, consider two scenarios:  
+1. If the current node is included in the path, subsequent nodes must be added continuously, or the path stops.  
+2. If the current node is not included, restart the path calculation from its left and right children.
+
+A convenient way to handle this is to create an auxiliary function specifically for calculating paths that start from the current node.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
 
 ```cpp
 // Auxiliary function
-// long long防止test case中大数溢出，一般情况下用int即可。
+// Use long long to prevent overflow with large test cases; int is usually sufficient.
 long long pathSumStartWithRoot(TreeNode* root, long long targetSum) {
     if (root == nullptr) {
         return 0;
@@ -287,11 +296,11 @@ def pathSum(root: Optional[TreeNode], targetSum: int) -> int:
 
 ### Problem Description
 
-判断一个二叉树是否对称。
+Determine whether a binary tree is symmetric.
 
 ### Input and Output Example
 
-输入一个二叉树，输出一个布尔值，表示该树是否对称。
+Input a binary tree, output a boolean indicating whether the tree is symmetric.
 
 ```
 Input:
@@ -305,8 +314,11 @@ Output: true
 
 ### Solution Explanation
 
-判断一个树是否对称等价于判断左右子树是否对称。笔者一般习惯将判断两个子树是否相等或对称类型的题的解法叫做“四步法”：（1）如果两个子树都为空指针，则它们相等或对称（2）如果两个子树只有一个为空指针，则它们不相等或不对称（3）如果两个子树根节点的值不相等，则它们不相等或不对称（4）根据相等或对称要求，进行递归处理。
-
+Determining whether a tree is symmetric is equivalent to checking if its left and right subtrees are symmetric. A common approach for such problems is the "four-step method":  
+1. If both subtrees are null, they are symmetric.
+2. If one subtree is null and the other is not, they are not symmetric.
+3. If the root values of the two subtrees are not equal, they are not symmetric.
+4. Based on symmetry requirements, recursively process the subtrees.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -370,11 +382,11 @@ def isSymmetric(root: Optional[TreeNode]) -> bool:
 
 ### Problem Description
 
-给定一个整数二叉树和一些整数，求删掉这些整数对应的节点后，剩余的子树。
+Given an integer binary tree and some integers, delete the nodes corresponding to these integers and return the remaining subtrees.
 
 ### Input and Output Example
 
-输入是一个整数二叉树和一个一维整数数组，输出一个数组，每个位置存储一个子树（的根节点）。
+Input is an integer binary tree and a one-dimensional integer array. Output is an array where each position contains a subtree (its root node).
 
 ```
 Input: to_delete = [3,5], tree =
@@ -393,7 +405,7 @@ Output: [
 
 ### Solution Explanation
 
-这道题最主要需要注意的细节是如果通过递归处理原树，以及需要在什么时候断开指针。同时，为了便于寻找待删除节点，可以建立一个哈希表方便查找。笔者强烈建议读者在看完题解后，自己写一遍本题，加深对于递归的理解和运用能力。
+The key details in this problem include how to recursively handle the original tree and when to disconnect pointers. Additionally, to efficiently find nodes to delete, you can create a hash table for quick lookup. It is highly recommended that readers attempt to implement this problem after reviewing the solution to deepen their understanding and application of recursion.
 
 <Tabs>
 <TabItem value="cpp" label="C++">

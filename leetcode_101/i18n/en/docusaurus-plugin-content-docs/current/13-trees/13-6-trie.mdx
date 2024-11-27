@@ -2,28 +2,28 @@
 sidebar_position: 73
 ---
 
-# 13.6 字典树
+# 13.6 Trie
 
-字典树（Trie）用于判断字符串是否存在或者是否具有某种字符串前缀。
+A Trie is a tree-like data structure used to determine whether a string exists or whether it has a specific prefix.
 
 <figure>
   <span style={{ display: 'block', width: '50%', margin: '0 auto' }}>
     ![](13.1.png)
   </span>
-  <figcaption style={{ textAlign: 'center' }}>图 13.1: 字典树，存储了单词 A、to、tea、ted、ten、i、in 和 inn，以及它们的频率</figcaption>
+  <figcaption style={{ textAlign: 'center' }}>Fig. 13.1: Trie storing words A, to, tea, ted, ten, i, in, and inn, along with their frequencies</figcaption>
 </figure>
 
-为什么需要用字典树解决这类问题呢？假如我们有一个储存了近万个单词的字典，即使我们使用哈希，在其中搜索一个单词的实际开销也是非常大的，且无法轻易支持搜索单词前缀。然而由于一个英文单词的长度 n 通常在 10 以内，如果我们使用字典树，则可以在 $O(n)$——近似 $O(1)$ 的时间内完成搜索，且额外开销非常小。
+Why use a Trie for such problems? Suppose we have a dictionary storing nearly 10,000 words. Even with a hash table, searching for a word can be computationally expensive, and supporting prefix-based searches becomes difficult. However, since the length of an English word, `n`, is usually less than 10, using a Trie allows searches to be completed in $O(n)$—approximately $O(1)$ time—with minimal additional overhead.
 
 ## [208. Implement Trie (Preﬁx Tree)](https://leetcode.com/problems/implement-trie-prefix-tree/)
 
 ### Problem Description
 
-尝试建立一个字典树，支持快速插入单词、查找单词、查找单词前缀的功能。
+Create a Trie that supports fast insertion of words, word lookup, and prefix lookup.
 
 ### Input and Output Example
 
-以下是数据结构的调用样例。
+Below is an example of how to use the data structure.
 
 ```
 Trie trie = new Trie();
@@ -37,7 +37,7 @@ trie.search("app"); // true
 
 ### Solution Explanation
 
-以下是字典树的典型实现方法。
+Here is the typical implementation of a Trie.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
