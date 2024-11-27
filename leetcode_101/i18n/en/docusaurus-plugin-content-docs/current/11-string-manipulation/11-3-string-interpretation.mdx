@@ -2,36 +2,36 @@
 sidebar_position: 61
 ---
 
-# 11.3 字符串理解
+# 11.3 String Parsing
 
 ## [227. Basic Calculator II](https://leetcode.com/problems/basic-calculator-ii/)
 
 ### Problem Description
 
-给定一个包含加减乘除整数运算的字符串，求其运算的整数值结果。如果除不尽则向 0 取整。
+Given a string containing addition, subtraction, multiplication, and division of integers, calculate the result. Division truncates towards zero.
 
 ### Input and Output Example
 
-输入是一个合法的运算字符串，输出是一个整数，表示其运算结果。
+Input is a valid arithmetic string, and output is an integer representing the result.
 
 ```
 Input: " 3+5 / 2 "
 Output: 5
 ```
 
-在这个样例中，因为除法的优先度高于加法，所以结果是 5 而非 4。
+In this example, since division has a higher priority than addition, the result is 5 rather than 4.
 
 ### Solution Explanation
 
-如果我们在字符串左边加上一个加号，可以证明其并不改变运算结果，且字符串可以分割成多个 < 一个运算符，一个数字 > 对子的形式；这样一来我们就可以从左往右处理了。由于乘除的优先级高于加减，因此我们需要使用一个中间变量来存储高优先度的运算结果。
+If we prepend a `+` sign to the left of the string, it doesn't change the result, and the string can be divided into multiple pairs of `<operator, number>`. This allows us to process the string from left to right. Since multiplication and division have higher precedence than addition and subtraction, we need an intermediate variable to store results of high-priority operations.
 
-此类型题也考察很多细节处理，如无运算符的情况，和多个空格的情况等等。
+This type of problem also tests edge cases, such as strings without operators or with multiple spaces.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
 
 ```cpp
-// 辅函数 - parse从位置i开始的一个数字。
+// Helper function to parse a number starting from position i.
 int parseNum(const string& s, int& i) {
     int num = 0, n = s.length();
     while (i < n && isdigit(s[i])) {
@@ -81,8 +81,8 @@ int calculate(string s) {
 ```py
 from typing import Tuple
 
-# 辅函数 - parse从位置i开始的一个数字。
-# 返回(数字, 下一个i位置)
+# Helper function to parse a number starting from position i.
+# Returns (number, next position i)
 def parseNum(s: str, i: int) -> Tuple[int, int]:
     num, n = 0, len(s)
     while i < n and s[i].isdigit():
@@ -113,7 +113,7 @@ def calculate(s: str) -> int:
             case "*":
                 local_num *= num
             case "/":
-                # int()会实现向0取整，而//对负数会远离0取整。
+                # int() performs truncation towards zero, unlike // for negatives.
                 local_num = int(local_num / num)
         
         if i < n:

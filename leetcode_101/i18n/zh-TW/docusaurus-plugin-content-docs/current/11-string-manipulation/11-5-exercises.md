@@ -8,13 +8,13 @@ sidebar_position: 63
 
 ### [409. Longest Palindrome](https://leetcode.com/problems/longest-palindrome/)
 
-计算一组字符可以构成的回文字符串的最大长度，可以利用其它数据结构进行辅助统计。
+計算一組字符可以構成的回文字符串的最大長度，可以使用其他資料結構進行輔助統計。
 
 ---
 
 ### [3. Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)
 
-计算最长无重复子字符串，同样的，可以利用其它数据结构进行辅助统计。
+計算最長無重複子字符串的長度，同樣可以使用其他資料結構進行輔助統計。
 
 ---
 
@@ -22,10 +22,10 @@ sidebar_position: 63
 
 ### [772. Basic Calculator III](https://leetcode.com/problems/basic-calculator-iii/)
 
-题目 227 的 follow-up，十分推荐练习。
+題目 227 的 follow-up，非常推薦練習。
 
 ---
 
 ### [5. Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring/)
 
-类似于我们讲过的子序列问题，子数组或子字符串问题常常也可以用动态规划来解决。先使用动态规划写出一个 $O(n^2)$ 时间复杂度的算法，再搜索一下 Manacher’s Algorithm，它可以在 $O(n)$ 时间解决这一问题。
+類似於我們之前講過的子序列問題，子陣列或子字符串問題常常也可以用動態規劃來解決。先用動態規劃寫出一個 $O(n^2)$ 時間複雜度的解法，然後搜索一下 Manacher’s Algorithm，它可以在 $O(n)$ 時間內解決這個問題。

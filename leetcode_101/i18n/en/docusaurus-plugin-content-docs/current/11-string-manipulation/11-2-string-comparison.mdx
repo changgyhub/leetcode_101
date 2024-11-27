@@ -2,17 +2,17 @@
 sidebar_position: 60
 ---
 
-# 11.2 字符串比较
+# 11.2 String Comparison
 
 ## [242. Valid Anagram](https://leetcode.com/problems/valid-anagram/)
 
 ### Problem Description
 
-判断两个字符串包含的字符是否完全相同。
+Determine if two strings contain exactly the same characters.
 
 ### Input and Output Example
 
-输入两个字符串，输出一个布尔值，表示两个字符串是否满足条件。
+Input two strings and output a boolean indicating whether the two strings meet the condition.
 
 ```
 Input: s = "anagram", t = "nagaram"
@@ -21,7 +21,8 @@ Output: true
 
 ### Solution Explanation
 
-我们可以利用哈希表或者数组统计两个数组中每个数字出现的频次，若频次相同，则说明它们包含的字符完全相同。
+We can use a hash table or an array to count the frequency of each character in both strings. If the frequencies match, it means the strings contain the exact same characters.
+
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -60,22 +61,24 @@ def isAnagram(s: str, t: str) -> bool:
 
 ### Problem Description
 
-判断两个字符串是否同构。同构的定义是，可以通过把一个字符串的某些相同的字符转换成另一些相同的字符，使得两个字符串相同，且两种不同的字符不能够被转换成同一种字符。
+Determine if two strings are isomorphic. Two strings are isomorphic if characters in one string can be replaced to get the other string, while ensuring that no two different characters map to the same character.
 
 ### Input and Output Example
 
-输入两个字符串，输出一个布尔值，表示两个字符串是否满足条件。
+Input two strings and output a boolean indicating whether they meet the condition.
 
 ```
 Input: s = "paper", t = "title"
 Output: true
 ```
 
-在这个样例中，通过把 s 中的 p、a、e、r 字符转换成 t、i、l、e 字符，可以使得两个字符串相同。
+In this example, by replacing `p`, `a`, `e`, `r` in `s` with `t`, `i`, `l`, `e` respectively, the two strings can become identical.
 
 ### Solution Explanation
 
-我们可以将问题转化一下：记录两个字符串每个位置的字符第一次出现的位置，如果两个字符串中相同位置的字符与它们第一次出现的位置一样，那么这两个字符串同构。举例来说，对于“paper”和“title”，假设我们现在遍历到第三个字符“p”和“t”，发现它们第一次出现的位置都在第一个字符，则说明目前位置满足同构。同样的，我们可以用哈希表存储，也可以用一个长度为 128 的数组（ASCII 定义下字符的总数量）。
+We can reformulate the problem: track the first appearance position of each character in both strings. If the characters at the same position in both strings have the same first appearance position, the strings are isomorphic. 
+
+For example, for "paper" and "title," if we reach the third characters `p` and `t`, we find their first appearances are at the first character, which satisfies the isomorphic condition. We can use a hash table for storage or a fixed-length array of size 128 (for the total number of ASCII characters).
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -117,22 +120,22 @@ def isIsomorphic(s: str, t: str) -> bool:
 
 ### Problem Description
 
-给定一个字符，求其有多少个回文子字符串。回文的定义是左右对称。
+Given a string, find how many of its substrings are palindromic. A palindrome is defined as being symmetric from left to right.
 
 ### Input and Output Example
 
-输入是一个字符串，输出一个整数，表示回文子字符串的数量。
+Input is a string, and output is an integer representing the count of palindromic substrings.
 
 ```
 Input: "aaa"
 Output: 6
 ```
 
-六个回文子字符串分别是 ["a","a","a","aa","aa","aaa"]。
+The six palindromic substrings are ["a", "a", "a", "aa", "aa", "aaa"].
 
 ### Solution Explanation
 
-我们可以从字符串的每个位置开始，向左向右延长，判断存在多少以当前位置为中轴的回文子字符串。
+We can start from every position in the string and extend to the left and right, counting how many palindromic substrings have the current position as their center.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -152,8 +155,8 @@ int extendSubstrings(string s, int l, int r) {
 int countSubstrings(string s) {
     int count = 0;
     for (int i = 0; i < s.length(); ++i) {
-        count += extendSubstrings(s, i, i);      // 奇数长度
-        count += extendSubstrings(s, i, i + 1);  // 偶数长度
+        count += extendSubstrings(s, i, i);      // Odd length
+        count += extendSubstrings(s, i, i + 1);  // Even length
     }
     return count;
 }
@@ -175,7 +178,7 @@ def extendSubstrings(s: str, l: int, r: int) -> int:
 # Main function
 def countSubstrings(s: str) -> int:
     return sum(
-        # 奇数长度 + 偶数长度。
+        # Odd length + Even length
         extendSubstrings(s, i, i) + extendSubstrings(s, i, i + 1)
         for i in range(len(s))
     )
@@ -190,22 +193,26 @@ def countSubstrings(s: str) -> int:
 
 ### Problem Description
 
-给定一个 0-1 字符串，求有多少非空子字符串的 0 和 1 数量相同，且 0 和 1 必须连续出现（比如 0011、1100；0101 不算）。
+Given a binary string (composed of '0's and '1's), count the number of non-empty substrings where the number of '0's and '1's are equal, and all '0's and '1's must appear consecutively (e.g., "0011", "1100"; but "0101" is not valid).
 
 ### Input and Output Example
 
-输入是一个字符串，输出一个整数，表示满足条件的子字符串的数量。
+Input is a string, and output is an integer representing the count of valid substrings.
 
 ```
 Input: "00110011"
 Output: 6
 ```
 
-在这个样例中，六个 0 和 1 数量相同的子字符串是 ["0011","01","1100","10","0011","01"]。
+In this example, the six substrings where '0's and '1's are equal are ["0011", "01", "1100", "10", "0011", "01"].
 
 ### Solution Explanation
 
-从左往右遍历数组，记录和当前位置数字相同且连续的长度，以及其之前连续的不同数字的长度。举例来说，对于 00110 的最后一位，我们记录的相同数字长度是 1，因为只有一个连续 0；我们记录的不同数字长度是 2，因为在 0 之前有两个连续的 1。若不同数字的连续长度大于等于当前数字的连续长度，则说明存在一个且只存在一个以当前数字结尾的满足条件的子字符串。
+Traverse the string from left to right, keeping track of the length of consecutive characters that are the same as the current character, as well as the length of the consecutive different characters before it. For example, in "00110", the last '0' has:
+- A consecutive length of 1 for '0', because there's only one '0' at the end.
+- A consecutive length of 2 for '1', because there are two '1's right before it.
+
+If the length of the consecutive different characters is greater than or equal to the current consecutive length, then there exists exactly one valid substring ending at the current character.
 
 <Tabs>
 <TabItem value="cpp" label="C++">
@@ -256,22 +263,27 @@ def countBinarySubstrings(s: str) -> int:
 
 ### Problem Description
 
-给定一个包括字母和左右括号的字符串，求最少要移除多少个括号才能使其合法。
+Given a string containing letters and parentheses, determine the minimum number of parentheses to remove to make the string valid.
 
 ### Input and Output Example
 
-输入是一个字符串，输出是合法且长度最长的移除结果。
+Input is a string, and output is a valid string with the longest possible length after removal.
 
 ```
 Input: s = "lee(t(c)o)de)"
 Output: "lee(t(c)o)de"
 ```
 
-返回 lee(t(co)de) 或 lee(t(c)ode) 也算正确。
+Returning "lee(t(co)de)" or "lee(t(c)ode)" is also considered correct.
 
 ### Solution Explanation
 
-因为只有一种括号，所以我们并不一定利用栈来统计，可以直接用一个临时变量统计在当前位置时，左括号比右括号多出现多少次。如果在遍历过程中出现负数，则需要移除多余的右括号。如果遍历结束时临时变量为正数，则需要从右到左移除多余的左括号。这里我们使用了一个小技巧，先标记待删除位置，最后一起移除。
+Since only one type of parenthesis is involved, we don't necessarily need a stack to track them. Instead, we can use a temporary variable to count how many more left parentheses are present than right parentheses at any position. 
+
+- If this count becomes negative during traversal, it means there are extra right parentheses that need to be removed.
+- At the end of the traversal, if the count is positive, it means there are extra left parentheses that need to be removed by traversing from right to left.
+
+A small optimization here is to first mark all positions that need to be removed and then remove them in one go.
 
 <Tabs>
 <TabItem value="cpp" label="C++">

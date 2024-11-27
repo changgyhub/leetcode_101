@@ -2,6 +2,6 @@
 sidebar_position: 59
 ---
 
-# 11.1 引言
+# 11.1 Introduction
 
-字符串可以看成是字符组成的数组。由于字符串是程序里经常需要处理的数据类型，因此有很多针对字符串处理的题目，以下是一些常见的类型。
+Strings can be considered as arrays of characters. Since strings are a frequently used data type in programming, there are many problems related to string manipulation. Below are some common types of such problems.
