@@ -20,7 +20,7 @@ sidebar_position: 67
 
 ### [19. Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)
 
-既然可以使用快慢指針找到鏈表的中點，也可以利用類似的方法找到倒數第 N 個節點，無需再次遍歷。
+既然可以使用快慢指針找到鏈結串列的中點，也可以利用類似的方法找到倒數第 N 個節點，無需再次遍歷。
 
 ---
 
@@ -28,4 +28,4 @@ sidebar_position: 67
 
 ### [148. Sort List](https://leetcode.com/problems/sort-list/)
 
-利用快慢指針找到鏈表的中點後，可以對鏈表進行合併排序。
+利用快慢指針找到鏈結串列的中點後，可以對鏈結串列進行合併排序。
