@@ -76,7 +76,7 @@ def diffWaysToCompute(expression: str) -> List[int]:
 
 </Tabs>
 
-我們發現，某些被 `divide` 的子字串可能重複出現多次，因此我們可以利用 `memoization` 來避免重複計算。例如，我們可以建立一個哈希表，`key` 是 `(l, r)`，`value` 是 `ways`。當再次遇到相同的 `(l, r)` 時，我們可以直接返回已經計算過的 `ways`。或者，與其我們從上到下用分治法結合 `memoization`，不如直接從下到上使用動態規劃處理。
+我們發現，某些被 `divide` 的子字串可能重複出現多次，因此我們可以利用 `memoization` 來避免重複計算。例如，我們可以建立一個雜湊表，`key` 是 `(l, r)`，`value` 是 `ways`。當再次遇到相同的 `(l, r)` 時，我們可以直接返回已經計算過的 `ways`。或者，與其我們從上到下用分治法結合 `memoization`，不如直接從下到上使用動態規劃處理。
 
 <Tabs>
 <TabItem value="cpp" label="C++">

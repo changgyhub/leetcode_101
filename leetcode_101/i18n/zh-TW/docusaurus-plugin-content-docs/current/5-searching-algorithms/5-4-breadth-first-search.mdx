@@ -322,7 +322,7 @@ void backtracking(const string &src, const string &dst,
 vector<vector<string>> findLadders(string beginWord, string endWord,
                                    vector<string> &wordList) {
     vector<vector<string>> ladder;
-    // 使用哈希集合儲存字典，方便查找。
+    // 使用雜湊集合儲存字典，方便查找。
     unordered_set<string> word_dict;
     for (const auto &w : wordList) {
         word_dict.insert(w);
@@ -333,7 +333,7 @@ vector<vector<string>> findLadders(string beginWord, string endWord,
     word_dict.erase(beginWord);
     word_dict.erase(endWord);
     // 建立兩個queue，從beginWord和endWord同時延展，每次延展最小的。
-    // 因為之後的去重操作需要遍歷queue，我們這裡用哈希表實現它，
+    // 因為之後的去重操作需要遍歷queue，我們這裡用雜湊表實現它，
     // 只要保證是分層次遍歷即可。
     unordered_set<string> q_small{beginWord}, q_large{endWord};
     unordered_map<string, vector<string>> next_words;
@@ -404,13 +404,13 @@ def backtracking(src: str, dst: str, next_words: Dict[str, List[str]],
 def findLadders(beginWord: str, endWord: str,
               wordList: List[str]) -> List[List[str]]:
     ladder = []
-    # 使用哈希集合儲存字典，方便查找。
+    # 使用雜湊集合儲存字典，方便查找。
     word_dict = set(wordList)
     if endWord not in word_dict:
         return ladder
     word_dict = word_dict.difference(set([beginWord, endWord]))
     # 建立兩個queue，從beginWord和endWord同時延展，每次延展最小的。
-    # 因為之後的去重操作需要遍歷queue，我們這裡用哈希表實現它，
+    # 因為之後的去重操作需要遍歷queue，我們這裡用雜湊表實現它，
     # 只要保證是分層次遍歷即可。
     q_small, q_large = set([beginWord]), set([endWord])
     next_words = dict()
