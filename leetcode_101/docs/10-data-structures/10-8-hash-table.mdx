@@ -1,0 +1,232 @@
+---
+sidebar_position: 55
+---
+
+# 10.8 哈希表
+
+`哈希表（hash table, hash map）`，又称散列表，使用 $O(n)$ 空间复杂度存储数据，通过哈希函数（hash function）映射位置，从而实现近似 $O(1)$ 时间复杂度的插入、查找、删除等操作。哈希表可以用来统计频率，记录内容等等。
+
+如果元素有穷，并且范围不大，那么可以用一个固定大小的数组来存储或统计元素。例如我们需要统计一个字符串中所有字母的出现次数，则可以用一个长度为 26 的数组来进行统计，其哈希函数即为字母在字母表的位置，这样空间复杂度就可以降低为常数。
+
+## [1. Two Sum](https://leetcode.com/problems/two-sum/)
+
+### 题目描述
+
+给定一个（未排序的）整数数组，已知有且只有两个数的和等于给定值，求这两个数的位置。
+
+### 输入输出样例
+
+输入一个一维整数数组和一个目标值，输出是一个大小为 2 的一维数组，表示满足条件的两个数字的位置。
+
+```
+Input: nums = [2, 7, 15, 11], target = 9
+Output: [0, 1]
+```
+
+在这个样例中，第 0 个位置的值 2 和第 1 个位置的值 7 的和为 9。
+
+### 题解
+
+我们可以利用哈希表存储遍历过的值以及它们的位置，每次遍历到位置 i 的时候，查找哈希表里是否存在 target - nums[i]，若存在，则说明这两个值的和为 target。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> twoSum(vector<int>& nums, int target) {
+    unordered_map<int, int> cache;  // <值，位置>
+    for (int i = 0; i < nums.size(); ++i) {
+        int num1 = nums[i], num2 = target - num1;
+        if (cache.contains(num2)) {
+            return vector<int>{cache[num2], i};
+        }
+        cache[num1] = i;
+    }
+    return {};
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def twoSum(nums: List[int], target: int) -> List[int]:
+    cache = dict() # <值，位置>
+    for i, num1 in enumerate(nums):
+        num2 = target - num1
+        if num2 in cache:
+            return [cache[num2], i]
+        cache[num1] = i
+    return []
+```
+
+</TabItem>
+
+</Tabs>
+
+## [128. Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/)
+
+### 题目描述
+
+给定一个整数数组，求这个数组中的数字可以组成的最长连续序列有多长。
+
+### 输入输出样例
+
+输入一个整数数组，输出一个整数，表示连续序列的长度。
+
+```
+Input: [100, 4, 200, 1, 3, 2]
+Output: 4
+```
+
+在这个样例中，最长连续序列是 [1,2,3,4]。
+
+### 题解
+
+我们可以把所有数字放到一个哈希表，然后不断地从哈希表中任意取一个值，并删除掉其之前之后的所有连续数字，然后更新目前的最长连续序列长度。重复这一过程，我们就可以找到所有的连续数字序列。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int longestConsecutive(vector<int>& nums) {
+    unordered_set<int> cache(nums.begin(), nums.end());
+    int max_len = 0;
+    while (!cache.empty()) {
+        int cur = *(cache.begin());
+        cache.erase(cur);
+        int l = cur - 1, r = cur + 1;
+        while (cache.contains(l)) {
+            cache.erase(l--);
+        }
+        while (cache.contains(r)) {
+            cache.erase(r++);
+        }
+        max_len = max(max_len, r - l - 1);
+    }
+    return max_len;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def longestConsecutive(nums: List[int]) -> int:
+    cache = set(nums)
+    max_len = 0
+
+    while len(cache) > 0:
+        cur = next(iter(cache))
+        cache.remove(cur)
+
+        l, r = cur - 1, cur + 1
+        while l in cache:
+            cache.remove(l)
+            l -= 1
+        while r in cache:
+            cache.remove(r)
+            r += 1
+
+        max_len = max(max_len, r - l - 1)
+
+    return max_len
+
+```
+
+</TabItem>
+
+</Tabs>
+
+## [149. Max Points on a Line](https://leetcode.com/problems/max-points-on-a-line/)
+
+### 题目描述
+
+给定一些二维坐标中的点，求同一条线上最多有多少点。
+
+### 输入输出样例
+
+输入是一个二维整数数组，表示每个点的横纵坐标；输出是一个整数，表示满足条件的最多点数。
+
+```
+Input: [[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]
+^
+|
+| o
+| o o
+| o
+| o o
++------------------->
+0 1 2 3 4 5 6
+Output: 4
+```
+
+这个样例中，$y =5 − x$ 上有四个点。
+
+### 题解
+
+对于每个点，我们对其它点建立哈希表，统计同一斜率的点一共有多少个。这里利用的原理是，一条线可以由一个点和斜率而唯一确定。另外也要考虑斜率不存在和重复坐标的情况。
+
+本题也利用了一个小技巧：在遍历每个点时，对于数组中位置 i 的点，我们只需要考虑 i 之后的点即可，因为 i 之前的点已经考虑过 i 了。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int maxPoints(vector<vector<int>>& points) {
+    int max_count = 0, n = points.size();
+    for (int i = 0; i < n; ++i) {
+        unordered_map<double, int> cache;  // <斜率, 点个数>
+        int same_xy = 1, same_y = 1;
+        for (int j = i + 1; j < n; ++j) {
+            if (points[i][1] == points[j][1]) {
+                ++same_y;
+                if (points[i][0] == points[j][0]) {
+                    ++same_xy;
+                }
+            } else {
+                double dx = points[i][0] - points[j][0],
+                       dy = points[i][1] - points[j][1];
+                ++cache[dx / dy];
+            }
+        }
+        max_count = max(max_count, same_y);
+        for (auto item : cache) {
+            max_count = max(max_count, same_xy + item.second);
+        }
+    }
+    return max_count;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def maxPoints(points: List[List[int]]) -> int:
+    max_count, n = 0, len(points)
+    
+    for i, point1 in enumerate(points):
+        cache = dict()  # <斜率, 点个数>
+        same_xy, same_y = 1, 1
+        
+        for point2 in points[i + 1:]:
+            if point1[1] == point2[1]:
+                same_y += 1
+            if point1[0] == point2[0]:
+                same_xy += 1
+            else:
+                dx, dy = point1[0] - point2[0], point1[1] - point2[1]
+                cache[dx / dy] = cache.get(dx / dy, 0) + 1
+
+        max_count = max(max_count, same_y)
+        for count in cache.values():
+            max_count = max(max_count, same_xy + count)
+    
+    return max_count
+
+```
+
+</TabItem>
+
+</Tabs>

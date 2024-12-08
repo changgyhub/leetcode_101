@@ -1,0 +1,147 @@
+---
+sidebar_position: 17
+---
+
+# 4.1 常用排序算法
+
+虽然在 C++ 和 Python 里都可以通过 sort 函数排序，而且刷题时很少需要自己手写排序算法，但是熟习各种排序算法可以加深自己对算法的基本理解，以及解出由这些排序算法引申出来的题目。这里我们展示两种复杂度为 $O(n \log n)$ 的排序算法：`快速排序`和`归并排序`，其中前者实际速度较快，后者可以保证相同值的元素在数组中的相对位置不变（即“稳定排序”）。
+
+## 快速排序（Quicksort）
+
+快速排序的原理并不复杂：对于当前一个未排序片段，我们先随机选择一个位置当作中枢点，然后通过遍历操作，将所有比中枢点小的数字移动到其左侧，再将所有比中枢点大的数字移动到其右侧。操作完成后，我们再次对中枢点左右侧的片段再次进行快速排序即可。可证明，如果中枢点选取是随机的，那么该算法的平均复杂度可以达到 $O(n \log n)$，最差情况下复杂度则为 $O(n^2)$。
+
+我们采用左闭右闭的二分写法，初始化条件为 $l =0，r =n − 1$。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+void quickSort(vector<int> &nums, int l, int r) {
+    if (l >= r) {
+        return;
+    }
+    // 在当前的[l, r]区间中，随机选择一个位置当作pivot。
+    int pivot = l + (rand() % (r - l + 1));
+    int pivot_val = nums[pivot];
+    // 将pivot与l交换。
+    swap(nums[l], nums[pivot]);
+    // 从[l+1, r]两端向内遍历，查找是否有位置不满足递增关系。
+    int i = l + 1, j = r;
+    while (true) {
+        while (i < j && nums[j] >= pivot_val) {
+            --j;
+        }
+        while (i < j && nums[i] <= pivot_val) {
+            ++i;
+        }
+        if (i == j) {
+            break;
+        }
+        // i位置的值大于pivot值，j位置的值小于pivot值，将二者交换。
+        swap(nums[i], nums[j]);
+    }
+    // i和j相遇的位置即为新的pivot，我们将pivot与l重新换回来。
+    // 此时相遇位置左侧一定比pivot值小，右侧一定比pivot值大。
+    int new_pivot = nums[i] <= nums[l] ? i : i - 1;
+    swap(nums[l], nums[new_pivot]);
+    quickSort(nums, l, new_pivot - 1);
+    quickSort(nums, new_pivot + 1, r);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def quickSort(nums: List[int], l: int, r: int) -> bool:
+    if l >= r:
+        return
+    # 在当前的[l, r]区间中，随机选择一个位置当作pivot。
+    pivot = random.randint(l, r)
+    pivot_val = nums[pivot]
+    # 将pivot与l交换。
+    nums[l], nums[pivot] = nums[pivot], nums[l]
+    # 从[l+1, r]两端向内遍历，查找是否有位置不满足递增关系。
+    i, j = l + 1, r
+    while True:
+        while i < j and nums[j] >= pivot_val:
+            j -= 1
+        while i < j and nums[i] <= pivot_val:
+            i += 1
+        if i == j:
+            break
+        # i位置的值大于pivot值，j位置的值小于pivot值，将二者交换。
+        nums[i], nums[j] = nums[j], nums[i]
+    # i和j相遇的位置即为新的pivot，我们将pivot与l重新换回来。
+    # 此时相遇位置左侧一定比pivot值小，右侧一定比pivot值大。
+    new_pivot = i if nums[i] <= nums[l] else i - 1
+    nums[l], nums[new_pivot] = nums[new_pivot], nums[l]
+    quickSort(nums, l, new_pivot - 1)
+    quickSort(nums, new_pivot + 1, r)
+```
+
+</TabItem>
+
+</Tabs>
+
+## 归并排序（Merge Sort）
+
+归并排序是典型的分治法，我们在之后的章节会展开讲解。简单来讲，对于一个未排序片段，我们可以先分别排序其左半侧和右半侧，然后将两侧重新组合（“治”）；排序每个半侧时可以通过递归再次把它切分成两侧（“分”）。
+
+我们采用左闭右闭的二分写法，初始化条件为 $l =0，r = n − 1$，另外提前建立一个和 nums 大小相同的数组 cache，用来存储临时结果。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+void mergeSort(vector<int> &nums, vector<int> &cache, int l, int r) {
+    if (l >= r) {
+        return;
+    }
+    // 分。
+    int mid = l + (r - l) / 2;
+    mergeSort(nums, cache, l, mid);
+    mergeSort(nums, cache, mid + 1, r);
+    // 治。
+    // i和j同时向右前进，i的范围是[l, mid]，j的范围是[mid+1, r]。
+    int i = l, j = mid + 1;
+    for (int pos = l; pos <= r; ++pos) {
+        if (j > r || (i <= mid && nums[i] <= nums[j])) {
+            cache[pos] = nums[i++];
+        } else {
+            cache[pos] = nums[j++];
+        }
+    }
+    for (int pos = l; pos <= r; ++pos) {
+        nums[pos] = cache[pos];
+    }
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def mergeSort(nums: List[int], cache: List[int], l: int, r: int) -> bool:
+    if l >= r:
+        return
+    # 分。
+    mid = (l + r) // 2
+    mergeSort(nums, cache, l, mid)
+    mergeSort(nums, cache, mid + 1, r)
+    # 治。
+    # i和j同时向右前进，i的范围是[l, mid]，j的范围是[mid+1, r]。
+    i, j = l, mid + 1
+    for pos in range(l, r + 1):
+        if j > r or (i <= mid and nums[i] <= nums[j]):
+            cache[pos] = nums[i]
+            i += 1
+        else:
+            cache[pos] = nums[j]
+            j += 1
+    nums[l:r+1] = cache[l:r+1]
+```
+
+</TabItem>
+
+</Tabs>

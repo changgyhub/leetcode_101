@@ -1,0 +1,190 @@
+---
+sidebar_position: 30
+---
+
+# 6.5 Subsequence Problem
+
+## [300. Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/)
+
+### Problem Description
+
+Given an unsorted array of integers, find the length of the longest increasing subsequence.
+
+:::warning
+
+According to LeetCode conventions, a subsequence does not need to be contiguous, while a subarray or substring must be contiguous.
+
+:::
+
+### Input and Output Example
+
+Input is a 1D array, and output is a positive integer representing the length of the longest increasing subsequence.
+
+```
+Input: [10,9,2,5,3,7,101,4]
+Output: 4
+```
+
+In this example, one of the longest increasing subsequences is [2,3,7,101].
+
+### Solution Explanation
+
+For subsequence problems, a common dynamic programming approach is to define a dp array where dp[i] represents the property of a subsequence ending at index i. After processing each position, summing up the results of all positions will yield the required result.
+
+In this problem, dp[i] represents the length of the longest subsequence ending at index i. For each position i, if a previous position j has a smaller value than nums[i], we can form a subsequence of length dp[j] + 1 ending at i. To check all possibilities, we use a nested loop with i and j, resulting in a time complexity of $O(n^2)$.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int lengthOfLIS(vector<int>& nums) {
+    int max_len = 0, n = nums.size();
+    vector<int> dp(n, 1);
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < i; ++j) {
+            if (nums[i] > nums[j]) {
+                dp[i] = max(dp[i], dp[j] + 1);
+            }
+        }
+        max_len = max(max_len, dp[i]);
+    }
+    return max_len;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def lengthOfLIS(nums: List[int]) -> int:
+    n = len(nums)
+    dp = [1] * n
+    for i in range(n):
+        for j in range(i):
+            if nums[i] > nums[j]:
+                dp[i] = max(dp[i], dp[j] + 1)
+    return max(dp)
+```
+
+</TabItem>
+
+</Tabs>
+
+This problem can also be solved using binary search to reduce the time complexity to $O(n \log n)$. We define a `dp` array where `dp[k]` stores the last number of the longest increasing subsequence of length `k+1`. As we iterate through each position `i`, if the number is larger than all numbers in the `dp` array, we append it to the end of `dp`, indicating that the length of the longest increasing subsequence has increased by 1. If the number lies between two numbers `a` and `b` in the `dp` array, we replace `b` with this number to increase the possibility of forming a longer increasing subsequence. Using this method, the `dp` array is always maintained in increasing order, allowing us to use binary search to speed up the process.
+
+
+For example, for the array [10,9,2,5,3,7,101,4], the updates in each round are as follows:
+
+```
+num    dp
+10     [10]
+9      [9]
+2      [2]
+5      [2,5]
+3      [2,3]
+7      [2,3,7]
+101    [2,3,7,101]
+4      [2,3,4,101]
+```
+
+Finally, we determine that the length of the longest increasing subsequence is 4. Note that the final form of the `dp` array does not necessarily represent a valid subsequence, e.g., [2,3,4,101] is not a subsequence, but the previously updated [2,3,7,101] is one of the optimal solutions.
+
+Similarly, for other problems, if the results of the state transition equation are increasing or decreasing and require insertion or search operations, we can also use binary search to speed up the solution.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int lengthOfLIS(vector<int>& nums) {
+    vector<int> dp{nums[0]};
+    for (int num : nums) {
+        if (dp.back() < num) {
+            dp.push_back(num);
+        } else {
+            *lower_bound(dp.begin(), dp.end(), num) = num;
+        }
+    }
+    return dp.size();
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def lengthOfLIS(nums: List[int]) -> int:
+    dp = [nums[0]]
+    for num in nums:
+        if dp[-1] < num:
+            dp.append(num)
+        else:
+            dp[bisect.bisect_left(dp, num, 0, len(dp))] = num
+    return len(dp)
+```
+
+</TabItem>
+
+</Tabs>
+
+## [1143. Longest Commom Subsequence](https://leetcode.com/problems/longest-common-subsequence/)
+
+### Problem Description
+
+Given two strings, find the length of their longest common subsequence.
+
+### Input and Output Example
+
+Input consists of two strings, and the output is an integer representing the length of their longest common subsequence.
+
+```
+Input: text1 = "abcde", text2 = "ace"
+Output: 3
+```
+
+In this example, the longest common subsequence is "ace."
+
+### Solution Explanation
+
+For subsequence problems, the second dynamic programming approach defines a dp array where dp[i] represents the property of the subsequence up to position i, without requiring it to end at i. The final result is the last value of the dp array, eliminating the need to compute each position.
+
+In this problem, we use a 2D array dp, where dp[i][j] represents the length of the longest common subsequence up to position i in the first string and position j in the second string. This makes it straightforward to handle the cases where the letters at these positions are the same or different.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int longestCommonSubsequence(string text1, string text2) {
+    int m = text1.length(), n = text2.length();
+    vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+    for (int i = 1; i <= m; ++i) {
+        for (int j = 1; j <= n; ++j) {
+            if (text1[i - 1] == text2[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            } else {
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+    return dp[m][n];
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def longestCommonSubsequence(text1: str, text2: str) -> int:
+    m, n = len(text1), len(text2)
+    dp = [[0 for _ in range(n + 1)] for _ in range(m + 1)]
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if text1[i - 1] == text2[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1] + 1
+            else:
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+    return dp[m][n]
+```
+
+</TabItem>
+
+</Tabs>

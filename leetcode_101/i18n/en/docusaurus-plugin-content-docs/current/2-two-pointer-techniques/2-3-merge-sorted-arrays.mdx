@@ -1,0 +1,68 @@
+---
+sidebar_position: 7
+---
+
+# 2.3 Merging Two Sorted Arrays
+
+## [88. Merge Sorted Array](https://leetcode.com/problems/merge-sorted-array/)
+
+### Problem Description
+
+Given two sorted arrays, merge them into one array.
+
+### Input and Output Example
+
+The input consists of two arrays and their respective lengths `m` and `n`. The length of the first array is extended to `m + n`, with the extra `n` positions filled with `0`s. The task is to merge the second array into the first array without allocating additional space.
+
+
+```
+Input: nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3
+Output: nums1 = [1,2,2,3,5,6]
+```
+
+
+### Solution Explanation
+
+Since both arrays are already sorted, we can place two pointers at the end of each array: at the `(m - 1)` position of `nums1` and the `(n - 1)` position of `nums2`. Each time, copy the larger number to the end of `nums1` and move the pointer one position to the left. 
+
+To keep track of `nums1`'s end position, we also need a third pointer for copying. In the following code, we use `m` and `n` as pointers for the two arrays and create an additional pointer, `pos`, initially set to `m + n - 1`. Each time we move `m` or `n` to the left, we also move `pos` to the left. Note that if all numbers from `nums1` have been copied, don't forget to continue copying numbers from `nums2`; if all numbers from `nums2` have been copied, the remaining numbers in `nums1` do not need to change as they are already sorted.
+
+In the C++ solution, we use the `++` and `--` shorthand: both `a++` and `++a` increment `a` by 1, but `a++` returns the original value of `a`, while `++a` returns `a + 1`. If you only want to increase `a` without needing a return value, either syntax is fine (`++a` is slightly faster in unoptimized code).
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+    int pos = m-- + n-- - 1;
+    while (m >= 0 && n >= 0) {
+        nums1[pos--] = nums1[m] > nums2[n] ? nums1[m--] : nums2[n--];
+    }
+    while (n >= 0) {
+        nums1[pos--] = nums2[n--];
+    }
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def merge(nums1: List[int], m: int, nums2: List[int], n: int) -> None:
+    pos = m + n - 1
+    m -= 1
+    n -= 1
+    while m >= 0 and n >= 0:
+        if nums1[m] > nums2[n]:
+            nums1[pos] = nums1[m]
+            m -= 1
+        else:
+            nums1[pos] = nums2[n]
+            n -= 1
+        pos -= 1
+    nums1[: n + 1] = nums2[: n + 1]
+```
+
+</TabItem>
+
+</Tabs>

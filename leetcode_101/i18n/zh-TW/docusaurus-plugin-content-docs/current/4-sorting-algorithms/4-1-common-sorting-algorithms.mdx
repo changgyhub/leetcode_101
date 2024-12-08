@@ -1,0 +1,150 @@
+---
+sidebar_position: 17
+---
+
+# 4.1 常用排序算法
+
+雖然在 C++ 和 Python 裡都可以通過 sort 函數排序，而且在刷題時很少需要自己手寫排序算法，但熟悉各種排序算法可以加深對算法的基本理解，並有助於解決由這些排序算法引申出的題目。這裡展示兩種時間複雜度為 $O(n \log n)$ 的排序算法：`快速排序` 和 `合併排序`。其中前者速度較快，後者能保證相同值的元素在陣列中的相對位置不變（即“穩定排序”）。
+
+
+## 快速排序（Quicksort）
+
+快速排序的原理並不複雜：對於一個未排序片段，我們先隨機選擇一個位置作為樞軸，然後通過遍歷操作，將所有比樞軸小的數字移動到其左側，再將所有比樞軸大的數字移動到其右側。操作完成後，我們對樞軸左右側的片段再次進行快速排序即可。可證明，如果樞軸選取是隨機的，那麼該算法的平均複雜度可以達到 $O(n \log n)$，但最差情況下複雜度為 $O(n^2)$。
+
+我們採用左閉右閉的二分寫法，初始化條件為 $l = 0, r = n - 1$。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+void quickSort(vector<int> &nums, int l, int r) {
+    if (l >= r) {
+        return;
+    }
+    // 在當前的 [l, r] 區間中，隨機選擇一個位置作為樞軸。
+    int pivot = l + (rand() % (r - l + 1));
+    int pivot_val = nums[pivot];
+    // 將樞軸與 l 交換。
+    swap(nums[l], nums[pivot]);
+    // 從 [l+1, r] 兩端向內遍歷，查找是否有位置不滿足遞增關係。
+    int i = l + 1, j = r;
+    while (true) {
+        while (i < j && nums[j] >= pivot_val) {
+            --j;
+        }
+        while (i < j && nums[i] <= pivot_val) {
+            ++i;
+        }
+        if (i == j) {
+            break;
+        }
+        // i 位置的值大於樞軸值，j 位置的值小於樞軸值，將二者交換。
+        swap(nums[i], nums[j]);
+    }
+    // i 和 j 相遇的位置即為新的樞軸，我們將樞軸與 l 重新交換回來。
+    // 此時相遇位置左側一定比樞軸值小，右側一定比樞軸值大。
+    int new_pivot = nums[i] <= nums[l] ? i : i - 1;
+    swap(nums[l], nums[new_pivot]);
+    quickSort(nums, l, new_pivot - 1);
+    quickSort(nums, new_pivot + 1, r);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def quickSort(nums: List[int], l: int, r: int) -> None:
+    if l >= r:
+        return
+    # 在當前的 [l, r] 區間中，隨機選擇一個位置作為樞軸。
+    pivot = random.randint(l, r)
+    pivot_val = nums[pivot]
+    # 將樞軸與 l 交換。
+    nums[l], nums[pivot] = nums[pivot], nums[l]
+    # 從 [l+1, r] 兩端向內遍歷，查找是否有位置不滿足遞增關係。
+    i, j = l + 1, r
+    while True:
+        while i < j and nums[j] >= pivot_val:
+            j -= 1
+        while i < j and nums[i] <= pivot_val:
+            i += 1
+        if i == j:
+            break
+        # i 位置的值大於樞軸值，j 位置的值小於樞軸值，將二者交換。
+        nums[i], nums[j] = nums[j], nums[i]
+    # i 和 j 相遇的位置即為新的樞軸，我們將樞軸與 l 重新交換回來。
+    # 此時相遇位置左側一定比樞軸值小，右側一定比樞軸值大。
+    new_pivot = i if nums[i] <= nums[l] else i - 1
+    nums[l], nums[new_pivot] = nums[new_pivot], nums[l]
+    quickSort(nums, l, new_pivot - 1)
+    quickSort(nums, new_pivot + 1, r)
+```
+
+</TabItem>
+
+</Tabs>
+
+## 合併排序（Merge Sort）
+
+合併排序是典型的分治法，會在後續章節展開講解。簡單來說，對於一個未排序片段，我們可以先分別排序其左半側和右半側，然後將兩側重新合併（“治”）；排序每個半側時可以通過遞迴再次將其切分為兩側（“分”）。
+
+我們採用左閉右閉的二分寫法，初始化條件為 $l = 0, r = n - 1$，並提前建立一個與 nums 大小相同的陣列 cache，用來儲存臨時結果。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+void mergeSort(vector<int> &nums, vector<int> &cache, int l, int r) {
+    if (l >= r) {
+        return;
+    }
+    // 分。
+    int mid = l + (r - l) / 2;
+    mergeSort(nums, cache, l, mid);
+    mergeSort(nums, cache, mid + 1, r);
+    // 治。
+    // i 和 j 同時向右前進，i 的範圍是 [l, mid]，j 的範圍是 [mid+1, r]。
+    int i = l, j = mid + 1;
+    for (int pos = l; pos <= r; ++pos) {
+        if (j > r || (i <= mid && nums[i] <= nums[j])) {
+            cache[pos] = nums[i++];
+        } else {
+            cache[pos] = nums[j++];
+        }
+    }
+    // 將 cache 的數據複製回 nums。
+    for (int pos = l; pos <= r; ++pos) {
+        nums[pos] = cache[pos];
+    }
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def mergeSort(nums: List[int], cache: List[int], l: int, r: int) -> None:
+    if l >= r:
+        return
+    # 分。
+    mid = (l + r) // 2
+    mergeSort(nums, cache, l, mid)
+    mergeSort(nums, cache, mid + 1, r)
+    # 治。
+    # i 和 j 同時向右前進，i 的範圍是 [l, mid]，j 的範圍是 [mid+1, r]。
+    i, j = l, mid + 1
+    for pos in range(l, r + 1):
+        if j > r or (i <= mid and nums[i] <= nums[j]):
+            cache[pos] = nums[i]
+            i += 1
+        else:
+            cache[pos] = nums[j]
+            j += 1
+    # 將 cache 的數據複製回 nums。
+    nums[l:r+1] = cache[l:r+1]
+```
+
+</TabItem>
+
+</Tabs>

@@ -1,0 +1,37 @@
+---
+sidebar_position: 68
+---
+
+# 13.1 数据结构介绍
+
+作为（单）链表的升级版，我们通常接触的树都是`二叉树`（binary tree），即每个节点最多有两个子节点；且除非题目说明，默认树中不存在循环结构。LeetCode 默认的树表示方法如下。
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+```
+
+</TabItem>
+
+</Tabs>
+
+可以看出，其与链表的主要差别就是多了一个子节点的指针。

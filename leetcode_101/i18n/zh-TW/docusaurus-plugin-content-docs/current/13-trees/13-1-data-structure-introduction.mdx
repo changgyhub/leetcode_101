@@ -1,0 +1,36 @@
+---
+sidebar_position: 68
+---
+
+# 13.1 資料結構介紹
+
+作為（單）鏈結串列的升級版，我們通常接觸的樹都是`二元樹`（binary tree），即每個節點最多有兩個子節點；且除非題目說明，預設樹中不存在循環結構。LeetCode 預設的樹表示方法如下。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+```
+
+</TabItem>
+
+</Tabs>
+
+可以看出，其與鏈結串列的主要差別就是多了一個子節點的指標。

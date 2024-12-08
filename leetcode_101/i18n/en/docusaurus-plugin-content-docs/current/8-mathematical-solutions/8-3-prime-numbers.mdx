@@ -1,0 +1,138 @@
+---
+sidebar_position: 40
+---
+
+# 8.3 Prime Numbers
+
+Prime numbers are integers greater than 1 that have no divisors other than 1 and themselves. It is important to note that every number can be expressed as a product of prime numbers.
+
+
+## [204. Count Primes](https://leetcode.com/problems/count-primes/)
+
+### Problem Description
+
+Given a number \( n \), find the count of prime numbers less than \( n \).
+
+### Input and Output Example
+
+Input an integer and output another integer representing the count of prime numbers less than the input number.
+
+```
+Input: 10
+Output: 4
+```
+
+In this example, the prime numbers less than 10 are [2, 3, 5, 7].
+
+### Solution Explanation
+
+The `Sieve of Eratosthenes` is a widely used algorithm for determining whether an integer is a prime number. It is particularly efficient for determining all prime numbers less than a given integer $n$. The principle is simple: iterate through numbers from $1$ to $n$, and for the current number $m$, mark all multiples of $m$ (less than $n$) as composite numbers. After processing, the numbers not marked as composite are prime.
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int countPrimes(int n) {
+    if (n <= 2) {
+        return 0;
+    }
+    vector<bool> primes(n, true);
+    int count = n - 2;  // Remove the non-prime number 1
+    for (int i = 2; i < n; ++i) {
+        if (primes[i]) {
+            for (int j = 2 * i; j < n; j += i) {
+                if (primes[j]) {
+                    primes[j] = false;
+                    --count;
+                }
+            }
+        }
+    }
+    return count;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def countPrimes(n: int) -> int:
+    if n <= 2:
+        return 0
+    primes = [True for _ in range(n)]
+    count = n - 2 # Remove the non-prime number 1
+    for i in range(2, n):
+        if primes[i]:
+            for j in range(2 * i, n, i):
+                if primes[j]:
+                    primes[j] = False
+                    count -= 1
+    return count
+```
+
+</TabItem>
+
+</Tabs>
+
+By leveraging certain properties of prime numbers, we can further optimize this algorithm.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int countPrimes(int n) {
+    if (n <= 2) {
+        return 0;
+    }
+    vector<bool> primes(n, true);
+    int sqrtn = sqrt(n);
+    int count = n / 2;  // Even numbers are not prime
+    int i = 3;
+    // The smallest prime factor is always less than or equal to the square root.
+    while (i <= sqrtn) {
+        // Find multiples to the right, avoiding even numbers and redundant checks.
+        for (int j = i * i; j < n; j += 2 * i) {
+            if (primes[j]) {
+                --count;
+                primes[j] = false;
+            }
+        }
+        i += 2;
+        // Move to the next position to the right, avoiding even numbers and redundant checks.
+        while (i <= sqrtn && !primes[i]) {
+            i += 2;
+        }
+    }
+    return count;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def countPrimes(n: int) -> int:
+    if n <= 2:
+        return 0
+    primes = [True for _ in range(n)]
+    sqrtn = sqrt(n)
+    count = n // 2  # Even numbers are not prime
+    i = 3
+    # The smallest prime factor is always less than or equal to the square root.
+    while i <= sqrtn:
+        # Find multiples to the right, avoiding even numbers and redundant checks.
+        for j in range(i * i, n, 2 * i):
+            if primes[j]:
+                count -= 1
+                primes[j] = False
+        i += 2
+        # Move to the next position to the right, avoiding even numbers and redundant checks.
+        while i <= sqrtn and not primes[i]:
+            i += 2
+    return count
+```
+
+</TabItem>
+
+</Tabs>

@@ -1,0 +1,104 @@
+---
+sidebar_position: 12
+---
+
+# 3.2 求开方
+
+## [69. Sqrt(x)](https://leetcode.com/problems/sqrtx/)
+
+### 题目描述
+
+给定一个非负整数 x，求它的开方，向下取整。
+
+### 输入输出样例
+
+输入一个整数，输出一个整数。
+
+```
+Input: 8
+Output: 2
+```
+
+8 的开方结果是 2.82842...，向下取整即是 2。
+
+
+### 题解
+
+我们可以把这道题想象成，给定一个非负整数 x，求 $f (t) =t^2 − x =0$ 的解。因为我们只考虑 $t ≥ 0$，所以 $f (t)$ 在定义域上是单调递增的。考虑到 $f (0) =−x ≤ 0$， $f (x) = x^2 − x ≥ 0$，我们可以对 $[0, x]$ 区间使用二分法找到 $f (t) =0$ 的解。这里笔者使用了左闭右闭的写法。
+
+在 C++ 题解中，$mid = (l +r)/2$ 可能会因为 $l +r$ 溢出而错误，因而采用 $mid = l +(r − l)/2$的写法；直接计算 $mid ∗ mid$ 也有可能溢出，因此我们比较 $mid$ 和 $x/mid$。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int mySqrt(int x) {
+    int l = 1, r = x, mid, x_div_mid;
+    while (l <= r) {
+        mid = l + (r - l) / 2;
+        x_div_mid = x / mid;
+        if (mid == x_div_mid) {
+            return mid;
+        }
+        if (mid < x_div_mid) {
+            l = mid + 1;
+        } else {
+            r = mid - 1;
+        }
+    }
+    return r;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def mySqrt(x: int) -> int:
+    l, r = 1, x
+    while l <= r:
+        mid = (l + r) // 2
+        mid_sqr = mid**2
+        if mid_sqr == x:
+            return mid
+        if mid_sqr < x:
+            l = mid + 1
+        else:
+            r = mid - 1
+    return r
+```
+
+</TabItem>
+
+</Tabs>
+
+另外，这道题还有一种更快的算法——`牛顿迭代法`，其公式为 $t_{n+1} = t_n - \frac{f(t_n)}{f'(t_n)}
+$。给定$f (t) =t2 − x =0$，这里的迭代公式为 $t_{n+1} = \frac{t_n + \frac{x}{t_n}}{2}$。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int mySqrt(int x) {
+    long t = x;
+    while (t * t > x) {
+        t = (t + x / t) / 2;
+    }
+    return t;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def mySqrt(x: int) -> int:
+    t = x
+    while t**2 > x:
+        t = (t + x // t) // 2
+    return t
+```
+
+</TabItem>
+
+</Tabs>

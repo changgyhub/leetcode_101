@@ -1,0 +1,143 @@
+---
+sidebar_position: 2
+---
+
+# 1.2 分配问题
+
+## [455. Assign Cookies](https://leetcode.com/problems/assign-cookies/)
+
+### 题目描述
+
+有一群孩子和一堆饼干，每个孩子有一个饥饿度，每个饼干都有一个饱腹度。每个孩子只能吃一个饼干，且只有饼干的饱腹度不小于孩子的饥饿度时，这个孩子才能吃饱。求解最多有多少孩子可以吃饱。
+
+### 输入输出样例
+
+输入两个数组，分别代表孩子的饥饿度和饼干的饱腹度。输出可以吃饱的孩子的最大数量。
+
+```
+Input: [1,2], [1,2,3]
+Output: 2
+```
+
+在这个样例中，我们可以给两个孩子喂 [1,2]、[1,3]、[2,3] 这三种组合的任意一种。
+
+### 题解
+
+因为饥饿度最小的孩子最容易吃饱，所以我们先考虑这个孩子。为了尽量使得剩下的饼干可以满足饥饿度更大的孩子，所以我们应该把大于等于这个孩子饥饿度的、且大小最小的饼干给这个孩子。满足了这个孩子之后，我们采取同样的策略，考虑剩下孩子里饥饿度最小的孩子，直到没有满足条件的饼干存在。
+
+简而言之，这里的贪心策略是，给剩余孩子里最小饥饿度的孩子分配最小的能饱腹的饼干。至于具体实现，因为我们需要获得大小关系，一个便捷的方法就是把孩子和饼干分别排序。这样我们就可以从饥饿度最小的孩子和饱腹度最小的饼干出发，计算有多少个对子可以满足条件。
+
+:::warning
+
+对数组或字符串排序是常见的操作，方便之后的大小比较。排序顺序默认是从小到大。
+
+:::
+
+:::warning
+
+在之后的讲解中，若我们谈论的是对连续空间的变量进行操作，我们并不会明确区分数组和字符串，因为他们本质上都是在连续空间上的有序变量集合。一个字符串“abc”可以被看作一个数组 [‘a’,‘b’,‘c’]。
+
+:::
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int findContentChildren(vector<int> &children, vector<int> &cookies) {
+    sort(children.begin(), children.end());
+    sort(cookies.begin(), cookies.end());
+    int child_i = 0, cookie_i = 0;
+    int n_children = children.size(), n_cookies = cookies.size();
+    while (child_i < n_children && cookie_i < n_cookies) {
+        if (children[child_i] <= cookies[cookie_i]) {
+            ++child_i;
+        }
+        ++cookie_i;
+    }
+    return child_i;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def findContentChildren(children: List[int], cookies: List[int]) -> int:
+    children.sort()
+    cookies.sort()
+    child_i, cookie_i = 0, 0
+    n_children, n_cookies = len(children), len(cookies)
+    while child_i < n_children and cookie_i < n_cookies:
+        if children[child_i] <= cookies[cookie_i]:
+            child_i += 1
+        cookie_i += 1
+    return child_i
+```
+
+</TabItem>
+
+</Tabs>
+
+## [135. Candy](https://leetcode.com/problems/candy/)
+
+### 题目描述
+
+一群孩子站成一排，每一个孩子有自己的评分。现在需要给这些孩子发糖果，规则是如果一个孩子的评分比自己身旁的一个孩子要高，那么这个孩子就必须得到比身旁孩子更多的糖果。所有孩子至少要有一个糖果。求解最少需要多少个糖果。
+
+### 输入输出样例
+
+输入是一个数组，表示孩子的评分。输出是最少糖果的数量。
+
+```
+Input: [1,0,2]
+Output: 5
+```
+在这个样例中，最少的糖果分法是 [2,1,2]。
+
+
+### 题解
+
+存在比较关系的贪心策略并不一定需要排序。虽然这一道题也是运用贪心策略，但我们只需要简单的两次遍历即可：把所有孩子的糖果数初始化为 1；先从左往右遍历一遍，如果右边孩子的评分比左边的高，则右边孩子的糖果数更新为左边孩子的糖果数加 1；再从右往左遍历一遍，如果左边孩子的评分比右边的高，且左边孩子当前的糖果数不大于右边孩子的糖果数，则左边孩子的糖果数更新为右边孩子的糖果数加 1。通过这两次遍历，分配的糖果就可以满足题目要求了。这里的贪心策略即为，在每次遍历中，只考虑并更新相邻一侧的大小关系。
+
+在样例中，我们初始化糖果分配为 [1,1,1]，第一次遍历更新后的结果为 [1,1,2]，第二次遍历更新后的结果为 [2,1,2]。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int candy(vector<int>& ratings) {
+    int n = ratings.size();
+    vector<int> candies(n, 1);
+    for (int i = 1; i < n; ++i) {
+        if (ratings[i] > ratings[i - 1]) {
+            candies[i] = candies[i - 1] + 1;
+        }
+    }
+    for (int i = n - 1; i > 0; --i) {
+        if (ratings[i] < ratings[i - 1]) {
+            candies[i - 1] = max(candies[i - 1], candies[i] + 1);
+        }
+    }
+    return accumulate(candies.begin(), candies.end(), 0);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def candy(ratings_list: List[int]) -> int:
+    n = len(ratings_list)
+    candies = [1] * n
+    for i in range(1, n):
+        if ratings_list[i] > ratings_list[i - 1]:
+            candies[i] = candies[i - 1] + 1
+    for i in range(n - 1, 0, -1):
+        if ratings_list[i] < ratings_list[i - 1]:
+            candies[i - 1] = max(candies[i - 1], candies[i] + 1)
+    return sum(candies)
+```
+
+</TabItem>
+
+</Tabs>

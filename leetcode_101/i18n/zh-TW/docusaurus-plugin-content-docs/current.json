@@ -1,0 +1,126 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "當前版本的標籤"
+  },
+  "sidebar.tutorialSidebar.category.1. 最易懂的贪心算法": {
+    "message": "1. 最易懂的貪心演算法",
+    "description": "The label for category 1. 最易懂的貪心演算法 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.1. 最易懂的贪心算法.link.generated-index.description": {
+    "message": "第 1 章 最易懂的貪心演算法",
+    "description": "The generated-index page description for category 1. 最易懂的貪心演算法 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.2. 玩转双指针": {
+    "message": "2. 玩轉雙指針",
+    "description": "The label for category 2. 玩轉雙指針 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.2. 玩转双指针.link.generated-index.description": {
+    "message": "第 2 章 玩轉雙指針",
+    "description": "The generated-index page description for category 2. 玩轉雙指針 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.3. 居合斩！二分查找": {
+    "message": "3. 居合斬！二分搜尋",
+    "description": "The label for category 3. 居合斬！二分搜尋 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.3. 居合斩！二分查找.link.generated-index.description": {
+    "message": "第 3 章 居合斬！二分搜尋",
+    "description": "The generated-index page description for category 3. 居合斬！二分搜尋 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.4. 千奇百怪的排序算法": {
+    "message": "4. 千奇百怪的排序演算法",
+    "description": "The label for category 4. 千奇百怪的排序演算法 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.4. 千奇百怪的排序算法.link.generated-index.description": {
+    "message": "第 4 章 千奇百怪的排序演算法",
+    "description": "The generated-index page description for category 4. 千奇百怪的排序演算法 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.5. 一切皆可搜索": {
+    "message": "5. 一切皆可搜尋",
+    "description": "The label for category 5. 一切皆可搜尋 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.5. 一切皆可搜索.link.generated-index.description": {
+    "message": "第 5 章 一切皆可搜尋",
+    "description": "The generated-index page description for category 5. 一切皆可搜尋 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.6. 深入浅出动态规划": {
+    "message": "6. 深入淺出的動態規劃",
+    "description": "The label for category 6. 深入淺出的動態規劃 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.6. 深入浅出动态规划.link.generated-index.description": {
+    "message": "第 6 章 深入淺出的動態規劃",
+    "description": "The generated-index page description for category 6. 深入淺出的動態規劃 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.7. 化繁为简的分治法": {
+    "message": "7. 化繁為簡的分治法",
+    "description": "The label for category 7. 化繁為簡的分治法 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.7. 化繁为简的分治法.link.generated-index.description": {
+    "message": "第 7 章 化繁為簡的分治法",
+    "description": "The generated-index page description for category 7. 化繁為簡的分治法 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.8. 巧解数学问题": {
+    "message": "8. 巧解數學問題",
+    "description": "The label for category 8. 巧解數學問題 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.8. 巧解数学问题.link.generated-index.description": {
+    "message": "第 8 章 巧解數學問題",
+    "description": "The generated-index page description for category 8. 巧解數學問題 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.9. 神奇的位运算": {
+    "message": "9. 神奇的位元運算",
+    "description": "The label for category 9. 神奇的位元運算 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.9. 神奇的位运算.link.generated-index.description": {
+    "message": "第 9 章 神奇的位元運算",
+    "description": "The generated-index page description for category 9. 神奇的位元運算 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.10. 妙用数据结构": {
+    "message": "10. 巧用資料結構",
+    "description": "The label for category 10. 巧用資料結構 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.10. 妙用数据结构.link.generated-index.description": {
+    "message": "第 10 章 巧用資料結構",
+    "description": "The generated-index page description for category 10. 巧用資料結構 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.11. 令人头大的字符串": {
+    "message": "11. 頭痛的字串處理",
+    "description": "The label for category 11. 頭痛的字串處理 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.11. 令人头大的字符串.link.generated-index.description": {
+    "message": "第 11 章 頭痛的字串處理",
+    "description": "The generated-index page description for category 11. 頭痛的字串處理 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.12. 指针三剑客之一：链表": {
+    "message": "12. 指標三劍客之一：鏈結串列",
+    "description": "The label for category 12. 指標三劍客之一：鏈結串列 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.12. 指针三剑客之一：链表.link.generated-index.description": {
+    "message": "第 12 章 指標三劍客之一：鏈結串列",
+    "description": "The generated-index page description for category 12. 指標三劍客之一：鏈結串列 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.13. 指针三剑客之二：树": {
+    "message": "13. 指標三劍客之二：樹",
+    "description": "The label for category 13. 指標三劍客之二：樹 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.13. 指针三剑客之二：树.link.generated-index.description": {
+    "message": "第 13 章 指標三劍客之二：樹",
+    "description": "The generated-index page description for category 13. 指標三劍客之二：樹 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.14. 指针三剑客之三：图": {
+    "message": "14. 指標三劍客之三：圖",
+    "description": "The label for category 14. 指標三劍客之三：圖 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.14. 指针三剑客之三：图.link.generated-index.description": {
+    "message": "第 14 章 指標三劍客之三：圖",
+    "description": "The generated-index page description for category 14. 指標三劍客之三：圖 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.15. 更加复杂的数据结构": {
+    "message": "15. 更加複雜的資料結構",
+    "description": "The label for category 15. 更加複雜的資料結構 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.15. 更加复杂的数据结构.link.generated-index.description": {
+    "message": "第 15 章 更加複雜的資料結構",
+    "description": "The generated-index page description for category 15. 更加複雜的資料結構in sidebar tutorialSidebar"
+  }
+}

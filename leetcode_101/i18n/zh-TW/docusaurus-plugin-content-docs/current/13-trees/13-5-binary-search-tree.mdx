@@ -1,0 +1,189 @@
+---
+sidebar_position: 72
+---
+
+# 13.5 二元搜尋樹
+
+`二元搜尋樹`（Binary Search Tree, BST）是一種特殊的二元樹：對於每個父節點，其左子樹中所有節點的值小於等於父節點的值，其右子樹中所有節點的值大於等於父節點的值。因此對於一個二元搜尋樹，我們可以在 $O(\log n)$ 的時間內查找某值是否存在：從根節點開始，若當前節點的值大於查找值則向左下走，若當前節點的值小於查找值則向右下走。同時因為二元搜尋樹是有序的，對其中序遍歷的結果即為排好序的陣列。
+
+例如下面這棵樹即為二元搜尋樹，其中序遍歷結果為 [1, 2, 3, 4, 5, 6]。
+
+```
+    4
+   / \
+  2   5
+ / \   \
+1   3   6
+```
+
+## [99. Recover Binary Search Tree](https://leetcode.com/problems/recover-binary-search-tree/)
+
+### 題目描述
+
+給定一個二元搜尋樹，已知有兩個節點被不小心交換了，試復原此樹。
+
+### 輸入輸出範例
+
+輸入是一個被誤交換兩個節點的二元搜尋樹，輸出是改正後的二元搜尋樹。
+
+```
+Input:
+  3
+ / \
+1   4
+   /
+  2
+Output:
+  2
+ / \
+1   4
+   /
+  3
+```
+
+在這個範例中，2 和 3 被不小心交換了。
+
+### 題解
+
+我們可以使用中序遍歷這個二元搜尋樹，同時設置一個 `prev` 指標，記錄當前節點中序遍歷時的前一節點。如果當前節點的值小於 `prev` 節點的值，說明次序需要調整。有一個技巧是：
+
+- 如果遍歷整個序列的過程中只出現一次次序錯誤，說明這兩個相鄰節點需要被交換。
+- 如果出現了兩次次序錯誤，則需要交換這兩個節點。
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// 輔助函式。
+void inorder(TreeNode* root, TreeNode*& mistake1, TreeNode*& mistake2,
+             TreeNode*& prev) {
+    if (root == nullptr) {
+        return;
+    }
+    inorder(root->left, mistake1, mistake2, prev);
+    if (prev != nullptr && root->val < prev->val) {
+        if (mistake1 == nullptr) {
+            mistake1 = prev;
+        }
+        mistake2 = root;
+    }
+    prev = root;
+    inorder(root->right, mistake1, mistake2, prev);
+}
+// 主函式。
+void recoverTree(TreeNode* root) {
+    TreeNode *mistake1 = nullptr, *mistake2 = nullptr, *prev = nullptr;
+    inorder(root, mistake1, mistake2, prev);
+    if (mistake1 != nullptr && mistake2 != nullptr) {
+        swap(mistake1->val, mistake2->val);
+    }
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# 輔助函式。
+# 注意，Python 中並不方便在輔函式中直接傳指標，因此我們建造長度為 1 的 list 進行傳引用。
+def inorder(
+    root: Optional[TreeNode],
+    mistake1=List[Optional[TreeNode]],
+    mistake2=List[Optional[TreeNode]],
+    prev=List[Optional[TreeNode]],
+):
+    if root is None:
+        return
+    inorder(root.left, mistake1, mistake2, prev)
+    if prev[0] is not None and root.val < prev[0].val:
+        if mistake1[0] is None:
+            mistake1[0] = prev[0]
+        mistake2[0] = root
+    prev[0] = root
+    inorder(root.right, mistake1, mistake2, prev)
+
+# 主函式。
+def recoverTree(root: Optional[TreeNode]) -> None:
+    mistake1, mistake2, prev = [None], [None], [None]
+    inorder(root, mistake1, mistake2, prev)
+    if mistake1[0] is not None and mistake2[0] is not None:
+        mistake1[0].val, mistake2[0].val = mistake2[0].val, mistake1[0].val
+```
+
+</TabItem>
+
+</Tabs>
+
+## [669. Trim a Binary Search Tree](https://leetcode.com/problems/trim-a-binary-search-tree/)
+
+### 題目描述
+
+給定一個二元搜尋樹和兩個整數 L 和 R，且 L < R，試修剪此二元搜尋樹，使得修剪後所有節點的值都在 [L, R] 的範圍內。
+
+### 輸入輸出範例
+
+輸入是一個二元搜尋樹和兩個整數 L 和 R，輸出一個被修剪好的二元搜尋樹。
+
+```
+Input: L = 1, R = 3, tree =
+      3
+     / \
+    0   4
+     \
+      2
+     /
+    1
+Output:
+    3
+   /
+  2
+ /
+1
+```
+
+### 題解
+
+利用二元搜尋樹的大小關係，我們可以很容易地利用遞迴進行樹的處理。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+TreeNode* trimBST(TreeNode* root, int low, int high) {
+    if (root == nullptr) {
+        return root;
+    }
+    if (root->val > high) {
+        return trimBST(root->left, low, high);
+    }
+    if (root->val < low) {
+        return trimBST(root->right, low, high);
+    }
+    root->left = trimBST(root->left, low, high);
+    root->right = trimBST(root->right, low, high);
+    return root;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def trimBST(
+    root: Optional[TreeNode], low: int, high: int
+) -> Optional[TreeNode]:
+    if root is None:
+        return None
+    if root.val > high:
+        return trimBST(root.left, low, high)
+    if root.val < low:
+        return trimBST(root.right, low, high)
+    root.left = trimBST(root.left, low, high)
+    root.right = trimBST(root.right, low, high)
+    return root
+```
+
+</TabItem>
+
+</Tabs>

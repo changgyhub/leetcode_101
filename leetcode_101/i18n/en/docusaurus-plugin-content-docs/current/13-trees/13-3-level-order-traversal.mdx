@@ -1,0 +1,92 @@
+---
+sidebar_position: 70
+---
+
+# 13.3 Level Order Traversal
+
+We can use Breadth-First Search (BFS) for level order traversal. Note that it is unnecessary to use two queues to separately store the current layer's nodes and the next layer's nodes. At the beginning of each layer's traversal, the number of nodes in the current queue equals the number of nodes in the current layer. By controlling the traversal to only process that many nodes, we ensure that the traversal covers only the current layer.
+
+## [637. Average of Levels in Binary Tree](https://leetcode.com/problems/average-of-levels-in-binary-tree/)
+
+### Problem Description
+
+Given a binary tree, compute the average value of nodes at each level.
+
+### Input and Output Example
+
+Input is a binary tree, and the output is a one-dimensional array representing the average value of nodes at each level.
+
+```
+Input:
+    3
+   / \
+  9  20
+     / \
+    15  7
+Output: [3, 14.5, 11]
+```
+
+### Solution Explanation
+
+Using Breadth-First Search, we can conveniently calculate the average value for each level.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<double> averageOfLevels(TreeNode* root) {
+    vector<double> level_avg;
+    if (root == nullptr) {
+        return level_avg;
+    }
+    queue<TreeNode*> q;
+    q.push(root);
+    int count = q.size();
+    while (count > 0) {
+        double level_sum = 0;
+        for (int i = 0; i < count; ++i) {
+            TreeNode* node = q.front();
+            q.pop();
+            level_sum += node->val;
+            if (node->left != nullptr) {
+                q.push(node->left);
+            }
+            if (node->right != nullptr) {
+                q.push(node->right);
+            }
+        }
+        level_avg.push_back(level_sum / count);
+        count = q.size();
+    }
+    return level_avg;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def averageOfLevels(root: Optional[TreeNode]) -> List[float]:
+    level_avg = []
+    if root is None:
+        return level_avg
+    q = collections.deque()
+    q.append(root)
+    count = len(q)
+    while count > 0:
+        level_sum = 0
+        for _ in range(count):
+            node = q.popleft()
+            level_sum += node.val
+            if node.left is not None:
+                q.append(node.left)
+            if node.right is not None:
+                q.append(node.right)
+        level_avg.append(level_sum / count)
+        count = len(q)
+    return level_avg
+```
+
+</TabItem>
+
+</Tabs>

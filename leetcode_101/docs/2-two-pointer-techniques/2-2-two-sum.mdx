@@ -1,0 +1,72 @@
+---
+sidebar_position: 6
+---
+
+# 2.2 Two Sum
+
+## [167. Two Sum II - Input array is sorted](https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/)
+
+### 题目描述
+
+在一个增序的整数数组里找到两个数，使它们的和为给定值。已知有且只有一对解。
+
+### 输入输出样例
+
+输入是一个数组（numbers）和一个给定值（target）。输出是两个数的位置，从 1 开始计数。
+
+```
+Input: numbers = [2,7,11,15], target = 9
+Output: [1,2]
+```
+
+在这个样例中，第一个数字（2）和第二个数字（7）的和等于给定值（9）。
+
+### 题解
+
+因为数组已经排好序，我们可以采用方向相反的双指针来寻找这两个数字，一个初始指向最小的元素，即数组最左边，向右遍历；一个初始指向最大的元素，即数组最右边，向左遍历。
+
+如果两个指针指向元素的和等于给定值，那么它们就是我们要的结果。如果两个指针指向元素的和小于给定值，我们把左边的指针右移一位，使得当前的和增加一点。如果两个指针指向元素的和大于给定值，我们把右边的指针左移一位，使得当前的和减少一点。
+
+可以证明，对于排好序且有解的数组，双指针一定能遍历到最优解。证明方法如下：假设最优解的两个数的位置分别是 l 和 r。我们假设在左指针在 l 左边的时候，右指针已经移动到了 r；此时两个指针指向值的和小于给定值，因此左指针会一直右移直到到达 l。同理，如果我们假设在右指针在 r 右边的时候，左指针已经移动到了 l；此时两个指针指向值的和大于给定值，因此右指针会一直左移直到到达 r。所以双指针在任何时候都不可能处于 (l,r) 之间，又因为不满足条件时指针必须移动一个，所以最终一定会收敛在 l 和 r。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> twoSum(vector<int>& numbers, int target) {
+    int l = 0, r = numbers.size() - 1, two_sum;
+    while (l < r) {
+        two_sum = numbers[l] + numbers[r];
+        if (two_sum == target) {
+            break;
+        }
+        if (two_sum < target) {
+            ++l;
+        } else {
+            --r;
+        }
+    }
+    return vector<int>{l + 1, r + 1};
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def twoSum(numbers: List[int], target: int) -> List[int]:
+    l, r = 0, len(numbers) - 1
+    while l < r:
+        two_sum = numbers[l] + numbers[r]
+        if two_sum == target:
+            break
+        if two_sum < target:
+            l += 1
+        else:
+            r -= 1
+    return [l + 1, r + 1]
+```
+
+</TabItem>
+
+</Tabs>

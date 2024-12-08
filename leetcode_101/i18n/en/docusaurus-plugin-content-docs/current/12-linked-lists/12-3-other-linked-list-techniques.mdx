@@ -1,0 +1,143 @@
+---
+sidebar_position: 66
+---
+
+# 12.3 Other Linked List Techniques
+
+## [160. Intersection of Two Linked Lists](https://leetcode.com/problems/intersection-of-two-linked-lists/)
+
+### Problem Description
+
+Given two linked lists, determine if they intersect at a point and find the intersecting node.
+
+### Input and Output Example
+
+Input consists of two linked lists, output is a node. If there is no intersection, return `nullptr`.
+
+```
+Input:
+A: a1 -> a2
+         |
+         v
+         c1 -> c2 -> c3
+         ^
+         |
+B: b1 -> b2 -> b3
+Output: c1
+```
+
+### Solution Explanation
+
+Assume the distance from the head of linked list A to the intersection is `a`, the distance from the head of linked list B to the intersection is `b`, and the distance from the intersection to the end of the lists is `c`. 
+
+We use two pointers starting at the heads of the two linked lists and move them forward at the same speed. When a pointer reaches the end of a list, it continues from the head of the other list. With this approach, both pointers will meet at the intersection node after `a + b + c` steps.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+    ListNode *l1 = headA, *l2 = headB;
+    while (l1 != l2) {
+        l1 = l1 != nullptr ? l1->next : headB;
+        l2 = l2 != nullptr ? l2->next : headA;
+    }
+    return l1;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def getIntersectionNode(
+    headA: ListNode, headB: ListNode
+) -> Optional[ListNode]:
+    l1 = headA
+    l2 = headB    
+    while l1 != l2:
+        l1 = l1.next if l1 is not None else headB
+        l2 = l2.next if l2 is not None else headA    
+    return l1
+```
+
+</TabItem>
+
+</Tabs>
+
+## [234. Palindrome Linked List](https://leetcode.com/problems/palindrome-linked-list/)
+
+### Problem Description
+
+Determine if a linked list is a palindrome using $O(1)$ space complexity.
+
+### Input and Output Example
+
+Input: A linked list.  
+Output: A boolean indicating whether the linked list is a palindrome.
+
+```
+Input: 1->2->3->2->1
+Output: true
+```
+
+### Solution Explanation
+
+First, use a slow and fast pointer to find the middle of the linked list. Then split the list into two halves. Reverse the second half and compare the two halves for equality.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+bool isPalindrome(ListNode* head) {
+    if (head == nullptr || head->next == nullptr) {
+        return true;
+    }
+    ListNode *slow = head, *fast = head;
+    while (fast->next && fast->next->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    slow->next = reverseList(slow->next);  // Refer to problem 206.
+    slow = slow->next;
+    while (slow != nullptr) {
+        if (head->val != slow->val) {
+            return false;
+        }
+        head = head->next;
+        slow = slow->next;
+    }
+    return true;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def isPalindrome(head: Optional[ListNode]) -> bool:
+    if head is None or head.next is None:
+        return True
+
+    slow, fast = head, head
+
+    while fast.next is not None and fast.next.next is not None:
+        slow = slow.next
+        fast = fast.next.next
+
+    slow.next = reverseList(slow.next)  # Refer to problem 206.
+    slow = slow.next
+
+    while slow is not None:
+        if head.val != slow.val:
+            return False
+        head = head.next
+        slow = slow.next
+
+    return True
+
+```
+
+</TabItem>
+
+</Tabs>

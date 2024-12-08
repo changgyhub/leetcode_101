@@ -1,0 +1,71 @@
+---
+sidebar_position: 39
+---
+
+# 8.2 公倍數與公因數
+
+利用`輾轉相除法`，我們可以很方便地求得兩個數的最大公因數（greatest common divisor，GCD）；將兩個數相乘再除以最大公因數即可得到最小公倍數（least common multiple, LCM）。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int gcd(int a, int b) { 
+    return b == 0 ? a : gcd(b, a % b); 
+}
+
+int lcm(int a, int b) { 
+    return a * b / gcd(a, b); 
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def gcd(a: int, b: int) -> int:
+    return a if b == 0 else gcd(b, a % b)
+
+def lcm(a: int, b: int) -> int:
+    return (a * b) // gcd(a, b)
+```
+
+</TabItem>
+
+</Tabs>
+
+進一步地，我們也可以通過擴展歐幾里得算法（extended gcd）在求得 a 和 b 最大公因數的同時，也得到它們的係數 x 和 y，從而使 ax + by = gcd(a, b)。因為 Python 中 int 只能按值傳遞，我們可以用一個長度固定為 1 的 list() 來進行傳遞引用的操作。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int xGCD(int a, int b, int &x, int &y) {
+    if (b == 0) {
+        x = 1, y = 0;
+        return a;
+    }
+    int x_inner, y_inner;
+    int gcd = xGCD(b, a % b, x_inner, y_inner);
+    x = y_inner, y = x_inner - (a / b) * y_inner;
+    return gcd;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def xGCD(a: int, b: int, x: List[int], y: List[int]) -> int:
+    if b == 0:
+        x[0], y[0] = 1, 0
+        return a
+    x_inner, y_inner = [0], [0]
+    gcd = xGCD(b, a % b, x_inner, y_inner)
+    x[0], y[0] = y_inner, x_inner - (a / b) * y_inner
+    return gcd
+```
+
+</TabItem>
+
+</Tabs>

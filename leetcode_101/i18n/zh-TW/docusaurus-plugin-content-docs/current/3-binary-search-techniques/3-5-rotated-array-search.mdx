@@ -1,0 +1,103 @@
+---
+sidebar_position: 15
+---
+
+# 3.5 搜尋旋轉陣列中的數字
+
+## [81. Search in Rotated Sorted Array II](https://leetcode.com/problems/search-in-rotated-sorted-array-ii/)
+
+### 題目描述
+
+一個原本遞增的陣列被首尾相連後按某個位置斷開（如 [1,2,2,3,4,5] → [2,3,4,5,1,2]，在第一位和第二位斷開），我們稱其為旋轉陣列。給定一個值，判斷這個值是否存在於這個旋轉陣列中。
+
+### 輸入輸出範例
+
+輸入是一個陣列和一個值，輸出是一個布林值，表示陣列中是否存在該值。
+
+```
+Input: nums = [2,5,6,0,0,1,2], target = 0
+Output: true
+```
+
+即使陣列被旋轉過，我們仍然可以利用這個陣列的遞增性，使用二分搜尋。對於當前的中點，如果它指向的值小於等於右端，那麼說明右區間是排好序的；反之，那麼說明左區間是排好序的。如果目標值位於排好序的區間內，我們可以對這個區間繼續二分搜尋；反之，我們對於另一半區間繼續二分搜尋。本題我們採用左閉右閉的寫法。
+
+
+### 題解
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+bool search(vector<int>& nums, int target) {
+    int l = 0, r = nums.size() - 1;
+    while (l <= r) {
+        int mid = l + (r - l) / 2;
+        if (nums[mid] == target) {
+            return true;
+        }
+        if (nums[mid] == nums[l]) {
+            // 無法判斷哪個區間是遞增的，但 l 位置一定不是 target。
+            ++l;
+        } else if (nums[mid] == nums[r]) {
+            // 無法判斷哪個區間是遞增的，但 r 位置一定不是 target。
+            --r;
+        } else if (nums[mid] < nums[r]) {
+            // 右區間是遞增的。
+            if (target > nums[mid] && target <= nums[r]) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        } else {
+            // 左區間是遞增的。
+            if (target >= nums[l] && target < nums[mid]) {
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+    }
+    return false;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def search(nums: List[int], target: int) -> bool:
+    l, r = 0, len(nums) - 1
+    while l <= r:
+        mid = (l + r) // 2
+        if nums[mid] == target:
+            return True
+        if nums[mid] == nums[l]:
+            # 無法判斷哪個區間是遞增的，但 l 位置一定不是 target。
+            l += 1
+        elif nums[mid] == nums[r]:
+            # 無法判斷哪個區間是遞增的，但 r 位置一定不是 target。
+            r -= 1
+        elif nums[mid] < nums[r]:
+            # 右區間是遞增的。
+            if nums[mid] < target <= nums[r]:
+                l = mid + 1
+            else:
+                r = mid - 1
+        else:
+            # 左區間是遞增的。
+            if nums[l] <= target < nums[mid]:
+                r = mid - 1
+            else:
+                l = mid + 1
+    return False
+```
+
+</TabItem>
+
+</Tabs>
+
+### 複雜度分析
+
+- **時間複雜度**: $O(n)$，在最壞情況下，陣列中所有元素都相同，導致每次只能排除一個元素。
+- **空間複雜度**: $O(1)$，只使用了常數額外空間。

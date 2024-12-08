@@ -1,0 +1,104 @@
+---
+sidebar_position: 77
+---
+
+# 14.3 Topological Sort
+
+`Topological Sort` is a common algorithm used to order nodes in a directed acyclic graph (DAG). Given $N$ nodes in a DAG, the goal is to arrange them in a linear sequence such that if node $i$ points to node $j$, then $i$ appears before $j$ in the sequence. The result of a topological sort is not unique as long as the above condition is satisfied.
+
+## [210. Course Schedule II](https://leetcode.com/problems/course-schedule-ii/)
+
+### Problem Description
+
+Given $N$ courses and their prerequisites, determine an order in which all the courses can be completed.
+
+### Input and Output Example
+
+The input consists of a positive integer representing the number of courses and a 2D array representing directed edges (e.g., `[1,0]` indicates course 1 must be taken after course 0). The output is a 1D array representing a topological order.
+
+```
+Input: numCourses = 4, prerequisites = [[1,0],[2,0],[3,1],[3,2]]
+Output: [0,1,2,3]
+```
+
+In this example, another valid order could be `[0,2,1,3]`.
+
+### Solution Explanation
+
+e can first build an adjacency matrix to represent the graph, facilitating direct lookups. Note that we reverse all edges, so if course $i$ points to course $j$, it means course $i$ must be completed before course $j$. This aligns with our intuitive understanding of prerequisites.
+
+Topological sorting can be viewed as a special case of breadth-first search (BFS): 
+
+1. Traverse all nodes and enqueue nodes with an in-degree of $0$ (i.e., nodes without prerequisites).
+2. While processing the queue:
+   - Add the current node to the sorted order.
+   - Decrease the in-degree of all nodes it points to by $1$.
+   - If a node’s in-degree becomes $0$, enqueue it.
+3. When the queue is empty, the nodes are either fully sorted, or a cycle exists in the graph, preventing all courses from being completed.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+    vector<vector<int>> graph(numCourses, vector<int>());
+    vector<int> indegree(numCourses, 0), schedule;
+    for (const auto& pr : prerequisites) {
+        graph[pr[1]].push_back(pr[0]);
+        ++indegree[pr[0]];
+    }
+    queue<int> q;
+    for (int i = 0; i < indegree.size(); ++i) {
+        if (indegree[i] == 0) {
+            q.push(i);
+        }
+    }
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        schedule.push_back(u);
+        for (int v : graph[u]) {
+            --indegree[v];
+            if (indegree[v] == 0) {
+                q.push(v);
+            }
+        }
+    }
+    for (int i = 0; i < indegree.size(); ++i) {
+        if (indegree[i] != 0) {
+            return vector<int>();
+        }
+    }
+    return schedule;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def findOrder(numCourses: int, prerequisites: List[List[int]]) -> List[int]:
+    graph = [[] for _ in range(numCourses)]
+    indegree = [0] * numCourses
+    schedule = []
+
+    for pr_from, pr_to in prerequisites:
+        graph[pr_to].append(pr_from)
+        indegree[pr_from] += 1
+
+    q = collections.deque([i for i, deg in enumerate(indegree) if deg == 0])
+
+    while len(q) > 0:
+        u = q.popleft()
+        schedule.append(u)
+        for v in graph[u]:
+            indegree[v] -= 1
+            if indegree[v] == 0:
+                q.append(v)
+
+    return schedule if all(deg == 0 for deg in indegree) else []
+```
+
+</TabItem>
+
+</Tabs>

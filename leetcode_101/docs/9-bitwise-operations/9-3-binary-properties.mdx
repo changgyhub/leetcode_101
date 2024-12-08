@@ -1,0 +1,123 @@
+---
+sidebar_position: 46
+---
+
+# 9.3 二进制特性
+
+利用二进制的一些特性，我们可以把位运算使用到更多问题上。
+
+例如，我们可以利用二进制和位运算输出一个数组的所有子集。假设我们有一个长度为 $n$ 的数组，我们可以生成长度为 $n$ 的所有二进制，1 表示选取该数字，0 表示不选取。这样我们就获得了 $2^n$ 个子集。
+
+## [318. Maximum Product of Word Lengths](https://leetcode.com/problems/maximum-product-of-word-lengths/)
+
+### 题目描述
+
+给定多个字母串，求其中任意两个字母串的长度乘积的最大值，且这两个字母串不能含有相同字母。
+
+### 输入输出样例
+
+输入一个包含多个字母串的一维数组，输出一个整数，表示长度乘积的最大值。
+
+```
+Input: ["a","ab","abc","d","cd","bcd","abcd"]
+Output: 4
+```
+
+在这个样例中，一种最优的选择是“ab”和“cd”。
+
+### 题解
+
+怎样快速判断两个字母串是否含有重复数字呢？可以为每个字母串建立一个长度为 26 的二进制数字，每个位置表示是否存在该字母。如果两个字母串含有重复数字，那它们的二进制表示的按位与不为 0。同时，我们可以建立一个哈希表来存储二进制数字到最长子母串长度的映射关系，比如 ab 和 aab 的二进制数字相同，但是 aab 更长。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int maxProduct(vector<string>& words) {
+    unordered_map<int, int> cache;
+    int max_prod = 0;
+    for (const string& word : words) {
+        int mask = 0, w_len = word.length();
+        for (char c : word) {
+            mask |= 1 << (c - ’a’);
+        }
+        cache[mask] = max(cache[mask], w_len);
+        for (auto [h_mask, h_len] : cache) {
+            if ((mask & h_mask) == 0) {
+                max_prod = max(max_prod, w_len * h_len);
+            }
+        }
+    }
+    return max_prod;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def maxProduct(words: List[str]) -> int:
+    cache = dict()
+    max_prod = 0
+    for word in words:
+        mask, w_len = 0, len(word)
+        for c in word:
+            mask = mask | (1 << (ord(c) - ord("a")))
+        cache[mask] = max(cache.get(mask, 0), w_len)
+        for h_mask, h_len in cache.items():
+            if (mask & h_mask) == 0:
+                max_prod = max(max_prod, w_len * h_len)
+    return max_prod
+```
+
+</TabItem>
+
+</Tabs>
+
+## [338. Counting Bits](https://leetcode.com/problems/counting-bits/)
+
+### 题目描述
+
+给定一个非负整数 n，求从 0 到 n 的所有数字的二进制表达中，分别有多少个 1。
+
+### 输入输出样例
+
+输入是一个非负整数 n，输出是长度为 n +1 的非负整数数组，每个位置 m 表示 m 的二进制里有多少个 1。
+
+```
+Input: 5
+Output: [0,1,1,2,1,2]
+```
+
+### 题解
+
+本题可以利用动态规划和位运算进行快速的求解。定义一个数组 dp，其中 dp[i] 表示数字 i 的二进制含有 1 的个数。对于第 i 个数字，如果它二进制的最后一位为 1，那么它含有 1 的个数则为 dp[i-1] + 1；如果它二进制的最后一位为 0，那么它含有 1 的个数和其算术右移结果相同，即 dp[i>>1]。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> countBits(int n) {
+    vector<int> dp(n + 1, 0);
+    for (int i = 1; i <= n; ++i)
+        // 等价于：dp[i] = dp[i & (i - 1)] + 1;
+        dp[i] = i & 1 ? dp[i - 1] + 1 : dp[i >> 1];
+    return dp;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def countBits(n: int) -> List[int]:
+    dp = [0] * (n + 1)
+    for i in range(1, n + 1):
+        # 等价于：dp[i] = dp[i & (i - 1)] + 1
+        dp[i] = dp[i - 1] + 1 if i & 1 else dp[i >> 1]
+    return dp
+```
+
+</TabItem>
+
+</Tabs>

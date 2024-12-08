@@ -1,0 +1,270 @@
+---
+sidebar_position: 65
+---
+
+# 12.2 链表的基本操作
+
+## [206. Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/)
+
+### 题目描述
+
+翻转一个链表。
+
+### 输入输出样例
+
+输入一个链表，输出该链表翻转后的结果。
+
+```
+Input: 1->2->3->4->5->nullptr
+Output: 5->4->3->2->1->nullptr
+```
+
+### 题解
+
+链表翻转是非常基础也一定要掌握的技能。我们提供了两种写法——递归和非递归。建议你同时掌握这两种写法。
+
+递归的写法为：
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+ListNode* reverseList(ListNode* head, ListNode* head_prev = nullptr) {
+    if (head == nullptr) {
+        return head_prev;
+    }
+    ListNode* head_next = head->next;
+    head->next = head_prev;
+    return reverseList(head_next, head);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def reverseList(
+    head: Optional[ListNode], head_prev: Optional[ListNode] = None
+) -> Optional[ListNode]:
+    if head is None:
+        return head_prev
+    head_next = head.next
+    head.next = head_prev
+    return reverseList(head_next, head)
+```
+
+</TabItem>
+
+</Tabs>
+
+非递归的写法为：
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+ListNode* reverseList(ListNode* head) {
+    ListNode *head_prev = nullptr, *head_next;
+    while (head) {
+        head_next = head->next;
+        head->next = head_prev;
+        head_prev = head;
+        head = head_next;
+    }
+    return head_prev;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def reverseList(head: Optional[ListNode]) -> Optional[ListNode]:
+    head_prev = None
+    while head is not None:
+        head_next = head.next
+        head.next = head_prev
+        head_prev = head
+        head = head_next
+    return head_prev
+```
+
+</TabItem>
+
+</Tabs>
+
+## [21. Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/)
+
+### 题目描述
+
+给定两个增序的链表，试将其合并成一个增序的链表。
+
+### 输入输出样例
+
+输入两个链表，输出一个链表，表示两个链表合并的结果。
+
+```
+Input: 1->2->4, 1->3->4
+Output: 1->1->2->3->4->4
+```
+
+### 题解
+
+我们提供了递归和非递归，共两种写法。递归的写法为：
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+    if (l2 == nullptr) {
+        return l1;
+    }
+    if (l1 == nullptr) {
+        return l2;
+    }
+    if (l1->val < l2->val) {
+        l1->next = mergeTwoLists(l1->next, l2);
+        return l1;
+    }
+    l2->next = mergeTwoLists(l1, l2->next);
+    return l2;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def mergeTwoLists(
+    l1: Optional[ListNode], l2: Optional[ListNode]
+) -> Optional[ListNode]:
+    if l1 is None or l2 is None:
+        return l1 or l2
+    if l1.val < l2.val:
+        l1.next = mergeTwoLists(l1.next, l2)
+        return l1
+    l2.next = mergeTwoLists(l1, l2.next)
+    return l2
+```
+
+</TabItem>
+
+</Tabs>
+
+非递归的写法为：
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {
+    ListNode *dummy = new ListNode(0), *node = dummy;
+    while (l1 && l2) {
+        if (l1->val < l2->val) {
+            node->next = l1;
+            l1 = l1->next;
+        } else {
+            node->next = l2;
+            l2 = l2->next;
+        }
+        node = node->next;
+    }
+    node->next = l1 == nullptr ? l2 : l1;
+    return dummy->next;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def mergeTwoLists(
+    l1: Optional[ListNode], l2: Optional[ListNode]
+) -> Optional[ListNode]:
+    dummy = ListNode()
+    head = dummy
+    
+    while l1 and l2:
+        if l1.val < l2.val:
+            dummy.next = l1
+            l1 = l1.next
+        else:
+            dummy.next = l2
+            l2 = l2.next
+        dummy = dummy.next
+    
+    dummy.next = l1 or l2
+    return head.next
+
+```
+
+</TabItem>
+
+</Tabs>
+
+## [24. Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs/)
+
+### 题目描述
+
+给定一个矩阵，交换每个相邻的一对节点。
+
+### 输入输出样例
+
+输入一个链表，输出该链表交换后的结果。
+
+```
+Input: 1->2->3->4
+Output: 2->1->4->3
+```
+
+### 题解
+
+利用指针进行交换操作，没有太大难度，但一定要细心。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+ListNode* swapPairs(ListNode* head) {
+    ListNode *node1 = head, *node2;
+    if (node1 && node1->next) {
+        node2 = node1->next;
+        node1->next = node2->next;
+        node2->next = node1;
+        head = node2;
+        while (node1->next && node1->next->next) {
+            node2 = node1->next->next;
+            node1->next->next = node2->next;
+            node2->next = node1->next;
+            node1->next = node2;
+            node1 = node2->next;
+        }
+    }
+    return head;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def swapPairs(head: Optional[ListNode]) -> Optional[ListNode]:
+    node1 = head
+    if node1 is not None and node1.next is not None:
+        node2 = node1.next
+        node1.next = node2.next
+        node2.next = node1
+        head = node2
+        while node1.next is not None and node1.next.next is not None:
+            node2 = node1.next.next
+            node1.next.next = node2.next
+            node2.next = node1.next
+            node1.next = node2
+            node1 = node2.next
+    return head
+```
+
+</TabItem>
+
+</Tabs>

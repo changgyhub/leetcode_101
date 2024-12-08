@@ -1,0 +1,125 @@
+---
+sidebar_position: 46
+---
+
+# 9.3 Binary Features
+
+By leveraging some binary features, we can apply bitwise operations to solve a wider range of problems.
+
+For example, we can use binary and bitwise operations to generate all subsets of an array. Suppose we have an array of length $n$, we can generate all binary numbers of length $n$, where 1 indicates selecting the number, and 0 indicates not selecting it. This way, we obtain $2^n$ subsets.
+
+## [318. Maximum Product of Word Lengths](https://leetcode.com/problems/maximum-product-of-word-lengths/)
+
+### Problem Description
+
+Given multiple strings, find the maximum product of lengths of any two strings such that the two strings do not share any common letters.
+
+### Input and Output Example
+
+Input is a one-dimensional array containing multiple strings, and output is an integer representing the maximum product of lengths.
+
+```
+Input: ["a","ab","abc","d","cd","bcd","abcd"]
+Output: 4
+```
+
+In this example, one optimal pair is "ab" and "cd."
+
+### Solution Explanation
+
+How can we quickly determine if two strings share common letters? We can represent each string with a binary number of length 26, where each position indicates the presence of a specific letter. If two strings share common letters, their binary representations' bitwise AND will not be 0. Additionally, we can use a hash map to store the mapping from binary numbers to the longest string lengths. For example, "ab" and "aab" may have the same binary representation, but "aab" is longer.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int maxProduct(vector<string>& words) {
+    unordered_map<int, int> cache;
+    int max_prod = 0;
+    for (const string& word : words) {
+        int mask = 0, w_len = word.length();
+        for (char c : word) {
+            mask |= 1 << (c - ’a’);
+        }
+        cache[mask] = max(cache[mask], w_len);
+        for (auto [h_mask, h_len] : cache) {
+            if ((mask & h_mask) == 0) {
+                max_prod = max(max_prod, w_len * h_len);
+            }
+        }
+    }
+    return max_prod;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def maxProduct(words: List[str]) -> int:
+    cache = dict()
+    max_prod = 0
+    for word in words:
+        mask, w_len = 0, len(word)
+        for c in word:
+            mask = mask | (1 << (ord(c) - ord("a")))
+        cache[mask] = max(cache.get(mask, 0), w_len)
+        for h_mask, h_len in cache.items():
+            if (mask & h_mask) == 0:
+                max_prod = max(max_prod, w_len * h_len)
+    return max_prod
+```
+
+</TabItem>
+
+</Tabs>
+
+## [338. Counting Bits](https://leetcode.com/problems/counting-bits/)
+
+### Problem Description
+
+Given a non-negative integer `n`, find the number of `1`s in the binary representation of every number from `0` to `n`.
+
+### Input and Output Example
+
+The input is a non-negative integer `n`, and the output is a list of non-negative integers of length `n + 1`, where each position `m` represents the number of `1`s in the binary representation of `m`.
+
+```
+Input: 5
+Output: [0,1,1,2,1,2]
+```
+
+### Solution Explanation
+
+This problem can be solved efficiently using dynamic programming and bitwise operations. Define an array `dp`, where `dp[i]` represents the number of `1`s in the binary representation of the number `i`. For the number `i`:
+- If the last bit of its binary representation is `1`, the count of `1`s is `dp[i-1] + 1`.
+- If the last bit of its binary representation is `0`, the count of `1`s is the same as that of its arithmetic right-shift result, i.e., `dp[i>>1]`.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> countBits(int n) {
+    vector<int> dp(n + 1, 0);
+    for (int i = 1; i <= n; ++i)
+        // Equivalent to: dp[i] = dp[i & (i - 1)] + 1;
+        dp[i] = i & 1 ? dp[i - 1] + 1 : dp[i >> 1];
+    return dp;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def countBits(n: int) -> List[int]:
+    dp = [0] * (n + 1)
+    for i in range(1, n + 1):
+        # Equivalent to: dp[i] = dp[i & (i - 1)] + 1
+        dp[i] = dp[i - 1] + 1 if i & 1 else dp[i >> 1]
+    return dp
+```
+
+</TabItem>
+
+</Tabs>

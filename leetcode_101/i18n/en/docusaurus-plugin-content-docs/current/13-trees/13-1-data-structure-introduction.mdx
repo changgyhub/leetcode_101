@@ -1,0 +1,36 @@
+---
+sidebar_position: 68
+---
+
+# 13.1 Data Structure Introduction
+
+As an upgraded version of the (single) linked list, the trees we commonly encounter are typically `binary trees`, where each node has at most two child nodes. Unless otherwise specified, trees are assumed to have no circular structures. LeetCode's default representation of trees is as follows:
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+```
+
+</TabItem>
+
+</Tabs>
+
+It can be seen that the primary difference compared to a linked list is the addition of a pointer for a second child node.

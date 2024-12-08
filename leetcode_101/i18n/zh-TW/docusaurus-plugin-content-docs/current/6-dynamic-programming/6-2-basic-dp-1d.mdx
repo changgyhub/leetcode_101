@@ -1,0 +1,249 @@
+---
+sidebar_position: 27
+---
+
+# 6.2 基本動態規劃：一維
+
+## [70. Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)
+
+### 題目描述
+
+給定 $n$ 階台階，每次可以走一步或兩步，求有多少種方法可以走完這些台階。
+
+### 輸入輸出範例
+
+輸入是一個數字，表示台階的數量；輸出是爬完台階的總方法數。
+
+```
+Input: 3
+Output: 3
+```
+
+在這個例子中，一共有三種方法可以爬完這三階台階：
+1. 每次走一步。
+2. 先走一步，再走兩步。
+3. 先走兩步，再走一步。
+
+### 題解
+
+這是一道經典的費波那契數列題目。定義一個陣列 `dp`，其中 `dp[i]` 表示到達第 $i$ 階的方法數。由於每次可以走一步或兩步，所以第 $i$ 階可以從第 $(i-1)$ 階或第 $(i-2)$ 階到達。換句話說，到達第 $i$ 階的方法數是到達第 $(i-1)$ 階的方法數加上到達第 $(i-2)$ 階的方法數。因此我們得到了狀態轉移方程：`dp[i] = dp[i-1] + dp[i-2]`。注意初始條件的處理。
+
+:::warning
+
+為了方便處理邊界情況，我們可以在構造 `dp` 陣列時多留一個位置，用於表示初始狀態。本題即額外留了一個第 0 階的初始位置。
+
+
+:::
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int climbStairs(int n) {
+    vector<int> dp(n + 1, 1);
+    for (int i = 2; i <= n; ++i) {
+        dp[i] = dp[i - 1] + dp[i - 2];
+    }
+    return dp[n];
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def climbStairs(n: int) -> int:
+    dp = [1] * (n + 1)
+    for i in range(2, n + 1):
+        dp[i] = dp[i - 1] + dp[i - 2]
+    return dp[n]
+```
+
+</TabItem>
+
+</Tabs>
+
+進一步的，我們可以對動態規劃進行空間壓縮。因為 dp[i] 只與 dp[i-1] 和 dp[i-2] 有關，因此可以只用兩個變數來儲存 dp[i-1] 和 dp[i-2]，使得原來的 $O(n)$ 空間複雜度優化為 $O(1)$ 複雜度。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int climbStairs(int n) {
+    int prev_prev = 1, prev = 1, cur = 1;
+    for (int i = 2; i <= n; ++i) {
+        cur = prev_prev + prev;
+        prev_prev = prev;
+        prev = cur;
+    }
+    return cur;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def climbStairs(n: int) -> int:
+    prev_prev = prev = cur = 1
+    for _ in range(2, n + 1):
+        cur = prev_prev + prev
+        prev_prev = prev
+        prev = cur
+    return cur
+```
+
+</TabItem>
+
+</Tabs>
+
+
+## [198. House Robber](https://leetcode.com/problems/house-robber/)
+
+### 題目描述
+
+假如你是一个劫匪，并且決定搶劫一條街上的房子，每個房子內的財物數量各不相同。如果你搶了兩棟相鄰的房子，則會觸發警報機關。求在不觸發機關的情況下最多可以搶劫多少錢。
+
+### 輸入輸出範例
+
+輸入是一個一維陣列，表示每個房子的財物數量；輸出是劫匪可以最多搶劫的財物數量。
+
+```
+Input: [2,7,9,3,1]
+Output: 12
+```
+
+在這個範例中，最多的搶劫方式為搶劫第 1、3、5 個房子。
+
+### 題解
+
+定義一個陣列 `dp`，其中 `dp[i]` 表示搶劫到第 `i` 個房子時，可以搶劫的最大金額。我們考慮 `dp[i]` 的值，此時可以搶劫的最大金額有兩種可能：
+
+1. **選擇不搶劫這個房子**：此時累計的金額為 `dp[i-1]`；
+2. **選擇搶劫這個房子**：那麼此前累計的最大金額只能是 `dp[i-2]`，因為我們無法搶劫第 `i-1` 個房子，否則會觸發警報。
+
+因此，這道題的狀態轉移方程為：
+
+$$
+dp[i] = \max(dp[i-1], dp[i-2] + \text{nums}[i-1])
+$$
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int rob(vector<int>& nums) {
+    int n = nums.size();
+    vector<int> dp(n + 1, 0);
+    dp[1] = nums[0];
+    for (int i = 2; i <= n; ++i) {
+        dp[i] = max(dp[i - 1], nums[i - 1] + dp[i - 2]);
+    }
+    return dp[n];
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def rob(nums: List[int]) -> int:
+    n = len(nums)
+    dp = [0] * (n + 1)
+    dp[1] = nums[0]
+    for i in range(2, n + 1):
+        dp[i] = max(dp[i - 1], nums[i - 1] + dp[i - 2])
+    return dp[n]
+```
+
+</TabItem>
+
+</Tabs>
+
+同樣的，我們可以像題目 70 那樣，對空間進行壓縮。由於 `dp[i]` 只與 `dp[i-1]` 和 `dp[i-2]` 有關，因此我們可以僅使用兩個變數來儲存這兩個值，將原來的 $O(n)$ 空間複雜度優化為 $O(1)$ 空間複雜度。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int rob(vector<int>& nums) {
+    int prev_prev = 0, prev = 0, cur = 0;
+    for (int i = 0; i < nums.size(); ++i) {
+        cur = max(prev_prev + nums[i], prev);
+        prev_prev = prev;
+        prev = cur;
+    }
+    return cur;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def rob(nums: List[int]) -> int:
+    prev_prev = prev = cur = 0
+    for i in range(len(nums)):
+        cur = max(prev_prev + nums[i], prev)
+        prev_prev = prev
+        prev = cur
+    return cur
+```
+
+</TabItem>
+
+</Tabs>
+
+## [413. Arithmetic Slices](https://leetcode.com/problems/arithmetic-slices/)
+
+### 題目描述
+
+給定一個陣列，求這個陣列中連續且等差的子陣列一共有多少個。
+
+### 輸入輸出範例
+
+輸入是一維陣列，輸出是滿足等差條件的連續子陣列個數。
+
+```
+Input: nums = [1,2,3,4]
+Output: 3
+```
+
+在這個範例中，等差數列有 [1,2,3]、[2,3,4] 和 [1,2,3,4]。
+
+### 題解
+
+因為要求是等差數列，可以很自然地想到子陣列必定滿足 `num[i] - num[i-1] = num[i-1] - num[i-2]`。這裡我們對於 `dp` 陣列的定義是以 `i` 結尾，且滿足該條件的子陣列數量。因為等差子陣列可以在任意一個位置終結，所以我們需要對 `dp` 陣列求和以進行子陣列統計。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int numberOfArithmeticSlices(vector<int>& nums) {
+    int n = nums.size();
+    vector<int> dp(n, 0);
+    for (int i = 2; i < n; ++i) {
+        if (nums[i] - nums[i - 1] == nums[i - 1] - nums[i - 2]) {
+            dp[i] = dp[i - 1] + 1;
+        }
+    }
+    return accumulate(dp.begin(), dp.end(), 0);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def numberOfArithmeticSlices(nums: List[int]) -> int:
+    n = len(nums)
+    dp = [0] * n
+    for i in range(2, n):
+        if nums[i] - nums[i - 1] == nums[i - 1] - nums[i - 2]:
+            dp[i] = dp[i - 1] + 1
+    return sum(dp)
+```
+
+</TabItem>
+
+</Tabs>

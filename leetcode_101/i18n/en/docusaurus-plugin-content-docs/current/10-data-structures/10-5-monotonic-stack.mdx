@@ -1,0 +1,72 @@
+---
+sidebar_position: 52
+---
+
+# 10.5 Monotonic Stack
+
+`Monotonic Stack` is a technique that maintains the monotonic increasing (or decreasing) property of a stack to solve comparison problems in $O(n)$ time complexity.
+
+## [739. Daily Temperatures](https://leetcode.com/problems/daily-temperatures/)
+
+### Problem Description
+
+Given the daily temperatures, determine how many days you need to wait for a warmer day. If there is no such day, return 0 for that day.
+
+### Input and Output Example
+
+The input is a one-dimensional integer array, and the output is an array of the same length, indicating how many days you need to wait for each day.
+
+```
+Input: [73, 74, 75, 71, 69, 72, 76, 73]
+Output: [1, 1, 4, 2, 1, 1, 0, 0]
+```
+
+### Solution Explanation
+
+We can maintain a monotonic decreasing stack that stores the temperatures. To facilitate calculating the day differences, we store indices (dates) instead of the temperatures themselves. As we iterate through the temperature array from left to right, for each day $p$, if the temperature on day $p$ is higher than the temperature of the day stored at the stack top $q$, we pop $q$ and record the waiting days for $q$ as $p - q$. We repeat this process until the temperature of day $p$ is less than or equal to the temperature at the stack top (or the stack becomes empty), then push $p$ into the stack and move to the next day. During this process, the stack always maintains a monotonic decreasing order, avoiding the need for sorting. Finally, if there are remaining indices in the stack, it means those days do not have warmer days in the future.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> dailyTemperatures(vector<int>& temperatures) {
+    int n = temperatures.size();
+    vector<int> days_to_wait(n, 0);
+    stack<int> mono_stack;
+    for (int i = 0; i < n; ++i) {
+        while (!mono_stack.empty()) {
+            int j = mono_stack.top();
+            if (temperatures[i] <= temperatures[j]) {
+                break;
+            }
+            mono_stack.pop();
+            days_to_wait[j] = i - j;
+        }
+        mono_stack.push(i);
+    }
+    return days_to_wait;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def dailyTemperatures(temperatures: List[int]) -> List[int]:
+    n = len(temperatures)
+    days_to_wait = [0] * n
+    mono_stack = []
+    for i in range(n):
+        while len(mono_stack) > 0:
+            j = mono_stack[-1]
+            if temperatures[i] <= temperatures[j]:
+                break
+            mono_stack.pop()
+            days_to_wait[j] = i - j
+        mono_stack.append(i)
+    return days_to_wait
+```
+
+</TabItem>
+
+</Tabs>

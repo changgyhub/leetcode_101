@@ -1,0 +1,73 @@
+---
+sidebar_position: 6
+---
+
+# 2.2 Two Sum
+
+## [167. Two Sum II - Input array is sorted](https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/)
+
+### Problem Description
+
+Find two numbers in an ascending integer array such that their sum equals a given value. There is exactly one solution.
+
+
+### Input and Output Example
+
+The input is an array (`numbers`) and a target value (`target`). The output is the positions of the two numbers, starting from 1.
+
+```
+Input: numbers = [2,7,11,15], target = 9
+Output: [1,2]
+```
+
+In this example, the sum of the first number (2) and the second number (7) equals the target value (9).
+
+### Solution Explanation
+
+Since the array is sorted, we can use a two-pointer approach with pointers moving in opposite directions to find these two numbers. One pointer starts at the smallest element, on the far left of the array, moving right; the other starts at the largest element, on the far right of the array, moving left.
+
+If the sum of the elements pointed to by the two pointers equals the target, then they are the solution. If the sum is less than the target, we move the left pointer one position to the right to increase the sum. If the sum is greater than the target, we move the right pointer one position to the left to decrease the sum.
+
+It can be proven that for a sorted array with a solution, the two-pointer approach will always reach the optimal solution. Here’s the proof: Assume the positions of the solution are `l` and `r`. If the left pointer is to the left of `l` and the right pointer has already moved to `r`, the sum of the two values will be less than the target, so the left pointer will continue moving right until it reaches `l`. Similarly, if the right pointer is to the right of `r` and the left pointer has already moved to `l`, the sum will be greater than the target, so the right pointer will move left until it reaches `r`. Thus, the two pointers will converge at `l` and `r`, as no other scenario prevents this convergence.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> twoSum(vector<int>& numbers, int target) {
+    int l = 0, r = numbers.size() - 1, two_sum;
+    while (l < r) {
+        two_sum = numbers[l] + numbers[r];
+        if (two_sum == target) {
+            break;
+        }
+        if (two_sum < target) {
+            ++l;
+        } else {
+            --r;
+        }
+    }
+    return vector<int>{l + 1, r + 1};
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def twoSum(numbers: List[int], target: int) -> List[int]:
+    l, r = 0, len(numbers) - 1
+    while l < r:
+        two_sum = numbers[l] + numbers[r]
+        if two_sum == target:
+            break
+        if two_sum < target:
+            l += 1
+        else:
+            r -= 1
+    return [l + 1, r + 1]
+```
+
+</TabItem>
+
+</Tabs>

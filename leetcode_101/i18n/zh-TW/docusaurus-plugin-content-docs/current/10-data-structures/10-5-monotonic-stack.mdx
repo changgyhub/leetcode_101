@@ -1,0 +1,72 @@
+---
+sidebar_position: 52
+---
+
+# 10.5 單調堆疊
+
+`單調堆疊`透過維持堆疊內值的單調遞增（遞減）性，可以在整體 $O(n)$ 的時間內解決需要大小比較的問題。
+
+## [739. Daily Temperatures](https://leetcode.com/problems/daily-temperatures/)
+
+### 題目描述
+
+給定每天的溫度，求對於每一天需要等幾天才可以等到更暖和的一天。如果該天之後不存在更暖和的天氣，則記為 0。
+
+### 輸入輸出範例
+
+輸入是一個一維整數陣列，輸出是相同長度的整數陣列，表示對於每天需要等待多少天。
+
+```
+Input: [73, 74, 75, 71, 69, 72, 76, 73]
+Output: [1, 1, 4, 2, 1, 1, 0, 0]
+```
+
+### 題解
+
+我們可以維持一個單調遞減的堆疊，表示每天的溫度；為了方便計算天數差，我們存放位置（即日期）而非溫度本身。我們從左到右遍歷溫度陣列，對於每個日期 $p$，如果 $p$ 的溫度比堆疊頂部儲存位置 $q$ 的溫度高，則我們取出 $q$，並記錄 $q$ 需要等待的天數為 $p - q$；我們重複這一過程，直到 $p$ 的溫度小於等於堆疊頂部儲存位置的溫度（或空堆疊）時，將 $p$ 插入堆疊頂部，然後考慮下一天。在此過程中，堆疊內陣列永遠保持單調遞減，避免了使用排序進行比較。最後若堆疊內剩餘一些日期，則說明它們之後都沒有出現更暖和的日期。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> dailyTemperatures(vector<int>& temperatures) {
+    int n = temperatures.size();
+    vector<int> days_to_wait(n, 0);
+    stack<int> mono_stack;
+    for (int i = 0; i < n; ++i) {
+        while (!mono_stack.empty()) {
+            int j = mono_stack.top();
+            if (temperatures[i] <= temperatures[j]) {
+                break;
+            }
+            mono_stack.pop();
+            days_to_wait[j] = i - j;
+        }
+        mono_stack.push(i);
+    }
+    return days_to_wait;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def dailyTemperatures(temperatures: List[int]) -> List[int]:
+    n = len(temperatures)
+    days_to_wait = [0] * n
+    mono_stack = []
+    for i in range(n):
+        while len(mono_stack) > 0:
+            j = mono_stack[-1]
+            if temperatures[i] <= temperatures[j]:
+                break
+            mono_stack.pop()
+            days_to_wait[j] = i - j
+        mono_stack.append(i)
+    return days_to_wait
+```
+
+</TabItem>
+
+</Tabs>

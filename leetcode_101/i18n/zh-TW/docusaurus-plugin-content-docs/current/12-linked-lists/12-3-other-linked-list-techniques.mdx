@@ -1,0 +1,143 @@
+---
+sidebar_position: 66
+---
+
+# 12.3 其他鏈結串列技巧
+
+## [160. Intersection of Two Linked Lists](https://leetcode.com/problems/intersection-of-two-linked-lists/)
+
+### 題目描述
+
+給定兩個鏈結串列，判斷它們是否在某一個節點相交，並找出相交的節點。
+
+### 輸入輸出範例
+
+輸入為兩條鏈結串列，輸出為相交的節點。如果沒有相交節點，則回傳 `nullptr`。
+
+```
+Input:
+A: a1 -> a2
+         |
+         v
+         c1 -> c2 -> c3
+         ^
+         |
+B: b1 -> b2 -> b3
+Output: c1
+```
+
+### 題解
+
+假設鏈結串列 A 的起點到相交點的距離是 `a`，鏈結串列 B 的起點到相交點的距離是 `b`，而相交點到串列尾端的距離為 `c`。
+
+我們可以用兩個指標，分別從兩個鏈結串列的起點開始，並以相同的速度向前移動。如果指標到達串列的尾端，就切換到另一個鏈結串列的起點繼續移動。透過這種方式，兩個指標在經過 `a + b + c` 次移動後，會同時抵達相交的節點。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+    ListNode *l1 = headA, *l2 = headB;
+    while (l1 != l2) {
+        l1 = l1 != nullptr ? l1->next : headB;
+        l2 = l2 != nullptr ? l2->next : headA;
+    }
+    return l1;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def getIntersectionNode(
+    headA: ListNode, headB: ListNode
+) -> Optional[ListNode]:
+    l1 = headA
+    l2 = headB    
+    while l1 != l2:
+        l1 = l1.next if l1 is not None else headB
+        l2 = l2.next if l2 is not None else headA    
+    return l1
+```
+
+</TabItem>
+
+</Tabs>
+
+## [234. Palindrome Linked List](https://leetcode.com/problems/palindrome-linked-list/)
+
+### 題目描述
+
+以 $O(1)$ 的空間複雜度，判斷鏈結串列是否為回文。
+
+### 輸入輸出範例
+
+輸入是一個鏈結串列，輸出是一個布林值，表示鏈結串列是否為回文。
+
+```
+Input: 1->2->3->2->1
+Output: true
+```
+
+### 題解
+
+先使用快慢指標找到鏈結串列的中點，再把鏈結串列切成兩半；然後把後半段翻轉；最後比較兩半是否相等。
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+bool isPalindrome(ListNode* head) {
+    if (head == nullptr || head->next == nullptr) {
+        return true;
+    }
+    ListNode *slow = head, *fast = head;
+    while (fast->next && fast->next->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    slow->next = reverseList(slow->next);  // 見題目206
+    slow = slow->next;
+    while (slow != nullptr) {
+        if (head->val != slow->val) {
+            return false;
+        }
+        head = head->next;
+        slow = slow->next;
+    }
+    return true;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def isPalindrome(head: Optional[ListNode]) -> bool:
+    if head is None or head.next is None:
+        return True
+
+    slow, fast = head, head
+
+    while fast.next is not None and fast.next.next is not None:
+        slow = slow.next
+        fast = fast.next.next
+
+    slow.next = reverseList(slow.next)  # 見題目206
+    slow = slow.next
+
+    while slow is not None:
+        if head.val != slow.val:
+            return False
+        head = head.next
+        slow = slow.next
+
+    return True
+
+```
+
+</TabItem>
+
+</Tabs>

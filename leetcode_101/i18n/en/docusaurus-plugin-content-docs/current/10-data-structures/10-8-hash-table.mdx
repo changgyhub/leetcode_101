@@ -1,0 +1,232 @@
+---
+sidebar_position: 55
+---
+
+# 10.8 Hash Table
+
+A `hash table` (also known as a hash map) uses $O(n)$ space complexity to store data. By leveraging a hash function, it maps positions to achieve approximate $O(1)$ time complexity for insertion, lookup, and deletion operations. Hash tables can be utilized for tasks such as frequency counting and content recording.
+
+If the elements are finite and their range is small, a fixed-size array can be used to store or count elements. For instance, to count the occurrences of all letters in a string, you can use an array of length 26, where the hash function maps each letter to its position in the alphabet. This approach reduces the space complexity to a constant.
+
+## [1. Two Sum](https://leetcode.com/problems/two-sum/)
+
+### Problem Description
+
+Given an (unsorted) array of integers, find the indices of two numbers that add up to a specific target. Assume that there is exactly one solution.
+
+### Input and Output Example
+
+Input is a one-dimensional integer array and a target value. Output is a one-dimensional array of size 2, representing the indices of the two numbers.
+
+```
+Input: nums = [2, 7, 15, 11], target = 9
+Output: [0, 1]
+```
+
+In this example, the value at index 0 (2) and the value at index 1 (7) sum up to 9.
+
+### Solution Explanation
+
+We can use a hash table to store values we have already seen along with their indices. For each index `i`, we check if `target - nums[i]` exists in the hash table. If it does, it means the two numbers sum up to the target.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> twoSum(vector<int>& nums, int target) {
+    unordered_map<int, int> cache;  // <value, index>
+    for (int i = 0; i < nums.size(); ++i) {
+        int num1 = nums[i], num2 = target - num1;
+        if (cache.contains(num2)) {
+            return vector<int>{cache[num2], i};
+        }
+        cache[num1] = i;
+    }
+    return {};
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def twoSum(nums: List[int], target: int) -> List[int]:
+    cache = dict() # <value, index>
+    for i, num1 in enumerate(nums):
+        num2 = target - num1
+        if num2 in cache:
+            return [cache[num2], i]
+        cache[num1] = i
+    return []
+```
+
+</TabItem>
+
+</Tabs>
+
+## [128. Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/)
+
+### Problem Description
+
+Given an array of integers, find the length of the longest consecutive sequence that can be formed using the numbers in the array.
+
+### Input and Output Example
+
+Input is an array of integers, and output is an integer representing the length of the consecutive sequence.
+
+```
+Input: [100, 4, 200, 1, 3, 2]
+Output: 4
+```
+
+In this example, the longest consecutive sequence is [1,2,3,4].
+
+### Solution Explanation
+
+We can put all the numbers into a hash table and repeatedly pick any value from the hash table. For each value, we remove all its consecutive numbers before and after it, and update the length of the longest consecutive sequence. Repeating this process allows us to find all consecutive number sequences.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int longestConsecutive(vector<int>& nums) {
+    unordered_set<int> cache(nums.begin(), nums.end());
+    int max_len = 0;
+    while (!cache.empty()) {
+        int cur = *(cache.begin());
+        cache.erase(cur);
+        int l = cur - 1, r = cur + 1;
+        while (cache.contains(l)) {
+            cache.erase(l--);
+        }
+        while (cache.contains(r)) {
+            cache.erase(r++);
+        }
+        max_len = max(max_len, r - l - 1);
+    }
+    return max_len;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def longestConsecutive(nums: List[int]) -> int:
+    cache = set(nums)
+    max_len = 0
+
+    while len(cache) > 0:
+        cur = next(iter(cache))
+        cache.remove(cur)
+
+        l, r = cur - 1, cur + 1
+        while l in cache:
+            cache.remove(l)
+            l -= 1
+        while r in cache:
+            cache.remove(r)
+            r += 1
+
+        max_len = max(max_len, r - l - 1)
+
+    return max_len
+
+```
+
+</TabItem>
+
+</Tabs>
+
+## [149. Max Points on a Line](https://leetcode.com/problems/max-points-on-a-line/)
+
+### Problem Description
+
+Given some points in a 2D plane, find the maximum number of points that lie on the same straight line.
+
+### Input and Output Example
+
+Input is a 2D integer array representing the x and y coordinates of each point. Output is an integer representing the maximum number of points on the same line.
+
+```
+Input: [[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]
+^
+|
+| o
+| o o
+| o
+| o o
++------------------->
+0 1 2 3 4 5 6
+Output: 4
+```
+
+In this example, the line $y = 5 - x$ contains four points.
+
+### Solution Explanation
+
+For each point, we use a hash table to count the number of points with the same slope relative to that point. A line is uniquely determined by one point and its slope. Additionally, we must account for cases where the slope does not exist and for duplicate coordinates.
+
+This problem also uses a small optimization: when iterating through each point at position `i`, we only consider points after `i` since points before `i` have already been considered.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int maxPoints(vector<vector<int>>& points) {
+    int max_count = 0, n = points.size();
+    for (int i = 0; i < n; ++i) {
+        unordered_map<double, int> cache;  // <slope, number of points>
+        int same_xy = 1, same_y = 1;
+        for (int j = i + 1; j < n; ++j) {
+            if (points[i][1] == points[j][1]) {
+                ++same_y;
+                if (points[i][0] == points[j][0]) {
+                    ++same_xy;
+                }
+            } else {
+                double dx = points[i][0] - points[j][0],
+                       dy = points[i][1] - points[j][1];
+                ++cache[dx / dy];
+            }
+        }
+        max_count = max(max_count, same_y);
+        for (auto item : cache) {
+            max_count = max(max_count, same_xy + item.second);
+        }
+    }
+    return max_count;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def maxPoints(points: List[List[int]]) -> int:
+    max_count, n = 0, len(points)
+    
+    for i, point1 in enumerate(points):
+        cache = dict()  # <slope, number of points>
+        same_xy, same_y = 1, 1
+        
+        for point2 in points[i + 1:]:
+            if point1[1] == point2[1]:
+                same_y += 1
+            if point1[0] == point2[0]:
+                same_xy += 1
+            else:
+                dx, dy = point1[0] - point2[0], point1[1] - point2[1]
+                cache[dx / dy] = cache.get(dx / dy, 0) + 1
+
+        max_count = max(max_count, same_y)
+        for count in cache.values():
+            max_count = max(max_count, same_xy + count)
+    
+    return max_count
+
+```
+
+</TabItem>
+
+</Tabs>

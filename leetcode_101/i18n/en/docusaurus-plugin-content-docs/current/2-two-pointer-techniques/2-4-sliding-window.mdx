@@ -1,0 +1,110 @@
+---
+sidebar_position: 8
+---
+
+# 2.4 Sliding Window
+
+## [76. Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/)
+
+### Problem Description
+
+Given two strings `s` and `t`, find the length of the shortest contiguous substring in `s` that contains all characters of `t`. The solution must have a time complexity of no more than $O(n)$.
+
+
+### Input and Output Example
+
+The input consists of two strings `s` and `t`, and the output is a substring of `s`. If no solution exists, return an empty string.
+
+
+```
+Input: s = "ADOBECODEBANC", t = "ABC"
+Output: "BANC"
+```
+
+In this example, the shortest substring in `s` that contains one `A`, one `B`, and one `C` is "BANC".
+
+
+### Solution Explanation
+
+This problem can be solved using the sliding window technique. Two pointers, `l` and `r`, both move from the leftmost to the rightmost position, with `l` always positioned at or before `r`. In the C++ solution, two arrays of length 128, `valid` and `freq`, are used to map characters (ASCII contains only 128 characters). The `valid` array indicates whether a character exists in `t`, and the `freq` array indicates the number of characters in `t` that are still missing in the sliding window of `s`: a positive value indicates missing characters, while a negative value indicates surplus characters. In the Python solution, the `Counter` data structure is used to simultaneously track characters in `t` and their missing quantities (a dictionary can also be used instead).
+
+Even though the solution contains a `while` loop nested inside a `for` loop, the `while` loop moves the `l` pointer from left to right only once, so the total time complexity remains $O(n)$.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+string minWindow(string s, string t) {
+    vector<bool> valid(128, false);
+    vector<int> freq(128, 0);
+    // Count characters in t.
+    for (int i = 0; i < t.length(); ++i) {
+        valid[t[i]] = true;
+        ++freq[t[i]];
+    }
+    // Move the sliding window and update statistics.
+    int count = 0;
+    int min_l = -1, min_length = -1;
+    for (int l = 0, r = 0; r < s.length(); ++r) {
+        if (!valid[s[r]]) {
+            continue;
+        }
+        // Add the character at position r to frequency stats and check if t's missing characters are filled.
+        if (--freq[s[r]] >= 0) {
+            ++count;
+        }
+        // If the sliding window contains all characters from t, try to move l to find the shortest substring.
+        while (count == t.length()) {
+            if (min_length == -1 || r - l + 1 < min_length) {
+                min_l = l;
+                min_length = r - l + 1;
+            }
+            // Remove the character at position l from stats and check if t's corresponding character is missing again.
+            if (valid[s[l]] && ++freq[s[l]] > 0) {
+                --count;
+            }
+            ++l;
+        }
+    }
+    return min_length == -1 ? "" : s.substr(min_l, min_length);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def minWindow(s: str, t: str) -> str:
+    # Count characters in t. Equivalent to:
+    # freq = dict()
+    # for c in t:
+    #     freq[c] = freq.get(c, 0) + 1
+    freq = Counter(t)
+    # Move the sliding window and update statistics.
+    count = 0
+    min_l, min_length = None, None
+    l = 0
+    for r in range(len(s)):
+        if s[r] not in freq:
+            continue
+        # Add the character at position r to frequency stats and check if t's missing characters are filled.
+        freq[s[r]] -= 1
+        if freq[s[r]] >= 0:
+            count += 1
+        # If the sliding window contains all characters from t, try to move l to find the shortest substring.
+        while count == len(t):
+            if min_length is None or r - l + 1 < min_length:
+                min_l = l
+                min_length = r - l + 1
+            # Remove the character at position l from stats and check if t's corresponding character is missing again.
+            if s[l] in freq:
+                freq[s[l]] += 1
+                if freq[s[l]] > 0:
+                    count -= 1
+            l += 1
+    return "" if min_length is None else s[min_l: min_l + min_length]
+```
+
+</TabItem>
+
+</Tabs>

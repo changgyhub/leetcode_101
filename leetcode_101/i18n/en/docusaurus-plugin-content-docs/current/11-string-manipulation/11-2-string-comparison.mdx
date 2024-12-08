@@ -1,0 +1,351 @@
+---
+sidebar_position: 60
+---
+
+# 11.2 String Comparison
+
+## [242. Valid Anagram](https://leetcode.com/problems/valid-anagram/)
+
+### Problem Description
+
+Determine if two strings contain exactly the same characters.
+
+### Input and Output Example
+
+Input two strings and output a boolean indicating whether the two strings meet the condition.
+
+```
+Input: s = "anagram", t = "nagaram"
+Output: true
+```
+
+### Solution Explanation
+
+We can use a hash table or an array to count the frequency of each character in both strings. If the frequencies match, it means the strings contain the exact same characters.
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+bool isAnagram(string s, string t) {
+    if (s.length() != t.length()) {
+        return false;
+    }
+    vector<int> counts(26, 0);
+    for (int i = 0; i < s.length(); ++i) {
+        ++counts[s[i] - ’a’];
+        --counts[t[i] - ’a’];
+    }
+    return all_of(counts.begin(), counts.end(), [](int c) { return c == 0; });
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def isAnagram(s: str, t: str) -> bool:
+    if len(s) != len(t):
+        return False
+    counter = Counter(s)
+    counter.subtract(t)
+    return all(v == 0 for v in counter.values())
+```
+
+</TabItem>
+
+</Tabs>
+
+## [205. Isomorphic Strings](https://leetcode.com/problems/isomorphic-strings/)
+
+### Problem Description
+
+Determine if two strings are isomorphic. Two strings are isomorphic if characters in one string can be replaced to get the other string, while ensuring that no two different characters map to the same character.
+
+### Input and Output Example
+
+Input two strings and output a boolean indicating whether they meet the condition.
+
+```
+Input: s = "paper", t = "title"
+Output: true
+```
+
+In this example, by replacing `p`, `a`, `e`, `r` in `s` with `t`, `i`, `l`, `e` respectively, the two strings can become identical.
+
+### Solution Explanation
+
+We can reformulate the problem: track the first appearance position of each character in both strings. If the characters at the same position in both strings have the same first appearance position, the strings are isomorphic. 
+
+For example, for "paper" and "title," if we reach the third characters `p` and `t`, we find their first appearances are at the first character, which satisfies the isomorphic condition. We can use a hash table for storage or a fixed-length array of size 128 (for the total number of ASCII characters).
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+bool isIsomorphic(string s, string t) {
+    vector<int> s_init(128, 0), t_init(128, 0);
+    for (int i = 0; i < s.length(); ++i) {
+        if (s_init[s[i]] != t_init[t[i]]) {
+            return false;
+        }
+        s_init[s[i]] = t_init[t[i]] = i + 1;
+    }
+    return true;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def isIsomorphic(s: str, t: str) -> bool:
+    s_init, t_init = [0] * 128, [0] * 128
+    
+    for i in range(len(s)):
+        if s_init[ord(s[i])] != t_init[ord(t[i])]:
+            return False
+        s_init[ord(s[i])] = t_init[ord(t[i])] = i + 1
+    
+    return True
+
+```
+
+</TabItem>
+
+</Tabs>
+
+## [647. Palindromic Substrings](https://leetcode.com/problems/palindromic-substrings/)
+
+### Problem Description
+
+Given a string, find how many of its substrings are palindromic. A palindrome is defined as being symmetric from left to right.
+
+### Input and Output Example
+
+Input is a string, and output is an integer representing the count of palindromic substrings.
+
+```
+Input: "aaa"
+Output: 6
+```
+
+The six palindromic substrings are ["a", "a", "a", "aa", "aa", "aaa"].
+
+### Solution Explanation
+
+We can start from every position in the string and extend to the left and right, counting how many palindromic substrings have the current position as their center.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// Auxiliary function
+int extendSubstrings(string s, int l, int r) {
+    int count = 0, n = s.length();
+    while (l >= 0 && r < n && s[l] == s[r]) {
+        --l;
+        ++r;
+        ++count;
+    }
+    return count;
+}
+// Main function
+int countSubstrings(string s) {
+    int count = 0;
+    for (int i = 0; i < s.length(); ++i) {
+        count += extendSubstrings(s, i, i);      // Odd length
+        count += extendSubstrings(s, i, i + 1);  // Even length
+    }
+    return count;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# Auxiliary function
+def extendSubstrings(s: str, l: int, r: int) -> int:
+    count, n = 0, len(s)
+    while l >= 0 and r < n and s[l] == s[r]:
+        count += 1
+        l -= 1
+        r += 1
+    return count
+
+# Main function
+def countSubstrings(s: str) -> int:
+    return sum(
+        # Odd length + Even length
+        extendSubstrings(s, i, i) + extendSubstrings(s, i, i + 1)
+        for i in range(len(s))
+    )
+
+```
+
+</TabItem>
+
+</Tabs>
+
+## [696. Count Binary Substrings](https://leetcode.com/problems/count-binary-substrings/)
+
+### Problem Description
+
+Given a binary string (composed of '0's and '1's), count the number of non-empty substrings where the number of '0's and '1's are equal, and all '0's and '1's must appear consecutively (e.g., "0011", "1100"; but "0101" is not valid).
+
+### Input and Output Example
+
+Input is a string, and output is an integer representing the count of valid substrings.
+
+```
+Input: "00110011"
+Output: 6
+```
+
+In this example, the six substrings where '0's and '1's are equal are ["0011", "01", "1100", "10", "0011", "01"].
+
+### Solution Explanation
+
+Traverse the string from left to right, keeping track of the length of consecutive characters that are the same as the current character, as well as the length of the consecutive different characters before it. For example, in "00110", the last '0' has:
+- A consecutive length of 1 for '0', because there's only one '0' at the end.
+- A consecutive length of 2 for '1', because there are two '1's right before it.
+
+If the length of the consecutive different characters is greater than or equal to the current consecutive length, then there exists exactly one valid substring ending at the current character.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int countBinarySubstrings(string s) {
+    int prev = 0, cur = 1, count = 0;
+    for (int i = 1; i < s.length(); ++i) {
+        if (s[i] == s[i - 1]) {
+            ++cur;
+        } else {
+            prev = cur;
+            cur = 1;
+        }
+        if (prev >= cur) {
+            ++count;
+        }
+    }
+    return count;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def countBinarySubstrings(s: str) -> int:
+    prev, cur, count = 0, 1, 0
+    
+    for i in range(1, len(s)):
+        if s[i] == s[i - 1]:
+            cur += 1
+        else:
+            prev = cur
+            cur = 1
+        if prev >= cur:
+            count += 1
+    
+    return count
+
+```
+
+</TabItem>
+
+</Tabs>
+
+## [1249. Minimum Remove to Make Valid Parentheses](https://leetcode.com/problems/minimum-remove-to-make-valid-parentheses/)
+
+### Problem Description
+
+Given a string containing letters and parentheses, determine the minimum number of parentheses to remove to make the string valid.
+
+### Input and Output Example
+
+Input is a string, and output is a valid string with the longest possible length after removal.
+
+```
+Input: s = "lee(t(c)o)de)"
+Output: "lee(t(c)o)de"
+```
+
+Returning "lee(t(co)de)" or "lee(t(c)ode)" is also considered correct.
+
+### Solution Explanation
+
+Since only one type of parenthesis is involved, we don't necessarily need a stack to track them. Instead, we can use a temporary variable to count how many more left parentheses are present than right parentheses at any position. 
+
+- If this count becomes negative during traversal, it means there are extra right parentheses that need to be removed.
+- At the end of the traversal, if the count is positive, it means there are extra left parentheses that need to be removed by traversing from right to left.
+
+A small optimization here is to first mark all positions that need to be removed and then remove them in one go.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+string minRemoveToMakeValid(string s) {
+    int count = 0, n = s.length();
+    char to_delete = '#';
+    for (char& c : s) {
+        if (c == '(') { 
+            ++count; 
+        } else if (c == ')') {
+            if (count > 0) {
+                --count;
+            } else {
+                c = to_delete;
+            }
+        }
+    }
+    for (int i = n - 1; i >= 0; --i) {
+        if (count == 0) break;
+        if (s[i] == '(') {
+            s[i] = to_delete;
+            --count;
+        }
+    }
+    s.erase(remove_if(s.begin(), s.end(),
+                      [to_delete](char c) { return c == to_delete; }),
+            s.end());
+    return s;
+}
+
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def minRemoveToMakeValid(s: str) -> str:
+    count, n = 0, len(s)
+    to_delete = set()
+    
+    for i in range(n):
+        if s[i] == "(":
+            count += 1
+        elif s[i] == ")":
+            if count > 0:
+                count -= 1
+            else:
+                to_delete.add(i)
+    
+    for i in range(n - 1, -1, -1):
+        if count == 0:
+            break
+        if s[i] == "(":
+            to_delete.add(i)
+            count -= 1
+    
+    return "".join(s[i] for i in range(n) if i not in to_delete)
+
+```
+
+</TabItem>
+
+</Tabs>

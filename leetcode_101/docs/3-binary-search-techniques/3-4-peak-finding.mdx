@@ -1,0 +1,85 @@
+---
+sidebar_position: 14
+---
+
+# 3.4 查找峰值
+
+## [162. Find Peak Element](https://leetcode.com/problems/find-peak-element/)
+
+### 题目描述
+
+给定一个数组，定义峰值为比所有两边都大的数字，求峰值的位置。一个数组里可能存在多个峰值，返回任意一个即可。时间复杂度要求为 $O(\log n)$。
+
+### 输入输出样例
+
+输入是一个数组，输出为峰值的位置。
+
+```
+Input: nums = [1,2,3,1]
+Output: 2
+```
+
+峰值 3 出现在位置 2。
+
+
+### 题解
+
+要实现 $O(\log n)$ 时间复杂度，我们可以对数组进行二分查找。在确保两端不是峰值后，若当前中点不是峰值，那么其左右一侧一定有一个峰值。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int findPeakElement(vector<int>& nums) {
+    int n = nums.size();
+    if (n == 1) {
+        return 0;
+    }
+    if (nums[0] > nums[1]) {
+        return 0;
+    }
+    if (nums[n - 1] > nums[n - 2]) {
+        return n - 1;
+    }
+    int l = 1, r = n - 2, mid;
+    while (l <= r) {
+        mid = l + (r - l) / 2;
+        if (nums[mid] > nums[mid + 1] && nums[mid] > nums[mid - 1]) {
+            return mid;
+        } else if (nums[mid] > nums[mid - 1]) {
+            l = mid + 1;
+        } else {
+            r = mid - 1;
+        }
+    }
+    return -1;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def findPeakElement(self, nums: List[int]) -> int:
+    n = len(nums)
+    if n == 1:
+        return 0
+    if nums[0] > nums[1]:
+        return 0
+    if nums[n - 1] > nums[n - 2]:
+        return n - 1
+    l, r = 1, n - 2
+    while l <= r:
+        mid = (l + r) // 2
+        if nums[mid] > nums[mid + 1] and nums[mid] > nums[mid - 1]:
+            return mid
+        elif nums[mid] > nums[mid - 1]:
+            l = mid + 1
+        else:
+            r = mid - 1
+    return -1
+```
+
+</TabItem>
+
+</Tabs>

@@ -1,0 +1,154 @@
+---
+sidebar_position: 36
+---
+
+# 7.2 表达式问题
+
+## [241. Diﬀerent Ways to Add Parentheses](https://leetcode.com/problems/different-ways-to-add-parentheses/)
+
+### 题目描述
+
+给定一个只包含加、减和乘法的数学表达式，求通过加括号可以得到多少种不同的结果。
+
+### 输入输出样例
+
+输入是一个字符串，表示数学表达式；输出是一个数组，存储所有不同的加括号结果。
+
+```
+Input: "2-1-1"
+Output: [0, 2]
+```
+
+在这个样例中，有两种加括号结果：((2-1)-1) = 0 和 (2-(1-1)) = 2。
+
+### 题解
+
+利用分治思想，我们可以把加括号转化为，对于每个运算符号，先执行处理两侧的数学表达式，再处理此运算符号。注意边界情况，即字符串内无运算符号，只有数字。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> diffWaysToCompute(string expression) {
+    vector<int> ways;
+    unordered_map<char, function<int(int, int)>> op_funcs;
+    op_funcs[’+’] = [](int x, int y) { return x + y; };
+    op_funcs[’-’] = [](int x, int y) { return x - y; };
+    op_funcs[’*’] = [](int x, int y) { return x * y; };
+    for (int i = 0; i < expression.length(); ++i) {
+        char c = expression[i];
+        if (!op_funcs.contains(c)) {
+            continue;
+        }
+        auto left = diffWaysToCompute(expression.substr(0, i));
+        auto right = diffWaysToCompute(expression.substr(i + 1));
+        for (int l : left) {
+            for (int r : right) {
+                ways.push_back(op_funcs[c](l, r));
+            }
+        }
+    }
+    return ways.empty() ? vector<int>{stoi(expression)} : ways;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def diffWaysToCompute(expression: str) -> List[int]:
+    ways = []
+    op_funcs = {
+        "+": (lambda x, y: x + y),
+        "-": (lambda x, y: x - y),
+        "*": (lambda x, y: x * y),
+    }
+    for i, c in enumerate(expression):
+        if c not in op_funcs:
+            continue
+        left = diffWaysToCompute(expression[:i])
+        right = diffWaysToCompute(expression[i + 1 :])
+        ways += [op_funcs[c](l, r) for l in left for r in right]
+    return [int(expression)] if len(ways) == 0 else ways
+```
+
+</TabItem>
+
+</Tabs>
+
+我们发现，某些被 divide 的子字符串可能重复出现多次，因此我们可以用 memoization 来去重。比如建立一个哈希表，key 是 (l, r)，value 是 ways。每次遇到相同的 (l, r)，我们可以直接返回已经计算过的 ways。或者与其我们从上到下用分治处理 +memoization，不如直接从下到上用动态规划处理。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> diffWaysToCompute(string expression) {
+    // 利用istringstream, 将数字和操作符进行分词。
+    vector<int> nums;
+    vector<char> ops;
+    int num = 0;
+    char op = ’ ’;
+    istringstream ss(expression);
+    while (ss >> num) {
+        nums.push_back(num);
+        if (ss >> op) {
+            ops.push_back(op);
+        }
+    }
+    int n = nums.size();
+    vector<vector<vector<int>>> dp(n, vector<vector<int>>(n, vector<int>()));
+    unordered_map<char, function<int(int, int)>> op_funcs;
+    op_funcs[’+’] = [](int a, int b) { return a + b; };
+    op_funcs[’-’] = [](int a, int b) { return a - b; };
+    op_funcs[’*’] = [](int a, int b) { return a * b; };
+    for (int i = 0; i < n; ++i) {
+        for (int j = i; j >= 0; --j) {
+            if (i == j) {
+                dp[j][i].push_back(nums[i]);
+                continue;
+            }
+            for (int k = j; k < i; ++k) {
+                for (auto l : dp[j][k]) {
+                    for (auto r : dp[k + 1][i]) {
+                        dp[j][i].push_back(op_funcs[ops[k]](l, r));
+                    }
+                }
+            }
+        }
+    }
+    return dp[0][n - 1];
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def diffWaysToCompute(expression: str) -> List[int]:
+    # re.split可以将操作符（\D）和数字直接分开。
+    sections = re.split(r"(\D)", expression)
+    nums = [int(num) for num in sections if num.isdigit()]
+    ops = [op for op in sections if not op.isdigit()]
+    n = len(nums)
+    dp = [[[] for _ in range(n)] for _ in range(n)]
+    op_funcs = {
+        "+": (lambda x, y: x + y),
+        "-": (lambda x, y: x - y),
+        "*": (lambda x, y: x * y),
+    }
+    for i in range(n):
+        for j in range(i, -1, -1):
+            if i == j:
+                dp[j][i].append(nums[i])
+                continue
+            for k in range(j, i):
+                dp[j][i] += [op_funcs[ops[k]](l, r)
+                            for l in dp[j][k] for r in dp[k + 1][i]]
+
+    return dp[0][n - 1]
+             
+```
+
+</TabItem>
+
+</Tabs>

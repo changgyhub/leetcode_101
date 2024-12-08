@@ -1,0 +1,138 @@
+---
+sidebar_position: 40
+---
+
+# 8.3 质数
+
+质数又称素数，指的是指在大于 1 的自然数中，除了 1 和它本身以外不再有其他因数的自然数。值得注意的是，每一个数都可以分解成质数的乘积。
+
+
+## [204. Count Primes](https://leetcode.com/problems/count-primes/)
+
+### 题目描述
+
+给定一个数字 n，求小于 n 的质数的个数。
+
+### 输入输出样例
+
+输入一个整数，输出也是一个整数，表示小于输入数的质数的个数。
+
+```
+Input: 10
+Output: 4
+```
+
+在这个样例中，小于 10 的质数只有 [2,3,5,7]。
+
+### 题解
+
+`埃拉托斯特尼筛法`（Sieve of Eratosthenes，简称埃氏筛法）是非常常用的，判断一个整数是否是质数的方法。并且它可以在判断一个整数 n 时，同时判断所小于 n 的整数，因此非常适合这道题。其原理也十分易懂：从 1 到 n 遍历，假设当前遍历到 m，则把所有小于 n 的、且是 m 的倍数的整数标为和数；遍历完成后，没有被标为和数的数字即为质数。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int countPrimes(int n) {
+    if (n <= 2) {
+        return 0;
+    }
+    vector<bool> primes(n, true);
+    int count = n - 2;  // 去掉不是质数的1
+    for (int i = 2; i < n; ++i) {
+        if (primes[i]) {
+            for (int j = 2 * i; j < n; j += i) {
+                if (primes[j]) {
+                    primes[j] = false;
+                    --count;
+                }
+            }
+        }
+    }
+    return count;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def countPrimes(n: int) -> int:
+    if n <= 2:
+        return 0
+    primes = [True for _ in range(n)]
+    count = n - 2 # 去掉不是质数的1
+    for i in range(2, n):
+        if primes[i]:
+            for j in range(2 * i, n, i):
+                if primes[j]:
+                    primes[j] = False
+                    count -= 1
+    return count
+```
+
+</TabItem>
+
+</Tabs>
+
+利用质数的一些性质，我们可以进一步优化该算法。
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int countPrimes(int n) {
+    if (n <= 2) {
+        return 0;
+    }
+    vector<bool> primes(n, true);
+    int sqrtn = sqrt(n);
+    int count = n / 2;  // 偶数一定不是质数
+    int i = 3;
+    // 最小质因子一定小于等于开方数。
+    while (i <= sqrtn) {
+        // 向右找倍数，注意避免偶数和重复遍历。
+        for (int j = i * i; j < n; j += 2 * i) {
+            if (primes[j]) {
+                --count;
+                primes[j] = false;
+            }
+        }
+        i += 2;
+        // 向右前进查找位置，注意避免偶数和重复遍历。
+        while (i <= sqrtn && !primes[i]) {
+            i += 2;
+        }
+    }
+    return count;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def countPrimes(n: int) -> int:
+    if n <= 2:
+        return 0
+    primes = [True for _ in range(n)]
+    sqrtn = sqrt(n)
+    count = n // 2 # 偶数一定不是质数
+    i = 3
+    # 最小质因子一定小于等于开方数。
+    while i <= sqrtn:
+        # 向右找倍数，注意避免偶数和重复遍历。
+        for j in range(i * i, n, 2 * i):
+            if primes[j]:
+                count -= 1
+                primes[j] = False
+        i += 2
+        # 向右前进查找位置，注意避免偶数和重复遍历。
+        while i <= sqrtn and not primes[i]:
+            i += 2
+    return count
+```
+
+</TabItem>
+
+</Tabs>

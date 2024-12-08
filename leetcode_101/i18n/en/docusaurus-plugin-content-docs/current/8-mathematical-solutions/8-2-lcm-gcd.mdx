@@ -1,0 +1,72 @@
+---
+sidebar_position: 39
+---
+
+# 8.2 Least Common Multiple and Greatest Common Divisor
+
+Using the `Euclidean algorithm`, we can efficiently calculate the greatest common divisor (GCD) of two numbers. Multiplying the two numbers and dividing the product by their GCD gives the least common multiple (LCM).
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int gcd(int a, int b) { 
+    return b == 0 ? a : gcd(b, a % b); 
+}
+
+int lcm(int a, int b) { 
+    return a * b / gcd(a, b); 
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def gcd(a: int, b: int) -> int:
+    return a if b == 0 else gcd(b, a % b)
+
+def lcm(a: int, b: int) -> int:
+    return (a * b) // gcd(a, b)
+```
+
+</TabItem>
+
+</Tabs>
+
+Furthermore, using the extended Euclidean algorithm (extended GCD), we can calculate not only the GCD of a and b but also their coefficients x and y such that ax + by = gcd(a, b). In Python, since int is passed by value, we can use a fixed-length list() to achieve reference passing.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int xGCD(int a, int b, int &x, int &y) {
+    if (b == 0) {
+        x = 1, y = 0;
+        return a;
+    }
+    int x_inner, y_inner;
+    int gcd = xGCD(b, a % b, x_inner, y_inner);
+    x = y_inner, y = x_inner - (a / b) * y_inner;
+    return gcd;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def xGCD(a: int, b: int, x: List[int], y: List[int]) -> int:
+    if b == 0:
+        x[0], y[0] = 1, 0
+        return a
+    x_inner, y_inner = [0], [0]
+    gcd = xGCD(b, a % b, x_inner, y_inner)
+    x[0], y[0] = y_inner, x_inner - (a / b) * y_inner
+    return gcd
+```
+
+</TabItem>
+
+</Tabs>

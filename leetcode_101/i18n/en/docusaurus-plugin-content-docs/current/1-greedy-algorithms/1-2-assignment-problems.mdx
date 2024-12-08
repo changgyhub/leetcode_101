@@ -1,0 +1,146 @@
+---
+sidebar_position: 2
+---
+
+# 1.2 Distribution Problem
+
+## [455. Assign Cookies](https://leetcode.com/problems/assign-cookies/)
+
+### Problem Description
+
+There is a group of children and a pile of cookies. Each child has a hunger level, and each cookie has a fullness level. Each child can only eat one cookie, and only if the cookie's fullness level is greater than or equal to the child's hunger level can the child be satisfied. Find the maximum number of children that can be satisfied.
+
+
+### Input and Output Example
+
+Input two arrays representing the hunger levels of the children and the fullness levels of the cookies. Output the maximum number of children that can be satisfied.
+
+
+```
+Input: [1,2], [1,2,3]
+Output: 2
+```
+
+In this example, we can feed the two children with any of the combinations [1,2], [1,3], or [2,3].
+
+
+### Solution Explanation
+
+Since the child with the lowest hunger level is the easiest to satisfy, we start with this child. To make sure the remaining cookies can satisfy children with higher hunger levels, we should give this child the smallest cookie that meets or exceeds their hunger level. After satisfying this child, we repeat the strategy for the next hungriest child until there are no suitable cookies left.
+
+In short, the greedy strategy here is to allocate the smallest sufficient cookie to the child with the smallest hunger level among the remaining children. For implementation, since we need to compare sizes, a convenient method is to sort the children and cookies separately. This way, we can start from the child with the smallest hunger and the cookie with the smallest fullness, counting how many pairs meet the requirements.
+
+:::warning
+
+Sorting arrays or strings is a common operation to facilitate subsequent size comparisons. The default sorting order is ascending.
+
+:::
+
+:::warning
+
+In later explanations, when we discuss operations on variables in continuous spaces, we will not explicitly distinguish between arrays and strings, as they are essentially ordered sets of variables in continuous space. A string "abc" can be viewed as an array ['a', 'b', 'c'].
+
+:::
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int findContentChildren(vector<int> &children, vector<int> &cookies) {
+    sort(children.begin(), children.end());
+    sort(cookies.begin(), cookies.end());
+    int child_i = 0, cookie_i = 0;
+    int n_children = children.size(), n_cookies = cookies.size();
+    while (child_i < n_children && cookie_i < n_cookies) {
+        if (children[child_i] <= cookies[cookie_i]) {
+            ++child_i;
+        }
+        ++cookie_i;
+    }
+    return child_i;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def findContentChildren(children: List[int], cookies: List[int]) -> int:
+    children.sort()
+    cookies.sort()
+    child_i, cookie_i = 0, 0
+    n_children, n_cookies = len(children), len(cookies)
+    while child_i < n_children and cookie_i < n_cookies:
+        if children[child_i] <= cookies[cookie_i]:
+            child_i += 1
+        cookie_i += 1
+    return child_i
+```
+
+</TabItem>
+
+</Tabs>
+
+## [135. Candy](https://leetcode.com/problems/candy/)
+
+### Problem Description
+
+A group of children is standing in a row, and each child has a rating. We need to distribute candies to these children, with the rule that if a child has a higher rating than their neighbor, they must receive more candies than that neighbor. Every child must receive at least one candy. Find the minimum number of candies needed.
+
+### Input and Output Example
+
+The input is an array representing the ratings of the children. The output is the minimum number of candies required.
+
+```
+Input: [1,0,2]
+Output: 5
+```
+In this example, the minimum distribution of candies is [2,1,2].
+
+
+### Solution Explanation
+
+A greedy strategy involving comparative relationships does not always require sorting. Although this problem also uses a greedy strategy, we only need two simple traversals: initialize each child’s candy count to 1; first traverse from left to right, and if a child’s rating is higher than the left neighbor, update the child’s candy count to be one more than the neighbor’s; then traverse from right to left, and if a child’s rating is higher than the right neighbor’s, and the current candy count is not greater than the neighbor’s, update the candy count to be one more than the neighbor’s. With these two passes, the candy distribution will meet the requirements. The greedy strategy here is to consider and update only the relationship with the adjacent side in each pass.
+
+In the example, we initialize the candy distribution as [1,1,1]. After the first traversal, the result is [1,1,2]. After the second traversal, the result is [2,1,2].
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int candy(vector<int>& ratings) {
+    int n = ratings.size();
+    vector<int> candies(n, 1);
+    for (int i = 1; i < n; ++i) {
+        if (ratings[i] > ratings[i - 1]) {
+            candies[i] = candies[i - 1] + 1;
+        }
+    }
+    for (int i = n - 1; i > 0; --i) {
+        if (ratings[i] < ratings[i - 1]) {
+            candies[i - 1] = max(candies[i - 1], candies[i] + 1);
+        }
+    }
+    return accumulate(candies.begin(), candies.end(), 0);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def candy(ratings_list: List[int]) -> int:
+    n = len(ratings_list)
+    candies = [1] * n
+    for i in range(1, n):
+        if ratings_list[i] > ratings_list[i - 1]:
+            candies[i] = candies[i - 1] + 1
+    for i in range(n - 1, 0, -1):
+        if ratings_list[i] < ratings_list[i - 1]:
+            candies[i - 1] = max(candies[i - 1], candies[i] + 1)
+    return sum(candies)
+```
+
+</TabItem>
+
+</Tabs>

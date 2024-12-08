@@ -1,0 +1,98 @@
+---
+sidebar_position: 9
+---
+
+# 2.5 Fast and Slow Pointers
+
+## [142. Linked List Cycle II](https://leetcode.com/problems/linked-list-cycle-ii/)
+
+### Problem Description
+
+Given a linked list, if there is a cycle, find the starting point of the cycle.
+
+### Input and Output Example
+
+The input is a linked list, and the output is a node in the linked list. If there is no cycle, return a null pointer.  
+In this example, the node with the value 2 is the starting point of the cycle.  
+If not otherwise specified, LeetCode uses the following data structure to represent a linked list.
+
+![alt](https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist.png)
+
+```cpp
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+```
+
+```py
+class ListNode:
+    def __init__(self, x):
+        self.val = x
+        self.next = None # or a ListNode
+```
+
+### Solution Explanation
+
+For the problem of detecting cycles in a linked list, there is a universal solution—the fast and slow pointer method (Floyd’s Cycle Detection Algorithm). Given two pointers, named slow and fast, both start at the head of the list. Each time, fast moves two steps, and slow moves one step. If fast reaches the end, it means there is no cycle. If fast can move indefinitely, it means there is a cycle, and slow and fast will eventually meet. When slow and fast meet for the first time, move fast back to the head of the list, and let both slow and fast move one step at a time. When slow and fast meet for the second time, the meeting node is the starting point of the cycle.
+
+:::warning
+
+For problems where you only need to determine the presence of a cycle, you can also use a hash table to check for duplicates.
+
+:::
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+ListNode *detectCycle(ListNode *head) {
+    ListNode *slow = head, *fast = head;
+    bool is_first_cycle = true;
+    // Detect the cycle.
+    while (fast != slow || is_first_cycle) {
+        if (fast == nullptr || fast->next == nullptr) {
+            return nullptr;
+        }
+        fast = fast->next->next;
+        slow = slow->next;
+        is_first_cycle = false;
+    }
+    // Find the node.
+    fast = head;
+    while (fast != slow) {
+        slow = slow->next;
+        fast = fast->next;
+    }
+    return fast;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def detectCycle(head: Optional[ListNode]) -> Optional[ListNode]:
+    slow = head
+    fast = head
+    is_first_cycle = True
+    # Detect the cycle.
+    while fast != slow or is_first_cycle:
+        if fast is None or fast.next is None:
+            return None
+        fast = fast.next.next
+        slow = slow.next
+        is_first_cycle = False
+    # Find the node.
+    fast = head
+    while fast != slow:
+        fast = fast.next
+        slow = slow.next
+    return fast
+```
+
+</TabItem>
+
+</Tabs>

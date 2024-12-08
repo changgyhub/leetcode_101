@@ -1,0 +1,99 @@
+---
+sidebar_position: 15
+---
+
+# 3.5 旋转数组查找数字
+
+## [81. Search in Rotated Sorted Array II](https://leetcode.com/problems/search-in-rotated-sorted-array-ii/)
+
+### 题目描述
+
+一个原本增序的数组被首尾相连后按某个位置断开（如 [1,2,2,3,4,5] → [2,3,4,5,1,2]，在第一位和第二位断开），我们称其为旋转数组。给定一个值，判断这个值是否存在于这个旋转数组中。
+
+### 输入输出样例
+
+输入是一个数组和一个值，输出是一个布尔值，表示数组中是否存在该值。
+
+```
+Input: nums = [2,5,6,0,0,1,2], target = 0
+Output: true
+```
+
+即使数组被旋转过，我们仍然可以利用这个数组的递增性，使用二分查找。对于当前的中点，如果它指向的值小于等于右端，那么说明右区间是排好序的；反之，那么说明左区间是排好序的。如果目标值位于排好序的区间内，我们可以对这个区间继续二分查找；反之，我们对于另一半区
+间继续二分查找。本题我们采用左闭右闭的写法。
+
+### 题解
+
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+bool search(vector<int>& nums, int target) {
+    int l = 0, r = nums.size() - 1;
+    while (l <= r) {
+        int mid = l + (r - l) / 2;
+        if (nums[mid] == target) {
+            return true;
+        }
+        if (nums[mid] == nums[l]) {
+            // 无法判断哪个区间是增序的，但l位置一定不是target。
+            ++l;
+        } else if (nums[mid] == nums[r]) {
+            // 无法判断哪个区间是增序的，但r位置一定不是target。
+            --r;
+        } else if (nums[mid] < nums[r]) {
+            // 右区间是增序的。
+            if (target > nums[mid] && target <= nums[r]) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        } else {
+            // 左区间是增序的。
+            if (target >= nums[l] && target < nums[mid]) {
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+    }
+    return false;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def search(nums: List[int], target: int) -> bool:
+    l, r = 0, len(nums) - 1
+    while l <= r:
+        mid = (l + r) // 2
+    if nums[mid] == target:
+        return True
+    if nums[mid] == nums[l]:
+        # 无法判断哪个区间是增序的，但l位置一定不是target。
+        l += 1
+    elif nums[mid] == nums[r]:
+        # 无法判断哪个区间是增序的，但r位置一定不是target。
+        r -= 1
+    elif nums[mid] < nums[r]:
+        # 右区间是增序的。
+        if nums[mid] < target <= nums[r]:
+            l = mid + 1
+        else:
+            r = mid - 1
+    else:
+        # 左区间是增序的。
+        if nums[l] <= target < nums[mid]:
+            r = mid - 1
+        else:
+            l = mid + 1
+    return False
+```
+
+</TabItem>
+
+</Tabs>

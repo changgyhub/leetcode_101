@@ -1,0 +1,375 @@
+---
+sidebar_position: 22
+---
+
+# 5.2 Depth First Search
+
+`Depth First Search (DFS)` is a search method where, upon encountering a new node, you immediately traverse that new node. Therefore, traversal requires a `Last In, First Out (LIFO) stack`, which can also be implemented using `recursion`, equivalent to using a stack. In a tree structure, since traversal always invokes the new node, it appears as if progressing in the "depth" direction. In Python, collections.deque can be used to implement the stack in C++. However, in most cases, using vector in C++ or list in Python is preferred as these structures not only support LIFO but also allow random access.
+
+Consider the following simple tree, starting traversal from node 1. If the traversal order is from the left child to the right child, the process follows the strategy of moving "deeper" first: 1 (starting node) → 2 (deeper left child) → 4 (deeper left child) → 2 (no children, return to parent) → 1 (all children traversed, return to parent) → 3 (deeper right child) → 1 (no children, return to parent) → end (all children traversed). If implemented with a stack, the stack's top element evolves as follows: 1 → 2 → 4 → 3.
+
+
+```
+   1
+  / \
+  2 3
+ /
+4
+```
+
+DFS can also be used to `detect cycles`: Record the parent node of each traversed node. If a node is revisited with a different parent, a cycle is detected. Alternatively, topological sorting can identify cycles: if a node has a non-zero in-degree at the end, a cycle exists.
+
+Sometimes, it is necessary to mark already traversed nodes to avoid redundant searches. This technique is called `state recording` or `memoization`.
+
+## [695. Max Area of Island](https://leetcode.com/problems/max-area-of-island/)
+
+### Problem Description
+
+Given a 2D binary grid where `0` represents water and `1` represents land, islands are formed by connected land cells. Each cell is connected only to its adjacent cells (up, down, left, right). Find the maximum area of an island.
+
+
+### Input and Output Example
+
+Input: a 2D grid; Output: the maximum area of an island.
+
+
+```
+Input:
+[[1,0,1,1,0,1,0,1],
+[1,0,1,1,0,1,1,1],
+[0,0,0,0,0,0,0,1]]
+Output: 6
+```
+
+The maximum area of an island is 6, located at the far right.
+
+### Solution Explanation
+
+This is a standard search problem, ideal for practicing DFS. Typically, DFS problems are divided into a main function for traversing all positions and a helper function for the recursive DFS. While DFS can also be implemented using a stack, recursion is often more convenient for competitive programming due to easier implementation and backtracking. However, in real-world engineering, a stack may be preferable to avoid recursion stack overflow and for easier understanding.
+
+Below is the stack implementation. A small trick is used for traversal directions: an array `[-1, 0, 1, 0, -1]` represents the four directions (up, down, left, right). You can also explicitly write `[-1, 0]`, `[1, 0]`, `[0, 1]`, `[0, -1]` for clarity.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int maxAreaOfIsland(vector<vector<int>>& grid) {
+    vector<int> direction{-1, 0, 1, 0, -1};
+    int m = grid.size(), n = grid[0].size(), max_area = 0;
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (grid[i][j] == 1) {
+                stack<pair<int, int>> island;
+                // Initialize the first node.
+                int local_area = 1;
+                grid[i][j] = 0;
+                island.push({i, j});
+                // DFS using stack.
+                while (!island.empty()) {
+                    auto [r, c] = island.top();
+                    island.pop();
+                    for (int k = 0; k < 4; ++k) {
+                        int x = r + direction[k], y = c + direction[k + 1];
+                        // Add neighboring nodes that meet the conditions.
+                        if (x >= 0 && x < m && y >= 0 && y < n &&
+                            grid[x][y] == 1) {
+                            ++local_area;
+                            grid[x][y] = 0;
+                            island.push({x, y});
+                        }
+                    }
+                }
+                max_area = max(max_area, local_area);
+            }
+        }
+    }
+    return max_area;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def maxAreaOfIsland(grid: List[List[int]]) -> int:
+    direction = [-1, 0, 1, 0, -1]
+    m, n, max_area = len(grid), len(grid[0]), 0
+    for i in range(m):
+        for j in range(n):
+            if grid[i][j] == 1:
+                island = []
+                # Initialize the first node.
+                local_area = 1
+                grid[i][j] = 0
+                island.append((i, j))
+                # DFS using stack.
+                while island:
+                    r, c = island.pop()
+                    for k in range(4):
+                        x, y = r + direction[k], c + direction[k + 1]
+                        # Add neighboring nodes that meet the conditions.
+                        if 0 <= x < m and 0 <= y < n and grid[x][y] == 1:
+                            local_area += 1
+                            grid[x][y] = 0
+                            island.append((x, y))
+                max_area = max(max_area, local_area)
+    return max_area
+```
+
+</TabItem>
+
+</Tabs>
+
+Below, we present the recursive implementation. Be sure to check the boundary conditions when performing recursive searches. This can be done either before calling the auxiliary function or at the beginning of the auxiliary function itself. In this example, we do not use the array [-1, 0, 1, 0, -1] for searching in four directions (up, down, left, and right). Instead, we explicitly write four different recursive functions. Either approach works, and readers can choose to master either one.
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// Auxiliary function.
+int dfs(vector<vector<int>>& grid, int r, int c) {
+    if (r < 0 || r >= grid.size() || c < 0 || c >= grid[0].size() ||
+        grid[r][c] == 0) {
+        return 0;
+    }
+    grid[r][c] = 0;
+    return (1 + dfs(grid, r + 1, c) + dfs(grid, r - 1, c) +
+            dfs(grid, r, c + 1) + dfs(grid, r, c - 1));
+}
+
+// Main function.
+int maxAreaOfIsland(vector<vector<int>>& grid) {
+    int max_area = 0;
+    for (int i = 0; i < grid.size(); ++i) {
+        for (int j = 0; j < grid[0].size(); ++j) {
+            max_area = max(max_area, dfs(grid, i, j));
+        }
+    }
+    return max_area;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# Auxiliary function
+def dfs(grid: List[List[int]], r: int, c: int) -> int:
+    if r < 0 or r >= len(grid) or c < 0 or c >= len(grid[0]) or grid[r][c] == 0:
+        return 0
+    grid[r][c] = 0
+    return (1 + dfs(grid, r + 1, c) + dfs(grid, r - 1, c) +
+            dfs(grid, r, c + 1) + dfs(grid, r, c - 1))
+
+# Main function
+def maxAreaOfIsland(grid: List[List[int]]) -> int:
+    max_area = 0
+    for i in range(len(grid)):
+        for j in range(len(grid[0])):
+            max_area = max(max_area, dfs(grid, i, j))
+    return max_area
+```
+
+</TabItem>
+
+</Tabs>
+
+## [547. Number of Provinces](https://leetcode.com/problems/number-of-provinces/)
+
+### Problem Description
+
+Given a 2D 0-1 matrix, if position (i, j) is 1, it means city i and city j belong to the same province. The adjacency relationship between cities is transitive; for example, if city a is connected to city b, and city b is connected to city c, then city a and city c are also connected, meaning they are part of the same province. The task is to calculate the total number of provinces.
+
+### Input and Output Example
+
+The input is a 2D matrix, and the output is an integer representing the number of provinces. Since the adjacency relationship is symmetric, the 2D matrix is symmetric. Additionally, each city is part of its own province, so the diagonal values are all 1.
+
+```
+Input:
+[[1,1,0],
+[1,1,0],
+[0,0,1]]
+Output: 2
+```
+
+In this example, cities [1, 2] are in one province, and city [3] is in another province.
+
+### Solution Explanation
+
+In the previous problem, the graph was represented such that each position represented a node, and each node was adjacent to its top, bottom, left, and right neighbors. In this problem, each row (or column) represents a node, and each column (or row) indicates whether there is an adjacent node. The previous problem had 𝑚 × 𝑛 nodes, each with 4 edges; in this problem, there are 𝑛 nodes, and each node can have up to 𝑛 edges if it is connected to all other cities, or a minimum of 1 edge if it is its own province. Once the graph representation is understood, this problem is essentially the same as the previous one: finding the number of provinces (or clusters of connected nodes). Here, we use a recursive approach.
+
+:::warning
+
+For problems involving connected nodes, we can also use the Union-Find algorithm to quickly manage connections and searches. This will be discussed in later sections.
+
+:::
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// Auxiliary function
+void dfs(vector<vector<int>>& isConnected, int i, vector<bool>& visited) {
+    visited[i] = true;
+    for (int j = 0; j < isConnected.size(); ++j) {
+        if (isConnected[i][j] == 1 && !visited[j]) {
+            dfs(isConnected, j, visited);
+        }
+    }
+}
+
+// Main function
+int findCircleNum(vector<vector<int>>& isConnected) {
+    int n = isConnected.size(), count = 0;
+    // Prevent revisiting already searched nodes
+    vector<bool> visited(n, false);
+    for (int i = 0; i < n; ++i) {
+        if (!visited[i]) {
+            dfs(isConnected, i, visited);
+            ++count;
+        }
+    }
+    return count;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# Auxiliary function
+def dfs(isConnected: List[List[int]], city: int, visited: Set[int]):
+    visited.add(city)
+    for i in range(len(isConnected)):
+        if isConnected[city][i] == 1 and i not in visited:
+            dfs(isConnected, i, visited)
+
+# Main function
+def findCircleNum(isConnected: List[List[int]]) -> int:
+    count = 0
+    # Prevent revisiting already searched nodes
+    visited = set()
+    for i in range(len(isConnected)):
+        if i not in visited:
+            dfs(isConnected, i, visited)
+            count += 1
+    return count
+```
+
+</TabItem>
+
+</Tabs>
+
+
+## [417. Paciﬁc Atlantic Water Flow](https://leetcode.com/problems/pacific-atlantic-water-flow/)
+
+### Problem Description
+
+Given a 2D matrix of non-negative integers, each position represents the elevation height. Assume that the left and top edges are the Pacific Ocean, and the right and bottom edges are the Atlantic Ocean. Determine the positions from which water can flow down to both the Pacific and Atlantic Oceans. Water can only flow from a higher or equal elevation to a lower or equal elevation.
+
+### Input and Output Example
+
+The input is a 2D array of non-negative integers representing the elevation heights. The output is a 2D array where the second dimension has a fixed size of 2, representing the coordinates of positions that satisfy the conditions.
+
+```
+Input:
+Pacific  ~  ~  ~  ~  ~
+    ~  1   2  2  3  (5) *
+    ~  3   2  3 (4) (4) *
+    ~  2   4 (5) 3   1 *
+    ~ (6) (7) 1  4   5 *
+    ~ (5)  1  1  2   4 *
+       *   *  *  *   * Atlantic
+Output: [[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]]
+```
+
+In this example, the areas marked with parentheses are the positions satisfying the condition.
+
+### Solution Explanation
+
+The problem requires determining positions from which water can flow to both oceans. If we attempt to search all positions, the complexity could become very high without pruning. Instead, we can reverse the perspective: starting from both oceans and simulating water flowing upwards. By doing so, we only need to search the four edges of the matrix. After completing the search, we iterate through the matrix to identify positions that can be reached from both the Pacific and Atlantic Oceans.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> direction{-1, 0, 1, 0, -1};
+// Auxiliary function
+void dfs(const vector<vector<int>>& heights, vector<vector<bool>>& can_reach,
+         int r, int c) {
+    if (can_reach[r][c]) {
+        return;
+    }
+    can_reach[r][c] = true;
+    for (int i = 0; i < 4; ++i) {
+        int x = r + direction[i], y = c + direction[i + 1];
+        if (x >= 0 && x < heights.size() && y >= 0 && y < heights[0].size() &&
+            heights[r][c] <= heights[x][y]) {
+            dfs(heights, can_reach, x, y);
+        }
+    }
+}
+
+// Main function
+vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
+    int m = heights.size(), n = heights[0].size();
+    vector<vector<bool>> can_reach_p(m, vector<bool>(n, false));
+    vector<vector<bool>> can_reach_a(m, vector<bool>(n, false));
+    vector<vector<int>> can_reach_p_and_a;
+    for (int i = 0; i < m; ++i) {
+        dfs(heights, can_reach_p, i, 0);
+        dfs(heights, can_reach_a, i, n - 1);
+    }
+    for (int i = 0; i < n; ++i) {
+        dfs(heights, can_reach_p, 0, i);
+        dfs(heights, can_reach_a, m - 1, i);
+    }
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (can_reach_p[i][j] && can_reach_a[i][j]) {
+                can_reach_p_and_a.push_back({i, j});
+            }
+        }
+    }
+    return can_reach_p_and_a;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+direction = [-1, 0, 1, 0, -1]
+
+# Auxiliary function
+def dfs(heights: List[List[int]], can_reach: List[List[int]], r: int, c: int):
+    if can_reach[r][c]:
+        return
+    can_reach[r][c] = True
+    for i in range(4):
+        x, y = r + direction[i], c + direction[i + 1]
+        if (x >= 0 and x < len(heights) and y >= 0 and y < len(heights[0]) and
+            heights[x][y] >= heights[r][c]):
+            dfs(heights, can_reach, x, y)
+
+# Main function
+def pacificAtlantic(heights: List[List[int]]) -> List[List[int]]:
+    m, n = len(heights), len(heights[0])
+    can_reach_p = [[False for _ in range(n)] for _ in range(m)]
+    can_reach_a = [[False for _ in range(n)] for _ in range(m)]
+    for i in range(m):
+        dfs(heights, can_reach_p, i, 0)
+        dfs(heights, can_reach_a, i, n - 1)
+    for j in range(n):
+        dfs(heights, can_reach_p, 0, j)
+        dfs(heights, can_reach_a, m - 1, j)
+    return [
+            [i, j] for i in range(m) for j in range(n)
+            if can_reach_p[i][j] and can_reach_a[i][j]
+        ]
+```
+
+</TabItem>
+
+</Tabs>

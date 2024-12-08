@@ -1,0 +1,179 @@
+---
+sidebar_position: 45
+---
+
+# 9.2 Basic Problems in Bit Manipulation
+
+## [461. Hamming Distance](https://leetcode.com/problems/hamming-distance/)
+
+### Problem Description
+
+Given two decimal numbers, calculate the Hamming distance between their binary representations (i.e., the number of differing bits).
+
+### Input and Output Example
+
+The input consists of two decimal integers, and the output is a decimal integer representing their Hamming distance.
+
+```
+Input: x = 1, y = 4
+Output: 2
+```
+
+In this example, the binary representation of 1 is `0001`, and that of 4 is `0100`, with two differing bits.
+
+### Solution Explanation
+
+Perform a bitwise XOR operation on the two numbers and count the number of `1`s in the result.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int hammingDistance(int x, int y) {
+    int diff = x ^ y, dist = 0;
+    while (diff != 0) {
+        dist += diff & 1;
+        diff >>= 1;
+    }
+    return dist;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def hammingDistance(x: int, y: int) -> int:
+    diff = x ^ y
+    dist = 0
+    while diff != 0:
+        dist += diff & 1
+        diff = diff >> 1
+    return dist
+```
+
+</TabItem>
+
+</Tabs>
+
+## [190. Reverse Bits](https://leetcode.com/problems/reverse-bits/)
+
+### Problem Description
+
+Given a decimal positive integer, output its reversed binary representation.
+
+### Input and Output Example
+
+Both input and output are decimal positive integers.
+
+```
+Input: 43261596 (00000010100101000001111010011100)
+Output: 964176192 (00111001011110000010100101000000)
+```
+
+Using arithmetic left shift and right shift, binary reversal can be easily implemented.
+
+### Solution Explanation
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+uint32_t reverseBits(uint32_t n) {
+    uint32_t m = 0;
+    for (int i = 0; i < 32; ++i) {
+        m <<= 1;
+        m += n & 1;
+        n >>= 1;
+    }
+    return m;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def reverseBits(n: int) -> int:
+    m = 0
+    for _ in range(32):
+        m = m << 1
+        m += n & 1
+        n = n >> 1
+    return m
+```
+
+</TabItem>
+
+</Tabs>
+
+## [136. Single Number](https://leetcode.com/problems/single-number/)
+
+### Problem Description
+
+Given an integer array, only one number in this array appears exactly once, while all other numbers appear twice. Find the number that appears only once.
+
+### Input and Output Example
+
+The input is a one-dimensional integer array, and the output is an integer from the array.
+
+```
+Input: [4,1,2,1,2]
+Output: 4
+```
+
+### Solution Explanation
+
+We can use the properties of x ∧ x = 0 and x ∧ 0 = x to solve this. By performing a bitwise XOR on all numbers in the array, the result of XORing all numbers that appear twice is 0. XORing 0 with the number that appears once gives the number itself.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int singleNumber(vector<int>& nums) {
+    int single = 0;
+    for (int num : nums) {
+        single ^= num;
+    }
+    return single;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def singleNumber(nums: List[int]) -> int:
+    single = 0
+    for num in nums:
+        single = single ^ num
+    return single
+```
+
+</TabItem>
+
+</Tabs>
+
+Here, we can also directly use the `reduce` function:
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int singleNumber(vector<int>& nums) {
+    return reduce(nums.begin(), nums.end(), 0,
+                  [](int x, int y) { return x ^ y; });
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def singleNumber(nums: List[int]) -> int:
+    return functools.reduce(lambda x, y: x ^ y, nums)
+```
+
+</TabItem>
+
+</Tabs>

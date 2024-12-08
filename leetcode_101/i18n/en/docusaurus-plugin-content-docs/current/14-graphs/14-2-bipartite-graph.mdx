@@ -1,0 +1,90 @@
+---
+sidebar_position: 76
+---
+
+# 14.2 Bipartite Graph
+
+The `bipartite graph` algorithm, also known as the `coloring method`, uses a breadth-first search (BFS). A graph is bipartite if its nodes can be colored using two colors such that no two adjacent nodes have the same color.
+
+## [785. Is Graph Bipartite?](https://leetcode.com/problems/is-graph-bipartite/)
+
+### Problem Description
+
+Given a graph, determine if it is bipartite.
+
+### Input and Output Example
+
+The input is a graph represented as an adjacency list (e.g., position `0` in the adjacency list is `[1,3]`, indicating node `0` is connected to nodes `1` and `3`). The output is a boolean value indicating whether the graph is bipartite.
+
+```
+Input: [[1,3], [0,2], [1,3], [0,2]]
+0----1
+|    |
+|    |
+3----2
+Output: true
+```
+
+In this example, we can partition the nodes into two groups: `{0,2}` and `{1,3}`.
+
+### Solution Explanation
+
+Using a queue and breadth-first search (BFS), we can color unvisited nodes and check whether adjacent nodes share the same color. In the code, `0` represents unvisited nodes, and `1` and `2` represent the two different colors.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+bool isBipartite(vector<vector<int>>& graph) {
+    int n = graph.size();
+    vector<int> color(n, 0);
+    queue<int> q;
+    for (int i = 0; i < n; ++i) {
+        if (color[i] == 0) {
+            q.push(i);
+            color[i] = 1;
+        }
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+            for (int j : graph[node]) {
+                if (color[j] == 0) {
+                    q.push(j);
+                    color[j] = color[node] == 2 ? 1 : 2;
+                } else if (color[j] == color[node]) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def isBipartite(graph: List[List[int]]) -> bool:
+    n = len(graph)
+    color = [0] * n
+    q = collections.deque()
+
+    for i in range(n):
+        if color[i] == 0:
+            q.append(i)
+            color[i] = 1
+        while len(q) > 0:
+            node = q.popleft()
+            for j in graph[node]:
+                if color[j] == 0:
+                    q.append(j)
+                    color[j] = 1 if color[node] == 2 else 2
+                elif color[j] == color[node]:
+                    return False
+    return True
+```
+
+</TabItem>
+
+</Tabs>

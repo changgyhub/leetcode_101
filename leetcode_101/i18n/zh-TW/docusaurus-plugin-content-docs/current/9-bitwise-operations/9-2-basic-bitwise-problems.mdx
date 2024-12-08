@@ -1,0 +1,179 @@
+---
+sidebar_position: 45
+---
+
+# 9.2 位運算基礎問題
+
+## [461. Hamming Distance](https://leetcode.com/problems/hamming-distance/)
+
+### 題目描述
+
+給定兩個十進制數字，求它們二進制表示的漢明距離（Hamming distance，即不同位的個數）。
+
+### 輸入輸出範例
+
+输入是两个十进制整数，输出是一个十进制整数，表示两个输入数字的汉明距离。
+
+```
+Input: x = 1, y = 4
+Output: 2
+```
+
+在這個範例中，1 的二進制是 0001，4 的二進制是 0100，一共有兩位不同。
+
+### 題解
+
+對兩個數進行按位異或操作，統計結果中有多少個 1 即可。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int hammingDistance(int x, int y) {
+    int diff = x ^ y, dist = 0;
+    while (diff != 0) {
+        dist += diff & 1;
+        diff >>= 1;
+    }
+    return dist;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def hammingDistance(x: int, y: int) -> int:
+    diff = x ^ y
+    dist = 0
+    while diff != 0:
+        dist += diff & 1
+        diff = diff >> 1
+    return dist
+```
+
+</TabItem>
+
+</Tabs>
+
+## [190. Reverse Bits](https://leetcode.com/problems/reverse-bits/)
+
+### 題目描述
+
+給定一個十進制正整數，輸出它在二進制下的翻轉結果。
+
+### 輸入輸出範例
+
+輸入和輸出都是十進制正整數。
+
+```
+Input: 43261596 (00000010100101000001111010011100)
+Output: 964176192 (00111001011110000010100101000000)
+```
+
+使用算術左移和右移，可以很輕易地實現二進制的翻轉。
+
+### 題解
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+uint32_t reverseBits(uint32_t n) {
+    uint32_t m = 0;
+    for (int i = 0; i < 32; ++i) {
+        m <<= 1;
+        m += n & 1;
+        n >>= 1;
+    }
+    return m;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def reverseBits(n: int) -> int:
+    m = 0
+    for _ in range(32):
+        m = m << 1
+        m += n & 1
+        n = n >> 1
+    return m
+```
+
+</TabItem>
+
+</Tabs>
+
+## [136. Single Number](https://leetcode.com/problems/single-number/)
+
+### 題目描述
+
+給定一個整數陣列，這個陣列裡只有一個數字只出現了一次，其餘數字出現了兩次，求這個只出現一次的數字。
+
+### 輸入輸出範例
+
+輸入是一個一維整數陣列，輸出是該陣列內的一個整數。
+
+```
+Input: [4,1,2,1,2]
+Output: 4
+```
+
+### 題解
+
+我們可以利用 x ∧ x = 0 和 x ∧ 0 = x 的特點，將陣列內所有的數字進行按位異或。出現兩次的所有數字按位異或的結果是 0，0 與出現一次的數字異或可以得到這個數字本身。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int singleNumber(vector<int>& nums) {
+    int single = 0;
+    for (int num : nums) {
+        single ^= num;
+    }
+    return single;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def singleNumber(nums: List[int]) -> int:
+    single = 0
+    for num in nums:
+        single = single ^ num
+    return single
+```
+
+</TabItem>
+
+</Tabs>
+
+這裡我們也可以直接使用 `reduce` 函數：
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int singleNumber(vector<int>& nums) {
+    return reduce(nums.begin(), nums.end(), 0,
+                  [](int x, int y) { return x ^ y; });
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def singleNumber(nums: List[int]) -> int:
+    return functools.reduce(lambda x, y: x ^ y, nums)
+```
+
+</TabItem>
+
+</Tabs>
