@@ -8,7 +8,7 @@
 <a href="https://www.linkedin.com/in/changgy/" ><img src="https://img.shields.io/badge/LinkedIn-Follow_Chang_Gao-black?style=social&logo=linkedin" height="22"/> </a>
 
 * [图书链接](https://github.com/changgyhub/leetcode_101/blob/master/LeetCode%20101%20-%20A%20Grinding%20Guide.pdf)
-* [網頁版圖书 by Yan-Ying Liao\(noworneverev\)](https://noworneverev.github.io/leetcode_101/)
+* [網頁版圖书](https://noworneverev.github.io/leetcode_101/) by [Yan-Ying Liao](https://github.com/noworneverev)
 * [图书模板链接](https://www.overleaf.com/latex/templates/elegantbook-template/zpsrbmdsxrgy)
 * [讨论区](https://github.com/changgyhub/leetcode_101/issues/49)
 
