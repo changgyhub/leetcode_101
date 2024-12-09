@@ -1,0 +1,109 @@
+---
+sidebar_position: 12
+---
+
+# 3.2 求平方根
+
+## [69. Sqrt(x)](https://leetcode.com/problems/sqrtx/)
+
+### 題目描述
+
+給定一個非負整數 `x`，求它的平方根並向下取整。
+
+### 輸入輸出範例
+
+輸入是一個整數，輸出也是一個整數。
+
+```
+Input: 8
+Output: 2
+```
+
+8 的平方根是 2.82842...，向下取整即為 2。
+
+
+### 題解
+
+我們可以將這道題想像成：給定一個非負整數 `x`，求 $f(t) = t^2 − x = 0$ 的解。由於我們只考慮 $t ≥ 0$，因此 $f(t)$ 在定義域內是單調遞增的。考慮到 $f(0) = −x ≤ 0$，$f(x) = x^2 − x ≥ 0$，我們可以對 $[0, x]$ 區間使用二分搜尋找到 $f(t) = 0$ 的解。此處我們採用左閉右閉的寫法。
+
+在 C++ 解法中，$mid = (l + r) / 2$ 可能會因為 $l + r$ 溢出而出錯，因此改為 $mid = l + (r − l) / 2$ 的寫法；直接計算 $mid ∗ mid$ 也可能溢出，因此我們比較 $mid$ 和 $x / mid$。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int mySqrt(int x) {
+    int l = 1, r = x, mid, x_div_mid;
+    while (l <= r) {
+        mid = l + (r - l) / 2;
+        x_div_mid = x / mid;
+        if (mid == x_div_mid) {
+            return mid;
+        }
+        if (mid < x_div_mid) {
+            l = mid + 1;
+        } else {
+            r = mid - 1;
+        }
+    }
+    return r;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def mySqrt(x: int) -> int:
+    l, r = 1, x
+    while l <= r:
+        mid = (l + r) // 2
+        mid_sqr = mid**2
+        if mid_sqr == x:
+            return mid
+        if mid_sqr < x:
+            l = mid + 1
+        else:
+            r = mid - 1
+    return r
+```
+
+</TabItem>
+
+</Tabs>
+
+### 複雜度分析
+
+- **時間複雜度**: $O(\log x)$，因為每次迭代將搜索範圍縮小一半。
+- **空間複雜度**: $O(1)$，只使用了常數額外空間。
+
+此外，這道題還有一種更快的算法——`牛頓迭代法`，其公式為 $t_{n+1} = t_n - \frac{f(t_n)}{f'(t_n)}$。給定 $f(t) = t^2 − x = 0$，其迭代公式為 $t_{n+1} = \frac{t_n + \frac{x}{t_n}}{2}$。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int mySqrt(int x) {
+    long t = x;
+    while (t * t > x) {
+        t = (t + x / t) / 2;
+    }
+    return t;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def mySqrt(x: int) -> int:
+    t = x
+    while t**2 > x:
+        t = (t + x // t) // 2
+    return t
+```
+
+</TabItem>
+
+</Tabs>
+

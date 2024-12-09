@@ -1,0 +1,481 @@
+---
+sidebar_position: 69
+---
+
+# 13.2 Tree Recursion
+
+For simple recursion problems, some LeetCode experts prefer to write one-line code, solving problems with a single line. While we will showcase such solutions, beginners are still advised to use multi-line if-else statements.
+
+In many cases, the recursive implementation for trees is similar to the recursive implementation for depth-first search. Hence, this book does not differentiate between the two.
+
+## [104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/)
+
+### Problem Description
+
+Find the maximum depth of a binary tree.
+
+### Input and Output Example
+
+The input is a binary tree, and the output is an integer representing the maximum depth of the tree.
+
+```
+Input:
+    3
+   / \
+  9  20
+     / \
+    15  7
+Output: 3
+```
+
+### Solution Explanation
+
+Using recursion, we can easily determine the maximum depth.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int maxDepth(TreeNode* root) {
+    if (root == nullptr) {
+        return 0;
+    }
+    return max(maxDepth(root->left), maxDepth(root->right)) + 1;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def maxDepth(root: Optional[TreeNode]) -> int:
+    if root is None:
+        return 0
+    return max(maxDepth(root.left), maxDepth(root.right)) + 1
+```
+
+</TabItem>
+
+</Tabs>
+
+## [110. Balanced Binary Tree](https://leetcode.com/problems/balanced-binary-tree/)
+
+### Problem Description
+
+Determine whether a binary tree is balanced. A balanced tree is defined as a tree in which the maximum depth difference between any two child nodes of a node is no greater than 1.
+
+### Input and Output Example
+
+The input is a binary tree, and the output is a boolean indicating whether the tree is balanced.
+
+```
+Input:
+      1
+     / \
+    2   2
+   / \
+  3   3
+ / \
+4   4 
+Output: false
+```
+
+### Solution Explanation
+
+The solution is similar to calculating the maximum depth of a tree but with two key differences: 
+
+1. The depth of the subtrees must be calculated first before performing the comparison.
+2. If an imbalance is detected while processing a subtree, return -1 immediately to signal imbalance. This allows ancestor nodes to avoid redundant checks. (In this problem, determining imbalance is straightforward by taking the absolute difference, but avoiding redundant computations is crucial in scenarios involving more costly comparisons.)
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// Auxiliary function
+int balancedDepth(TreeNode* root) {
+    if (root == nullptr) {
+        return 0;
+    }
+    int left = balancedDepth(root->left);
+    int right = balancedDepth(root->right);
+    if (left == -1 || right == -1 || abs(left - right) > 1) {
+        return -1;
+    }
+    return max(left, right) + 1;
+}
+// Main function
+bool isBalanced(TreeNode* root) { return balancedDepth(root) != -1; }
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# Auxiliary function
+def balancedDepth(root: Optional[TreeNode]) -> int:
+    if root is None:
+        return 0
+    left = balancedDepth(root.left)
+    right = balancedDepth(root.right)
+    if left == -1 or right == -1 or abs(left - right) > 1:
+        return -1
+    return max(left, right) + 1
+
+# Main function
+def isBalanced(root: Optional[TreeNode]) -> bool:
+    return balancedDepth(root) != -1
+
+```
+
+</TabItem>
+
+</Tabs>
+
+## [543. Diameter of Binary Tree](https://leetcode.com/problems/diameter-of-binary-tree/)
+
+### Problem Description
+
+Find the longest diameter of a binary tree. The diameter is defined as the undirected distance between any two nodes in the binary tree.
+
+### Input and Output Example
+
+Input is a binary tree, and output is an integer representing the longest diameter.
+
+```
+Input:
+      1
+     / \
+    2   3
+   / \
+  4   5
+Output: 3
+```
+
+In this example, the longest diameter is [4,2,1,3] and [5,2,1,3].
+
+### Solution Explanation
+
+We can use recursion to solve this problem. It's important to note that when processing a subtree, the updated longest diameter and the returned value from the recursion are different.
+
+The updated longest diameter refers to the diameter passing through the root of the subtree (i.e., the sum of the lengths of the left and right subtrees). The function's return value, however, is the longest diameter with the root of the subtree as an endpoint (i.e., the length of one side of the subtree). This return value design allows the parent node's longest diameter to be updated recursively.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// Auxiliary function
+int updateDiameter(TreeNode* node, int& diameter) {
+    if (node == nullptr) {
+        return 0;
+    }
+    int left = updateDiameter(node->left, diameter);
+    int right = updateDiameter(node->right, diameter);
+    diameter = max(diameter, left + right);
+    return max(left, right) + 1;
+}
+// Main function
+int diameterOfBinaryTree(TreeNode* root) {
+    int diameter = 0;
+    updateDiameter(root, diameter);
+    return diameter;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# Auxiliary function
+def updateDiameter(node: Optional[TreeNode], diameter: List[int]) -> int:
+    if node is None:
+        return 0
+    left = updateDiameter(node.left, diameter)
+    right = updateDiameter(node.right, diameter)
+    diameter[0] = max(diameter[0], left + right)
+    return max(left, right) + 1
+
+# Main function
+def diameterOfBinaryTree(root: Optional[TreeNode]) -> int:
+    diameter = [0]
+    updateDiameter(root, diameter)
+    return diameter[0]
+
+```
+
+</TabItem>
+
+</Tabs>
+
+## [437. Path Sum III](https://leetcode.com/problems/path-sum-iii/)
+
+### Problem Description
+
+Given a binary tree of integers, find the number of paths where the sum of the node values equals a given target.
+
+### Input and Output Example
+
+Input is a binary tree and a target integer. Output is an integer representing the number of paths that satisfy the condition.
+
+```
+Input: sum = 8, tree =
+        10
+       / \
+      5  -3
+     / \   \
+    3   2   11
+   / \   \
+  3 -2    1
+Output: 3
+```
+
+In this example, there are three paths where the sum equals 8: `[[5,3],[5,2,1],[-3,11]]`.
+
+### Solution Explanation
+
+When recursively processing each node, consider two scenarios:  
+1. If the current node is included in the path, subsequent nodes must be added continuously, or the path stops.  
+2. If the current node is not included, restart the path calculation from its left and right children.
+
+A convenient way to handle this is to create an auxiliary function specifically for calculating paths that start from the current node.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// Auxiliary function
+// Use long long to prevent overflow with large test cases; int is usually sufficient.
+long long pathSumStartWithRoot(TreeNode* root, long long targetSum) {
+    if (root == nullptr) {
+        return 0;
+    }
+    return (root->val == targetSum) +
+           pathSumStartWithRoot(root->left, targetSum - root->val) +
+           pathSumStartWithRoot(root->right, targetSum - root->val);
+}
+// Main function
+int pathSum(TreeNode* root, int targetSum) {
+    if (root == nullptr) {
+        return 0;
+    }
+    return pathSumStartWithRoot(root, targetSum) +
+           pathSum(root->left, targetSum) + pathSum(root->right, targetSum);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# Auxiliary function
+def pathSumStartWithRoot(root: Optional[TreeNode], targetSum: int) -> int:
+    if root is None:
+        return 0
+    return (
+        int(root.val == targetSum)
+        + pathSumStartWithRoot(root.left, targetSum - root.val)
+        + pathSumStartWithRoot(root.right, targetSum - root.val)
+    )
+
+# Main function
+def pathSum(root: Optional[TreeNode], targetSum: int) -> int:
+    if root is None:
+        return 0
+    return (
+        pathSumStartWithRoot(root, targetSum)
+        + pathSum(root.left, targetSum)
+        + pathSum(root.right, targetSum)
+    )
+
+```
+
+</TabItem>
+
+</Tabs>
+
+## [101. Symmetric Tree](https://leetcode.com/problems/symmetric-tree/)
+
+### Problem Description
+
+Determine whether a binary tree is symmetric.
+
+### Input and Output Example
+
+Input a binary tree, output a boolean indicating whether the tree is symmetric.
+
+```
+Input:
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4 3
+Output: true
+```
+
+### Solution Explanation
+
+Determining whether a tree is symmetric is equivalent to checking if its left and right subtrees are symmetric. A common approach for such problems is the "four-step method":  
+1. If both subtrees are null, they are symmetric.
+2. If one subtree is null and the other is not, they are not symmetric.
+3. If the root values of the two subtrees are not equal, they are not symmetric.
+4. Based on symmetry requirements, recursively process the subtrees.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// Auxiliary function
+bool isLeftRightSymmetric(TreeNode* left, TreeNode* right) {
+    if (left == nullptr && right == nullptr) {
+        return true;
+    }
+    if (left == nullptr or right == nullptr) {
+        return false;
+    }
+    if (left->val != right->val) {
+        return false;
+    }
+    return isLeftRightSymmetric(left->left, right->right) &&
+           isLeftRightSymmetric(left->right, right->left);
+}
+// Main function
+bool isSymmetric(TreeNode* root) {
+    if (root == nullptr) {
+        return true;
+    }
+    return isLeftRightSymmetric(root->left, root->right);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# Auxiliary function
+def isLeftRightSymmetric(
+    left: Optional[TreeNode], right: Optional[TreeNode]
+) -> bool:
+    if left is None and right is None:
+        return True
+    if left is None or right is None:
+        return False
+    if left.val != right.val:
+        return False
+    return (
+        isLeftRightSymmetric(left.left, right.right) and
+        isLeftRightSymmetric(left.right, right.left)
+    )
+
+# Main function
+def isSymmetric(root: Optional[TreeNode]) -> bool:
+    if root is None:
+        return True
+    return isLeftRightSymmetric(root.left, root.right)
+
+```
+
+</TabItem>
+
+</Tabs>
+
+## [1110. Delete Nodes And Return Forest](https://leetcode.com/problems/delete-nodes-and-return-forest/)
+
+### Problem Description
+
+Given an integer binary tree and some integers, delete the nodes corresponding to these integers and return the remaining subtrees.
+
+### Input and Output Example
+
+Input is an integer binary tree and a one-dimensional integer array. Output is an array where each position contains a subtree (its root node).
+
+```
+Input: to_delete = [3,5], tree =
+    1
+   / \
+  2   3
+ / \ / \
+ 4 5 6 7
+Output: [
+    1
+   /
+  2
+ /
+4  ,6 ,7]
+```
+
+### Solution Explanation
+
+The key details in this problem include how to recursively handle the original tree and when to disconnect pointers. Additionally, to efficiently find nodes to delete, you can create a hash table for quick lookup. It is highly recommended that readers attempt to implement this problem after reviewing the solution to deepen their understanding and application of recursion.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// Auxiliary function
+TreeNode* moveNodesToForest(TreeNode* root, unordered_set<int>& undeleted,
+                            vector<TreeNode*>& forest) {
+    if (root == nullptr) {
+        return nullptr;
+    }
+    root->left = moveNodesToForest(root->left, undeleted, forest);
+    root->right = moveNodesToForest(root->right, undeleted, forest);
+    if (undeleted.contains(root->val)) {
+        if (root->left != nullptr) {
+            forest.push_back(root->left);
+        }
+        if (root->right != nullptr) {
+            forest.push_back(root->right);
+        }
+        root = nullptr;
+    }
+    return root;
+}
+// Main function
+vector<TreeNode*> delNodes(TreeNode* root, vector<int>& to_delete) {
+    vector<TreeNode*> forest;
+    unordered_set<int> undeleted(to_delete.begin(), to_delete.end());
+    root = moveNodesToForest(root, undeleted, forest);
+    if (root != nullptr) {
+        forest.push_back(root);
+    }
+    return forest;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# Auxiliary function
+def moveNodesToForest(
+    root: Optional[TreeNode], undeleted: Set[int], forest: List[TreeNode]
+) -> Optional[TreeNode]:
+    if root is None:
+        return None
+    
+    root.left = moveNodesToForest(root.left, undeleted, forest)
+    root.right = moveNodesToForest(root.right, undeleted, forest)
+    
+    if root.val in undeleted:
+        if root.left is not None:
+            forest.append(root.left)
+        if root.right is not None:
+            forest.append(root.right)
+        root = None
+    
+    return root
+
+# Main function
+def delNodes(root: Optional[TreeNode], to_delete: List[int]) -> List[TreeNode]:
+    forest = []
+    undeleted = set(to_delete)
+    root = moveNodesToForest(root, undeleted, forest)
+    if root is not None:
+        forest.append(root)
+    return forest
+
+```
+
+</TabItem>
+
+</Tabs>

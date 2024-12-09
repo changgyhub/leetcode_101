@@ -1,0 +1,87 @@
+---
+sidebar_position: 14
+---
+
+# 3.4 Find Maximum
+
+## [162. Find Peak Element](https://leetcode.com/problems/find-peak-element/)
+
+### Problem Description
+
+Given an array, a maximum is defined as a number that is greater than both of its neighbors. Find the position of any maximum. There may be multiple maxima in the array, and you can return any of them. The required time complexity is $O(\log n)$.
+
+### Input and Output Example
+
+The input is an array, and the output is the position of a maximum.
+
+
+```
+Input: nums = [1,2,3,1]
+Output: 2
+```
+
+The maximum 3 appears at position 2.
+
+
+### Solution Explanation
+
+To achieve $O(\log n)$ time complexity, we can use binary search on the array. If the endpoints are not maxima, and the current midpoint is not a maximum, then one of its sides must contain a maximum.
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int findPeakElement(vector<int>& nums) {
+    int n = nums.size();
+    if (n == 1) {
+        return 0;
+    }
+    if (nums[0] > nums[1]) {
+        return 0;
+    }
+    if (nums[n - 1] > nums[n - 2]) {
+        return n - 1;
+    }
+    int l = 1, r = n - 2, mid;
+    while (l <= r) {
+        mid = l + (r - l) / 2;
+        if (nums[mid] > nums[mid + 1] && nums[mid] > nums[mid - 1]) {
+            return mid;
+        } else if (nums[mid] > nums[mid - 1]) {
+            l = mid + 1;
+        } else {
+            r = mid - 1;
+        }
+    }
+    return -1;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def findPeakElement(self, nums: List[int]) -> int:
+    n = len(nums)
+    if n == 1:
+        return 0
+    if nums[0] > nums[1]:
+        return 0
+    if nums[n - 1] > nums[n - 2]:
+        return n - 1
+    l, r = 1, n - 2
+    while l <= r:
+        mid = (l + r) // 2
+        if nums[mid] > nums[mid + 1] and nums[mid] > nums[mid - 1]:
+            return mid
+        elif nums[mid] > nums[mid - 1]:
+            l = mid + 1
+        else:
+            r = mid - 1
+    return -1
+```
+
+</TabItem>
+
+</Tabs>

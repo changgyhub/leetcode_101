@@ -1,0 +1,125 @@
+---
+sidebar_position: 46
+---
+
+# 9.3 二進制特性
+
+利用二進制的一些特性，我們可以把位運算使用到更多問題上。
+
+例如，我們可以利用二進制和位運算輸出一個陣列的所有子集。假設我們有一個長度為 $n$ 的陣列，我們可以生成長度為 $n$ 的所有二進制，1 表示選取該數字，0 表示不選取。這樣我們就獲得了 $2^n$ 個子集。
+
+## [318. Maximum Product of Word Lengths](https://leetcode.com/problems/maximum-product-of-word-lengths/)
+
+### 題目描述
+
+給定多個字母串，求其中任意兩個字母串的長度乘積的最大值，且這兩個字母串不能含有相同字母。
+
+### 輸入輸出範例
+
+輸入一個包含多個字母串的一維陣列，輸出一個整數，表示長度乘積的最大值。
+
+```
+Input: ["a","ab","abc","d","cd","bcd","abcd"]
+Output: 4
+```
+
+在這個範例中，一種最優的選擇是“ab”和“cd”。
+
+### 題解
+
+怎樣快速判斷兩個字母串是否含有重複字母呢？可以為每個字母串建立一個長度為 26 的二進制數字，每個位置表示是否存在該字母。如果兩個字母串含有重複字母，那它們的二進制表示的按位與不為 0。同時，我們可以建立一個雜湊表來儲存二進制數字到最長子母串長度的映射關係，比如 ab 和 aab 的二進制數字相同，但是 aab 更長。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int maxProduct(vector<string>& words) {
+    unordered_map<int, int> cache;
+    int max_prod = 0;
+    for (const string& word : words) {
+        int mask = 0, w_len = word.length();
+        for (char c : word) {
+            mask |= 1 << (c - ’a’);
+        }
+        cache[mask] = max(cache[mask], w_len);
+        for (auto [h_mask, h_len] : cache) {
+            if ((mask & h_mask) == 0) {
+                max_prod = max(max_prod, w_len * h_len);
+            }
+        }
+    }
+    return max_prod;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def maxProduct(words: List[str]) -> int:
+    cache = dict()
+    max_prod = 0
+    for word in words:
+        mask, w_len = 0, len(word)
+        for c in word:
+            mask = mask | (1 << (ord(c) - ord("a")))
+        cache[mask] = max(cache.get(mask, 0), w_len)
+        for h_mask, h_len in cache.items():
+            if (mask & h_mask) == 0:
+                max_prod = max(max_prod, w_len * h_len)
+    return max_prod
+```
+
+</TabItem>
+
+</Tabs>
+
+## [338. Counting Bits](https://leetcode.com/problems/counting-bits/)
+
+### 題目描述
+
+給定一個非負整數 n，求從 0 到 n 的所有數字的二進制表示中，各自有多少個 1。
+
+### 輸入輸出範例
+
+輸入是一個非負整數 n，輸出是一個長度為 n + 1 的非負整數陣列，每個位置 m 表示 m 的二進制中有多少個 1。
+
+```
+Input: 5
+Output: [0,1,1,2,1,2]
+```
+
+### 題解
+
+本題可以利用動態規劃和位運算進行快速求解。定義一個陣列 dp，其中 dp[i] 表示數字 i 的二進制中含有 1 的個數。對於第 i 個數字：
+- 如果它二進制的最後一位為 1，那麼它含有 1 的個數為 dp[i-1] + 1；
+- 如果它二進制的最後一位為 0，那麼它含有 1 的個數和其算術右移結果相同，即 dp[i>>1]。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> countBits(int n) {
+    vector<int> dp(n + 1, 0);
+    for (int i = 1; i <= n; ++i)
+        // 等價於：dp[i] = dp[i & (i - 1)] + 1;
+        dp[i] = i & 1 ? dp[i - 1] + 1 : dp[i >> 1];
+    return dp;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def countBits(n: int) -> List[int]:
+    dp = [0] * (n + 1)
+    for i in range(1, n + 1):
+        # 等價於：dp[i] = dp[i & (i - 1)] + 1
+        dp[i] = dp[i - 1] + 1 if i & 1 else dp[i >> 1]
+    return dp
+```
+
+</TabItem>
+
+</Tabs>

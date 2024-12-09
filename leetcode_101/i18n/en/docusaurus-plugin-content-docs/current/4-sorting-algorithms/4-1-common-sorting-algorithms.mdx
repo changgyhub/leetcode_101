@@ -1,0 +1,148 @@
+---
+sidebar_position: 17
+---
+
+# 4.1 Common Sorting Algorithms
+
+Although sorting can be achieved in C++ and Python using the `sort` function and it is rare to write sorting algorithms manually during coding challenges, understanding various sorting algorithms helps deepen your knowledge of basic algorithms and solve problems derived from these algorithms. Here, we introduce two sorting algorithms with a time complexity of $O(n \log n)$: `Quick Sort` and `Merge Sort`. The former is generally faster, while the latter ensures that elements with the same value maintain their relative order in the array (i.e., it is a "stable sort").
+
+
+## Quicksort
+
+The principle of Quick Sort is straightforward: for an unsorted segment, we randomly choose a position as the pivot and rearrange the elements such that all numbers smaller than the pivot are moved to its left and all numbers larger than the pivot are moved to its right. After this operation, we recursively perform Quick Sort on the segments to the left and right of the pivot. It can be proven that if the pivot is chosen randomly, the average complexity of this algorithm is $O(n \log n)$, while the worst-case complexity is $O(n^2)$.
+
+We use a left-closed, right-closed interval approach, initializing with $l = 0, r = n - 1$.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+void quickSort(vector<int> &nums, int l, int r) {
+    if (l >= r) {
+        return;
+    }
+    // Randomly choose a pivot within the current [l, r] interval.
+    int pivot = l + (rand() % (r - l + 1));
+    int pivot_val = nums[pivot];
+    // Swap the pivot with the first element.
+    swap(nums[l], nums[pivot]);
+    // Traverse inward from both ends of [l+1, r] to find misplaced elements.
+    int i = l + 1, j = r;
+    while (true) {
+        while (i < j && nums[j] >= pivot_val) {
+            --j;
+        }
+        while (i < j && nums[i] <= pivot_val) {
+            ++i;
+        }
+        if (i == j) {
+            break;
+        }
+        // Swap the misplaced elements.
+        swap(nums[i], nums[j]);
+    }
+    // Swap the pivot back to its correct position.
+    int new_pivot = nums[i] <= nums[l] ? i : i - 1;
+    swap(nums[l], nums[new_pivot]);
+    quickSort(nums, l, new_pivot - 1);
+    quickSort(nums, new_pivot + 1, r);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def quickSort(nums: List[int], l: int, r: int) -> None:
+    if l >= r:
+        return
+    # Randomly choose a pivot within the current [l, r] interval.
+    pivot = random.randint(l, r)
+    pivot_val = nums[pivot]
+    # Swap the pivot with the first element.
+    nums[l], nums[pivot] = nums[pivot], nums[l]
+    # Traverse inward from both ends of [l+1, r] to find misplaced elements.
+    i, j = l + 1, r
+    while True:
+        while i < j and nums[j] >= pivot_val:
+            j -= 1
+        while i < j and nums[i] <= pivot_val:
+            i += 1
+        if i == j:
+            break
+        # Swap the misplaced elements.
+        nums[i], nums[j] = nums[j], nums[i]
+    # Swap the pivot back to its correct position.
+    new_pivot = i if nums[i] <= nums[l] else i - 1
+    nums[l], nums[new_pivot] = nums[new_pivot], nums[l]
+    quickSort(nums, l, new_pivot - 1)
+    quickSort(nums, new_pivot + 1, r)
+```
+
+</TabItem>
+
+</Tabs>
+
+## Merge Sort
+
+Merge Sort is a classic divide-and-conquer algorithm, which we will elaborate on in later sections. In short, for an unsorted segment, we first sort its left and right halves separately and then merge the two halves ("conquer"). Sorting each half can be achieved recursively by further splitting each half into two parts ("divide").
+
+We use a left-closed, right-closed interval approach, initializing with $l = 0, r = n - 1$, and pre-allocate an array cache of the same size as nums to store intermediate results.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+void mergeSort(vector<int> &nums, vector<int> &cache, int l, int r) {
+    if (l >= r) {
+        return;
+    }
+    // Divide.
+    int mid = l + (r - l) / 2;
+    mergeSort(nums, cache, l, mid);
+    mergeSort(nums, cache, mid + 1, r);
+    // Conquer.
+    // Use two pointers, i and j, to traverse the left [l, mid] and right [mid+1, r] halves.
+    int i = l, j = mid + 1;
+    for (int pos = l; pos <= r; ++pos) {
+        if (j > r || (i <= mid && nums[i] <= nums[j])) {
+            cache[pos] = nums[i++];
+        } else {
+            cache[pos] = nums[j++];
+        }
+    }
+    // Copy the sorted elements back to nums.
+    for (int pos = l; pos <= r; ++pos) {
+        nums[pos] = cache[pos];
+    }
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def mergeSort(nums: List[int], cache: List[int], l: int, r: int) -> None:
+    if l >= r:
+        return
+    # Divide.
+    mid = (l + r) // 2
+    mergeSort(nums, cache, l, mid)
+    mergeSort(nums, cache, mid + 1, r)
+    # Conquer.
+    # Use two pointers, i and j, to traverse the left [l, mid] and right [mid+1, r] halves.
+    i, j = l, mid + 1
+    for pos in range(l, r + 1):
+        if j > r or (i <= mid and nums[i] <= nums[j]):
+            cache[pos] = nums[i]
+            i += 1
+        else:
+            cache[pos] = nums[j]
+            j += 1
+    # Copy the sorted elements back to nums.
+    nums[l:r+1] = cache[l:r+1]
+```
+
+</TabItem>
+
+</Tabs>

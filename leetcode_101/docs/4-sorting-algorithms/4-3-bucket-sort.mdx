@@ -1,0 +1,84 @@
+---
+sidebar_position: 19
+---
+
+# 4.3 桶排序
+
+## [347. Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/)
+
+### 题目描述
+
+给定一个数组，求前 $k$ 个最频繁的数字。
+
+### 输入输出样例
+
+输入是一个数组和一个目标值 $k$。输出是一个长度为 $k$ 的数组。
+
+```
+Input: nums = [1,1,1,1,2,2,3,4], k = 2
+Output: [1,2]
+```
+
+在这个样例中，最频繁的两个数是 1 和 2。
+
+### 题解
+
+顾名思义，`桶排序`的意思是为每个值设立一个桶，桶内记录这个值出现的次数（或其它属性），然后对桶进行排序。针对样例来说，我们先通过桶排序得到四个桶 [1,2,3,4]，它们的值分别
+为 [4,2,1,1]，表示每个数字出现的次数。
+
+紧接着，我们对桶的频次进行排序，前 $k$ 大个桶即是前 $k$ 个频繁的数。这里我们可以使用各种排序算法，甚至可以再进行一次桶排序，把每个旧桶根据频次放在不同的新桶内。针对样例来说，因为目前最大的频次是 4，我们建立 [1,2,3,4] 四个新桶，它们分别放入的旧桶为 [[3,4],[2],[],[1]]，表示不同数字出现的频率。最后，我们从后往前遍历，直到找到 k 个旧桶。
+
+我们可以使用 C++ 中的 unordered_map 或 Python 中的 dict 实现哈希表。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> topKFrequent(vector<int>& nums, int k) {
+    unordered_map<int, int> counts;
+    for (int num : nums) {
+        ++counts[num];
+    }
+    unordered_map<int, vector<int>> buckets;
+    for (auto [num, count] : counts) {
+        buckets[count].push_back(num);
+    }
+    vector<int> top_k;
+    for (int count = nums.size(); count >= 0; --count) {
+        if (buckets.contains(count)) {
+            for (int num : buckets[count]) {
+                top_k.push_back(num);
+                if (top_k.size() == k) {
+                    return top_k;
+                }
+            }
+        }
+    }
+    return top_k;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def topKFrequent(nums: List[int], k: int) -> List[int]:
+    counts = Counter(nums)
+    buckets = dict()
+    for num, count in counts.items():
+        if count in buckets:
+            buckets[count].append(num)
+        else:
+            buckets[count] = [num]
+    top_k = []
+    for count in range(len(nums), 0, -1):
+        if count in buckets:
+            top_k += buckets[count]
+            if len(top_k) >= k:
+                return top_k[:k]
+    return top_k[:k]
+```
+
+</TabItem>
+
+</Tabs>

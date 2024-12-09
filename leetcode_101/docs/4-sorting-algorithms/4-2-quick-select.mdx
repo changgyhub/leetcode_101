@@ -1,0 +1,80 @@
+---
+sidebar_position: 18
+---
+
+# 4.2 快速选择
+
+## [215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/)
+
+### 题目描述
+
+在一个未排序的数组中，找到第 $k$ 大的数字。
+
+### 输入输出样例
+
+输入一个数组和一个目标值 $k$，输出第 $k$ 大的数字。题目默认一定有解。
+
+```
+Input: [3,2,1,5,6,4] and k = 2
+Output: 5
+```
+
+
+
+### 题解
+
+`快速选择`一般用于求解 k-th Element 问题，可以在平均 $O(n)$ 时间复杂度，$O(1)$ 空间复杂度完成求解工作。快速选择的实现和快速排序相似，不过只需要找到第 $k$ 大的枢（pivot）即可，不需要对其左右再进行排序。与快速排序一样，快速选择一般需要先打乱数组，否则最坏情况下时间复杂度为 $O(n^2)$。
+
+这道题如果直接用上面的快速排序原代码运行，会导致在 LeetCode 上接近超时。我们可以用空间换取时间，直接存储比中枢点小和大的值，尽量避免进行交换位置的操作。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int findKthLargest(vector<int> nums, int k) {
+    int pivot = rand() % nums.size();
+    int pivot_val = nums[pivot];
+    vector<int> larger, equal, smaller;
+    for (int num : nums) {
+        if (num > pivot_val) {
+            larger.push_back(num);
+        } else if (num < pivot_val) {
+            smaller.push_back(num);
+        } else {
+            equal.push_back(num);
+        }
+    }
+    if (k <= larger.size()) {
+        return findKthLargest(larger, k);
+    }
+    if (k > larger.size() + equal.size()) {
+        return findKthLargest(smaller, k - larger.size() - equal.size());
+    }
+    return pivot_val;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def findKthLargest(nums: List[int], k: int) -> int:
+    pivot_val = random.choice(nums)
+    larger, equal, smaller = [], [], []
+    for num in nums:
+        if num > pivot_val:
+            larger.append(num)
+        elif num < pivot_val:
+            smaller.append(num)
+        else:
+            equal.append(num)
+    if k <= len(larger):
+        return findKthLargest(larger, k)
+    if k > len(larger) + len(equal):
+        return findKthLargest(smaller, k - len(larger) - len(equal))
+    return pivot_val
+```
+
+</TabItem>
+
+</Tabs>

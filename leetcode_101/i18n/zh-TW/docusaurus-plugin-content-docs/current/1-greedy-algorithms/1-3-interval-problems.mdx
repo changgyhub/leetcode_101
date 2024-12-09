@@ -1,0 +1,87 @@
+---
+sidebar_position: 3
+---
+
+# 1.3 區間問題
+
+## [435. Non-overlapping Intervals](https://leetcode.com/problems/non-overlapping-intervals/)
+
+### 題目描述
+
+給定多個區間，計算讓這些區間互不重疊所需要移除的最少區間數量。起止相連的區間不算重疊。
+
+### 輸入輸出範例
+
+輸入是一個陣列，包含多個長度固定為 2 的子陣列，表示每個區間的開始和結束。輸出是一個整數，表示需要移除的區間數量。
+
+
+```
+Input: [[1,2], [2,4], [1,3]]
+Output: 1
+```
+在這個範例中，我們可以移除區間 [1,3]，使得剩餘的區間 [[1,2], [2,4]] 互不重疊。
+
+
+### 題解
+
+求最少移除的區間數量等同於盡量多保留不重疊的區間。在選擇要保留的區間時，區間的結尾非常重要：選擇的區間結尾越小，留給其他區間的空間就越大，這樣就能保留更多的區間。因此，我們的貪心策略是優先保留結尾小且不相交的區間。
+
+具體實現方法為，先把區間按照結尾的大小進行增序排序（利用 lambda 函數），每次選擇結尾最小且與前一個選擇的區間不重疊的區間。
+
+在範例中，排序後的陣列為 [[1,2], [1,3], [2,4]]。按照我們的貪心策略，首先初始化為區間 [1,2]；由於 [1,3] 與 [1,2] 相交，我們跳過該區間；由於 [2,4] 與 [1,2] 不相交，我們將其保留。因此，最終保留的區間為 [[1,2], [2,4]]。
+
+:::warning
+
+需要根據實際情況判斷按區間開頭排序還是按區間結尾排序。
+
+:::
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int eraseOverlapIntervals(vector<vector<int>>& intervals) {
+    sort(intervals.begin(), intervals.end(),
+         [](vector<int>& a, vector<int>& b) { return a[1] < b[1]; });
+    int removed = 0, prev_end = intervals[0][1];
+    for (int i = 1; i < intervals.size(); ++i) {
+        if (intervals[i][0] < prev_end) {
+            ++removed;
+        } else {
+            prev_end = intervals[i][1];
+        }
+    }
+    return removed;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def eraseOverlapIntervals(intervals: List[List[int]]) -> int:
+    intervals.sort(key=lambda x: x[1])
+    removed, prev_end = 0, intervals[0][1]
+    for i in range(1, len(intervals)):
+        if prev_end > intervals[i][0]:
+            removed += 1
+        else:
+            prev_end = intervals[i][1]
+    return removed
+```
+
+</TabItem>
+
+</Tabs>
+
+### 複雜度分析
+
+- **時間複雜度**
+    - 將區間依照結束時間進行排序需花費 $O(n \log n)$ 的時間。
+    - 遍歷排序後的區間需花費 $O(n)$ 的時間。
+    - 總時間複雜度為 $O(n \log n)$。
+
+- **空間複雜度**
+    - 排序操作可能需要 $O(n)$ 的額外空間（基於 Timsort 實現）。
+    - 其他變數（如 `removed` 和 `prev_end`）僅需 $O(1)$ 空間。
+    - 總空間複雜度為 $O(n)$。

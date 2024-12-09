@@ -1,0 +1,232 @@
+---
+sidebar_position: 42
+---
+
+# 8.5 Random and Sampling
+
+## [384. Shuffle an Array](https://leetcode.com/problems/shuffle-an-array/)
+
+### Problem Description
+
+Given an array, implement two functions. The first function `shuffle` randomly shuffles the array, and the second function `reset` restores the array to its original order.
+
+### Input and Output Example
+
+Input is an array of integers and a list of function names. Output is a two-dimensional array representing the result of each function call.
+
+```
+Input: nums = [1,2,3], actions: ["shuffle","shuffle","reset"]
+Output: [[2,1,3],[3,2,1],[1,2,3]]
+```
+
+In this example, the first two shuffle results can be any random permutations.
+
+### Solution Explanation
+
+We use the classical `Fisher-Yates Shuffle Algorithm`, which works by swapping elements randomly to shuffle the array. Both forward and backward implementations are equally valid. Pay attention to the implementation details of the `reset` function and the constructor of the `Solution` class.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+class Solution {
+   public:
+    Solution(vector<int> nums) : nums_(nums) {}
+
+    vector<int> reset() { return nums_; }
+
+    vector<int> shuffle() {
+        vector<int> shuffled(nums_);
+        int n = nums_.size();
+        // Reverse shuffle: effective and equivalent.
+        for (int i = n - 1; i >= 0; --i) {
+            swap(shuffled[i], shuffled[rand() % (i + 1)]);
+        }
+        // Forward shuffle: another valid approach.
+        // for (int i = 0; i < n; ++i) {
+        // int pos = rand() % (n - i);
+        // swap(shuffled[i], shuffled[i+pos]);
+        // }
+        return shuffled;
+    }
+
+   private:
+    vector<int> nums_;
+};
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+class Solution:
+    def __init__(self, nums: List[int]):
+        self.base = nums[:]
+
+    def reset(self) -> List[int]:
+        return self.base[:]
+
+    def shuffle(self) -> List[int]:
+        shuffled = self.base[:]
+        n = len(self.base)
+        # Reverse shuffle: effective and equivalent.
+        for i in range(n - 1, -1, -1):
+            j = random.randint(0, i)
+            shuffled[i], shuffled[j] = shuffled[j], shuffled[i]
+        # Forward shuffle: another valid approach.
+        # for i in range(n):
+        #   j = i + random.randint(0, n - i - 1)
+        #   shuffled[i], shuffled[j] = shuffled[j], shuffled[i]
+        return shuffled
+```
+
+</TabItem>
+
+</Tabs>
+
+## [528. Random Pick with Weight](https://leetcode.com/problems/random-pick-with-weight/)
+
+### Problem Description
+
+Given an array where each position's value represents its weight, implement a method to randomly sample indices based on these weights.
+
+### Input and Output Example
+
+Input consists of a one-dimensional positive integer array representing weights, and another one-dimensional string array of commands specifying the number of random samples. Output is a one-dimensional integer array indicating the sampled indices.
+
+```
+Input: weights = [1,3], actions: ["pickIndex","pickIndex","pickIndex"]
+Output: [0,1,1]
+```
+
+In this example, the chosen index is uncertain each time, but the expected probability for index 0 is 1/4, and for index 1 is 3/4.
+
+### Solution Explanation
+
+We can first calculate the prefix sum using `partial_sum`, which gives the cumulative sum of weights up to each position. The resulting array for positive integers is monotonically increasing. When sampling, we generate a random number and use binary search to locate its position within the prefix sum, simulating the weighted sampling process. This binary search can be implemented using `lower_bound`.
+
+For the example, the prefix sum of weights [1,3] is [1,4]. If the random number is 1, `lower_bound` returns 0; if the random number is 2, 3, or 4, `lower_bound` returns 1.
+
+We'll delve deeper into prefix sum techniques in the following sections.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+class Solution {
+   public:
+    Solution(vector<int> weights) : cumsum_(weights) {
+        partial_sum(cumsum_.begin(), cumsum_.end(), cumsum_.begin());
+    }
+
+    int pickIndex() {
+        int val = (rand() % cumsum_.back()) + 1;
+        return lower_bound(cumsum_.begin(), cumsum_.end(), val) -
+               cumsum_.begin();
+    }
+
+   private:
+    vector<int> cumsum_;
+};
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+class Solution:
+    def __init__(self, weights: List[int]):
+        self.cumsum = weights[:]
+        for i in range(1, len(weights)):
+            self.cumsum[i] += self.cumsum[i - 1]
+
+        def pickIndex(self) -> int:
+            val = random.randint(1, self.cumsum[-1])
+            return bisect.bisect_left(self.cumsum, val, 0, len(self.cumsum))
+```
+
+</TabItem>
+
+</Tabs>
+
+## [382. Linked List Random Node](https://leetcode.com/problems/linked-list-random-node/)
+
+### Problem Description
+
+Given a singly linked list, design an algorithm to randomly return one of its values.
+
+### Input and Output Example
+
+Input is a singly linked list, output is a number representing the value of one of its nodes.
+
+```
+Input: 1->2->3->4->5
+Output: 3
+```
+
+In this example, each node has an equal chance of being selected, such as node 3.
+
+### Solution Explanation
+
+Unlike arrays, where the total size is known, we cannot determine the total length of a linked list before traversal. In this scenario, we can use **reservoir sampling**: traverse the linked list, and at the $m$-th node, choose it with a probability of $\frac{1}{m}$ to replace the previously chosen node.
+
+A simple proof of the randomness of reservoir sampling is as follows: for the $m$-th node in a linked list of length $n$, the sufficient and necessary condition for it to be sampled is that it is chosen, and none of the subsequent nodes are chosen. The probability is calculated as:
+
+$$
+\frac{1}{m} × \frac{m}{m+1} × \frac{m+1}{m+2} × · · · × \frac{n−1}{n} = \frac{1}{n}
+$$
+
+Thus, each node has an equal probability of being selected.
+
+Alternatively, we can preprocess the linked list by traversing it once and converting it into an array for easier random access.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+class Solution {
+   public:
+    Solution(ListNode* node) : head_(node) {}
+
+    int getRandom() {
+        int pick = head_->val;
+        ListNode* node = head_->next;
+        int i = 2;
+        while (node) {
+            if (rand() % i == 0) {
+                pick = node->val;
+            }
+            ++i;
+            node = node->next;
+        }
+        return pick;
+    }
+
+   private:
+    ListNode* head_;
+};
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+class Solution:
+    def __init__(self, head: Optional[ListNode]):
+        self.head = head
+
+    def getRandom(self) -> int:
+        pick = self.head.val
+        node = self.head.next
+        i = 2
+        while node is not None:
+            if random.randint(0, i - 1) == 0:
+                pick = node.val
+            i += 1
+            node = node.next
+        return pick
+```
+
+</TabItem>
+
+</Tabs>

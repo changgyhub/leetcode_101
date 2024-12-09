@@ -1,0 +1,236 @@
+---
+sidebar_position: 27
+---
+
+# 6.2 基本动态规划：一维
+
+## [70. Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)
+
+### 题目描述
+
+给定 $n$ 节台阶，每次可以走一步或走两步，求一共有多少种方式可以走完这些台阶。
+
+### 输入输出样例
+
+输入是一个数字，表示台阶数量；输出是爬台阶的总方式。
+
+```
+Input: 3
+Output: 3
+```
+
+在这个样例中，一共有三种方法走完这三节台阶：每次走一步；先走一步，再走两步；先走两步，再走一步。
+
+### 题解
+
+这是十分经典的斐波那契数列题。定义一个数组 dp，dp[i] 表示走到第 i 阶的方法数。因为我们每次可以走一步或者两步，所以第 i 阶可以从第 i-1 或 i-2 阶到达。换句话说，走到第 i 阶的方法数即为走到第 i-1 阶的方法数加上走到第 i-2 阶的方法数。这样我们就得到了状态转移方程 dp[i] = dp[i-1] + dp[i-2]。注意边界条件的处理。
+
+:::warning
+
+有的时候为了方便处理边界情况，我们可以在构造 dp 数组时多留一个位置，用来处理初始状态。本题即多留了一个第 0 阶的初始位置。
+
+:::
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int climbStairs(int n) {
+    vector<int> dp(n + 1, 1);
+    for (int i = 2; i <= n; ++i) {
+        dp[i] = dp[i - 1] + dp[i - 2];
+    }
+    return dp[n];
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def climbStairs(n: int) -> int:
+    dp = [1] * (n + 1)
+    for i in range(2, n + 1):
+        dp[i] = dp[i - 1] + dp[i - 2]
+    return dp[n]
+```
+
+</TabItem>
+
+</Tabs>
+
+进一步的，我们可以对动态规划进行空间压缩。因为 dp[i] 只与 dp[i-1] 和 dp[i-2] 有关，因此可以只用两个变量来存储 dp[i-1] 和 dp[i-2]，使得原来的 $O(n)$ 空间复杂度优化为 $O(1)$ 复杂度。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int climbStairs(int n) {
+    int prev_prev = 1, prev = 1, cur = 1;
+    for (int i = 2; i <= n; ++i) {
+        cur = prev_prev + prev;
+        prev_prev = prev;
+        prev = cur;
+    }
+    return cur;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def climbStairs(n: int) -> int:
+    prev_prev = prev = cur = 1
+    for _ in range(2, n + 1):
+        cur = prev_prev + prev
+        prev_prev = prev
+        prev = cur
+    return cur
+```
+
+</TabItem>
+
+</Tabs>
+
+
+## [198. House Robber](https://leetcode.com/problems/house-robber/)
+
+### 题目描述
+
+假如你是一个劫匪，并且决定抢劫一条街上的房子，每个房子内的钱财数量各不相同。如果你抢了两栋相邻的房子，则会触发警报机关。求在不触发机关的情况下最多可以抢劫多少钱。
+
+### 输入输出样例
+
+输入是一个一维数组，表示每个房子的钱财数量；输出是劫匪可以最多抢劫的钱财数量。
+
+```
+Input: [2,7,9,3,1]
+Output: 12
+```
+
+在这个样例中，最多的抢劫方式为抢劫第 1、3、5 个房子。
+
+### 题解
+
+定义一个数组 dp，dp[i] 表示抢劫到第 i 个房子时，可以抢劫的最大数量。我们考虑 dp[i]，此时可以抢劫的最大数量有两种可能，一种是我们选择不抢劫这个房子，此时累计的金额即为 dp[i-1]；另一种是我们选择抢劫这个房子，那么此前累计的最大金额只能是 dp[i-2]，因为我们不能够抢劫第 i-1 个房子，否则会触发警报机关。因此本题的状态转移方程为 dp[i] = max(dp[i-1], nums[i-1] + dp[i-2])。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int rob(vector<int>& nums) {
+    int n = nums.size();
+    vector<int> dp(n + 1, 0);
+    dp[1] = nums[0];
+    for (int i = 2; i <= n; ++i) {
+        dp[i] = max(dp[i - 1], nums[i - 1] + dp[i - 2]);
+    }
+    return dp[n];
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def rob(nums: List[int]) -> int:
+    n = len(nums)
+    dp = [0] * (n + 1)
+    dp[1] = nums[0]
+    for i in range(2, n + 1):
+        dp[i] = max(dp[i - 1], nums[i - 1] + dp[i - 2])
+    return dp[n]
+```
+
+</TabItem>
+
+</Tabs>
+
+同样的，我们可以像题目 70 那样，对空间进行压缩。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int rob(vector<int>& nums) {
+    int prev_prev = 0, prev = 0, cur = 0;
+    for (int i = 0; i < nums.size(); ++i) {
+        cur = max(prev_prev + nums[i], prev);
+        prev_prev = prev;
+        prev = cur;
+    }
+    return cur;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def rob(nums: List[int]) -> int:
+    prev_prev = prev = cur = 0
+    for i in range(len(nums)):
+        cur = max(prev_prev + nums[i], prev)
+        prev_prev = prev
+        prev = cur
+    return cur
+```
+
+</TabItem>
+
+</Tabs>
+
+## [413. Arithmetic Slices](https://leetcode.com/problems/arithmetic-slices/)
+
+### 题目描述
+
+给定一个数组，求这个数组中连续且等差的子数组一共有多少个。
+
+### 输入输出样例
+
+输入是一个一维数组，输出是满足等差条件的连续子数组个数。
+
+```
+Input: nums = [1,2,3,4]
+Output: 3
+```
+
+在这个样例中，等差数列有 [1,2,3]、[2,3,4] 和 [1,2,3,4]。
+
+### 题解
+
+因为要求是等差数列，可以很自然地想到子数组必定满足 num[i] - num[i-1] = num[i-1] - num[i-2]。这里我们对于 dp 数组的定义是以 i 结尾的，满足该条件的子数组数量。因为等差子数组可以在任意一个位置终结，所以我们需要对 dp 数组求和进行子数组统计。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int numberOfArithmeticSlices(vector<int>& nums) {
+    int n = nums.size();
+    vector<int> dp(n, 0);
+    for (int i = 2; i < n; ++i) {
+        if (nums[i] - nums[i - 1] == nums[i - 1] - nums[i - 2]) {
+            dp[i] = dp[i - 1] + 1;
+        }
+    }
+    return accumulate(dp.begin(), dp.end(), 0);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def numberOfArithmeticSlices(nums: List[int]) -> int:
+    n = len(nums)
+    dp = [0] * n
+    for i in range(2, n):
+        if nums[i] - nums[i - 1] == nums[i - 1] - nums[i - 2]:
+            dp[i] = dp[i - 1] + 1
+    return sum(dp)
+```
+
+</TabItem>
+
+</Tabs>

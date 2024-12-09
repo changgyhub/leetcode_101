@@ -1,0 +1,252 @@
+---
+sidebar_position: 27
+---
+
+# 6.2 Basic Dynamic Programming: One-Dimensional
+
+## [70. Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)
+
+### Problem Description
+
+Given $n$ steps of stairs, you can either take one step or two steps at a time. Determine how many ways there are to climb to the top.
+
+
+### Input and Output Example
+
+Input is a single number representing the number of steps; output is the total number of ways to climb the stairs.
+
+```
+Input: 3
+Output: 3
+```
+
+In this example, there are three ways to climb the three steps:
+1. Take one step three times.
+2. Take one step, then two steps.
+3. Take two steps, then one step.
+
+### Solution Explanation
+
+This is a classic Fibonacci sequence problem. Define an array `dp` where `dp[i]` represents the number of ways to reach the $i^{th}$ step. Since you can either take one step or two steps, the $i^{th}$ step can be reached from the $(i-1)^{th}$ or the $(i-2)^{th}$ step. In other words, the number of ways to reach the $i^{th}$ step is the sum of the ways to reach the $(i-1)^{th}$ and $(i-2)^{th}$ steps. This gives us the state transition equation: `dp[i] = dp[i-1] + dp[i-2]`. Pay attention to the initial conditions.
+
+
+:::warning
+
+To handle boundary cases conveniently, we can reserve an extra position in the `dp` array to represent the initial state. In this problem, an extra initial position for step 0 is added.
+
+:::
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int climbStairs(int n) {
+    vector<int> dp(n + 1, 1);
+    for (int i = 2; i <= n; ++i) {
+        dp[i] = dp[i - 1] + dp[i - 2];
+    }
+    return dp[n];
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def climbStairs(n: int) -> int:
+    dp = [1] * (n + 1)
+    for i in range(2, n + 1):
+        dp[i] = dp[i - 1] + dp[i - 2]
+    return dp[n]
+```
+
+</TabItem>
+
+</Tabs>
+
+Furthermore, we can apply space optimization to dynamic programming. Since dp[i] only depends on dp[i-1] and dp[i-2], we can use just two variables to store dp[i-1] and dp[i-2], reducing the original $O(n)$ space complexity to $O(1)$.
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int climbStairs(int n) {
+    int prev_prev = 1, prev = 1, cur = 1;
+    for (int i = 2; i <= n; ++i) {
+        cur = prev_prev + prev;
+        prev_prev = prev;
+        prev = cur;
+    }
+    return cur;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def climbStairs(n: int) -> int:
+    prev_prev = prev = cur = 1
+    for _ in range(2, n + 1):
+        cur = prev_prev + prev
+        prev_prev = prev
+        prev = cur
+    return cur
+```
+
+</TabItem>
+
+</Tabs>
+
+
+## [198. House Robber](https://leetcode.com/problems/house-robber/)
+
+### Problem Description
+
+Suppose you are a robber deciding to rob houses along a street, where each house has a different amount of money. If you rob two adjacent houses, an alarm will be triggered. Determine the maximum amount of money you can rob without triggering the alarm.
+
+### Input and Output Example
+
+The input is a one-dimensional array `nums` representing the amount of money in each house; the output is the maximum amount of money the robber can steal.
+
+```
+Input: [2,7,9,3,1]
+Output: 12
+```
+
+In this example, the optimal way to rob is to rob houses 1, 3, and 5.
+
+### Solution Explanation
+
+Define an array `dp`, where `dp[i]` represents the maximum amount of money that can be robbed up to the `i`-th house. To determine the value of `dp[i]`, there are two possible scenarios:
+
+1. **Do not rob this house**: In this case, the accumulated amount is `dp[i-1]`.
+2. **Rob this house**: The previously accumulated maximum amount can only be `dp[i-2]`, because robbing the `i-1`-th house would trigger the alarm.
+
+Thus, the state transition equation for this problem is:
+
+$$
+dp[i] = \max(dp[i-1], dp[i-2] + \text{nums}[i-1])
+$$
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int rob(vector<int>& nums) {
+    int n = nums.size();
+    vector<int> dp(n + 1, 0);
+    dp[1] = nums[0];
+    for (int i = 2; i <= n; ++i) {
+        dp[i] = max(dp[i - 1], nums[i - 1] + dp[i - 2]);
+    }
+    return dp[n];
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def rob(nums: List[int]) -> int:
+    n = len(nums)
+    dp = [0] * (n + 1)
+    dp[1] = nums[0]
+    for i in range(2, n + 1):
+        dp[i] = max(dp[i - 1], nums[i - 1] + dp[i - 2])
+    return dp[n]
+```
+
+</TabItem>
+
+</Tabs>
+
+Similarly, we can optimize space complexity just like in Problem 70. Since `dp[i]` only depends on `dp[i-1]` and `dp[i-2]`, we can use only two variables to store these two values, reducing the original $O(n)$ space complexity to $O(1)$ space complexity.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int rob(vector<int>& nums) {
+    int prev_prev = 0, prev = 0, cur = 0;
+    for (int i = 0; i < nums.size(); ++i) {
+        cur = max(prev_prev + nums[i], prev);
+        prev_prev = prev;
+        prev = cur;
+    }
+    return cur;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def rob(nums: List[int]) -> int:
+    prev_prev = prev = cur = 0
+    for i in range(len(nums)):
+        cur = max(prev_prev + nums[i], prev)
+        prev_prev = prev
+        prev = cur
+    return cur
+```
+
+</TabItem>
+
+</Tabs>
+
+## [413. Arithmetic Slices](https://leetcode.com/problems/arithmetic-slices/)
+
+### Problem Description
+
+Given an array, calculate the total number of continuous arithmetic subarrays.
+
+### Input and Output Example
+
+Input is a one-dimensional array, and output is the number of continuous subarrays that meet the arithmetic condition.
+
+```
+Input: nums = [1,2,3,4]
+Output: 3
+```
+
+In this example, the arithmetic subarrays are [1,2,3], [2,3,4], and [1,2,3,4].
+
+### Solution Explanation
+
+Since the requirement is for arithmetic subarrays, it naturally follows that the subarray must satisfy the condition `num[i] - num[i-1] = num[i-1] - num[i-2]`. Here, we define the `dp` array such that `dp[i]` represents the number of subarrays ending at index `i` that satisfy this condition. Because arithmetic subarrays can end at any position, we need to sum up the `dp` array to calculate the total number of subarrays.
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int numberOfArithmeticSlices(vector<int>& nums) {
+    int n = nums.size();
+    vector<int> dp(n, 0);
+    for (int i = 2; i < n; ++i) {
+        if (nums[i] - nums[i - 1] == nums[i - 1] - nums[i - 2]) {
+            dp[i] = dp[i - 1] + 1;
+        }
+    }
+    return accumulate(dp.begin(), dp.end(), 0);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def numberOfArithmeticSlices(nums: List[int]) -> int:
+    n = len(nums)
+    dp = [0] * n
+    for i in range(2, n):
+        if nums[i] - nums[i - 1] == nums[i - 1] - nums[i - 2]:
+            dp[i] = dp[i - 1] + 1
+    return sum(dp)
+```
+
+</TabItem>
+
+</Tabs>

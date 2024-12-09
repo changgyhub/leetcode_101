@@ -1,0 +1,74 @@
+---
+sidebar_position: 3
+---
+
+# 1.3 区间问题
+
+## [435. Non-overlapping Intervals](https://leetcode.com/problems/non-overlapping-intervals/)
+
+### 题目描述
+
+给定多个区间，计算让这些区间互不重叠所需要移除区间的最少个数。起止相连不算重叠。
+
+### 输入输出样例
+
+输入是一个数组，包含多个长度固定为 2 的子数组，表示每个区间的开始和结尾。输出一个整数，表示需要移除的区间数量。
+
+```
+Input: [[1,2], [2,4], [1,3]]
+Output: 1
+```
+在这个样例中，我们可以移除区间 [1,3]，使得剩余的区间 [[1,2], [2,4]] 互不重叠。
+
+
+### 题解
+
+求最少的移除区间个数，等价于尽量多保留不重叠的区间。在选择要保留区间时，区间的结尾十分重要：选择的区间结尾越小，余留给其它区间的空间就越大，就越能保留更多的区间。因此，我们采取的贪心策略为，优先保留结尾小且不相交的区间。
+
+具体实现方法为，先把区间按照结尾的大小进行增序排序（利用 lambda 函数），每次选择结尾最小且和前一个选择的区间不重叠的区间。
+
+在样例中，排序后的数组为 [[1,2], [1,3], [2,4]]。按照我们的贪心策略，首先初始化为区间[1,2]；由于 [1,3] 与 [1,2] 相交，我们跳过该区间；由于 [2,4] 与 [1,2] 不相交，我们将其保留。因此最终保留的区间为 [[1,2], [2,4]]。
+
+:::warning
+
+需要根据实际情况判断按区间开头排序还是按区间结尾排序。
+
+:::
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int eraseOverlapIntervals(vector<vector<int>>& intervals) {
+    sort(intervals.begin(), intervals.end(),
+         [](vector<int>& a, vector<int>& b) { return a[1] < b[1]; });
+    int removed = 0, prev_end = intervals[0][1];
+    for (int i = 1; i < intervals.size(); ++i) {
+        if (intervals[i][0] < prev_end) {
+            ++removed;
+        } else {
+            prev_end = intervals[i][1];
+        }
+    }
+    return removed;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def eraseOverlapIntervals(intervals: List[List[int]]) -> int:
+    intervals.sort(key=lambda x: x[1])
+    removed, prev_end = 0, intervals[0][1]
+    for i in range(1, len(intervals)):
+        if prev_end > intervals[i][0]:
+            removed += 1
+        else:
+            prev_end = intervals[i][1]
+    return removed
+```
+
+</TabItem>
+
+</Tabs>

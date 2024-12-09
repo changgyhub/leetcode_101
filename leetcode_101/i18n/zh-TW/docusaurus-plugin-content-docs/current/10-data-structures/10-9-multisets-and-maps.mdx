@@ -1,0 +1,87 @@
+---
+sidebar_position: 56
+---
+
+# 10.9 多重集合和映射
+
+## [332. Reconstruct Itinerary](https://leetcode.com/problems/reconstruct-itinerary/)
+
+### 題目描述
+
+給定一個人搭乘過的一些飛機的起止機場，已知這個人從 JFK 起飛，那麼這個人是按什麼順序飛的；如果存在多種可能性，返回字母序最小的那種。
+
+### 輸入輸出範例
+
+輸入是一個二維字串陣列，表示多個起止機場的組合；輸出是一個一維字串陣列，表示飛行順序。
+
+```
+Input: [["MUC", "LHR"], ["JFK", "MUC"], ["SFO", "SJC"], ["LHR", "SFO"]]
+Output: ["JFK", "MUC", "LHR", "SFO", "SJC"]
+```
+
+### 題解
+
+本題可以先用雜湊表記錄起止機場，其中鍵是起始機場，值是一個多重（有序）集合，表示對應的終止機場。因為一個人可能搭過重複的航線，所以我們需要使用多重集合來儲存重複值。儲存完成之後，我們可以利用堆疊/DFS 來還原從終點到起點的飛行順序，再將結果逆序得到從起點到終點的順序。
+
+由於 Python 沒有內建的多重（有序）集合實作，我們可以直接儲存一個陣列，然後進行排序。也可以使用 Counter 結構，每次查找下一個機場時，返回鍵值最小的那個。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<string> findItinerary(vector<vector<string>>& tickets) {
+    vector<string> itinerary;
+    unordered_map<string, multiset<string>> cache;
+    for (const auto& ticket : tickets) {
+        cache[ticket[0]].insert(ticket[1]);
+    }
+    stack<string> s;
+    s.push("JFK");
+    while (!s.empty()) {
+        string t = s.top();
+        if (cache[t].empty()) {
+            itinerary.push_back(t);
+            s.pop();
+        } else {
+            s.push(*cache[t].begin());
+            cache[t].erase(cache[t].begin());
+        }
+    }
+    reverse(itinerary.begin(), itinerary.end());
+    return itinerary;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def findItinerary(tickets: List[List[str]]) -> List[str]:
+    itinerary = []
+    cache = dict()
+    
+    for ticket in tickets:
+        if ticket[0] not in cache:
+            cache[ticket[0]] = []
+        cache[ticket[0]].append(ticket[1])
+    
+    for ticket in cache.keys():
+        cache[ticket].sort(reverse=True)
+    
+    s = ["JFK"]
+    while len(s) > 0:
+        t = s[-1]
+        if t not in cache or len(cache[t]) == 0:
+            itinerary.append(t)
+            s.pop()
+        else:
+            t_next = cache[t].pop()
+            s.append(t_next)
+    
+    return list(reversed(itinerary))
+
+```
+
+</TabItem>
+
+</Tabs>

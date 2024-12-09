@@ -1,0 +1,189 @@
+---
+sidebar_position: 30
+---
+
+# 6.5 子序列問題
+
+## [300. Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/)
+
+### 題目描述
+
+給定一個未排序的整數陣列，求最長的遞增子序列。
+
+:::warning
+
+按照 LeetCode 的慣例，子序列（subsequence）不必連續，而子陣列（subarray）或子字串（substring）必須連續。
+
+:::
+
+### 輸入輸出範例
+
+輸入是一個一維陣列，輸出是一個正整數，表示最長遞增子序列的長度。
+
+```
+Input: [10,9,2,5,3,7,101,4]
+Output: 4
+```
+
+在這個範例中，最長遞增子序列之一是 [2,3,7,101]。
+
+### 題解
+
+對於子序列問題，第一種動態規劃方法是，定義一個 dp 陣列，其中 dp[i] 表示以 i 結尾的子序列的屬性。在處理好每個位置後，統計一遍各個位置的結果即可得到題目要求的結果。
+
+在本題中，dp[i] 可以表示以 i 結尾的、最長子序列長度。對於每一個位置 i，如果其之前的某個位置 j 所對應的數字小於位置 i 所對應的數字，則我們可以獲得一個以 i 結尾的、長度為 dp[j] + 1 的子序列。為了遍歷所有情況，我們需要 i 和 j 進行兩層循環，其時間複雜度為 $O(n^2)$。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int lengthOfLIS(vector<int>& nums) {
+    int max_len = 0, n = nums.size();
+    vector<int> dp(n, 1);
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < i; ++j) {
+            if (nums[i] > nums[j]) {
+                dp[i] = max(dp[i], dp[j] + 1);
+            }
+        }
+        max_len = max(max_len, dp[i]);
+    }
+    return max_len;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def lengthOfLIS(nums: List[int]) -> int:
+    n = len(nums)
+    dp = [1] * n
+    for i in range(n):
+        for j in range(i):
+            if nums[i] > nums[j]:
+                dp[i] = max(dp[i], dp[j] + 1)
+    return max(dp)
+```
+
+</TabItem>
+
+</Tabs>
+
+本題還可以使用二分搜尋將時間複雜度降低為 $O(n \log n)$。我們定義一個 dp 陣列，其中 dp[k] 儲存長度為 k+1 的最長遞增子序列的最後一個數字。我們遍歷每一個位置 i，如果其對應的數字大於 dp 陣列中所有數字的值，那麼我們把它放在 dp 陣列尾部，表示最長遞增子序列長度加 1；如果我們發現這個數字在 dp 陣列中比數字 a 大、比數字 b 小，則我們將 b 更新為此數字，使得之後構成遞增序列的可能性增大。以這種方式維護的 dp 陣列永遠是遞增的，因此可以用二分搜尋加速搜尋。
+
+以範例為例，對於陣列 [10,9,2,5,3,7,101,4]，我們每輪的更新搜尋情況為：
+
+```
+num    dp
+10     [10]
+9      [9]
+2      [2]
+5      [2,5]
+3      [2,3]
+7      [2,3,7]
+101    [2,3,7,101]
+4      [2,3,4,101]
+```
+
+最終我們知道最長遞增子序列的長度是 4。注意 dp 陣列最終的形式並不一定是合法的排列形式，如 [2,3,4,101] 並不是子序列；但之前覆蓋掉的 [2,3,7,101] 是最優解之一。
+
+類似的，對於其他題目，如果狀態轉移方程的結果遞增或遞減，且需要進行插入或搜尋操作，我們也可以使用二分法進行加速。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int lengthOfLIS(vector<int>& nums) {
+    vector<int> dp{nums[0]};
+    for (int num : nums) {
+        if (dp.back() < num) {
+            dp.push_back(num);
+        } else {
+            *lower_bound(dp.begin(), dp.end(), num) = num;
+        }
+    }
+    return dp.size();
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def lengthOfLIS(nums: List[int]) -> int:
+    dp = [nums[0]]
+    for num in nums:
+        if dp[-1] < num:
+            dp.append(num)
+        else:
+            dp[bisect.bisect_left(dp, num, 0, len(dp))] = num
+    return len(dp)
+```
+
+</TabItem>
+
+</Tabs>
+
+## [1143. Longest Commom Subsequence](https://leetcode.com/problems/longest-common-subsequence/)
+
+### 題目描述
+
+給定兩個字串，求它們最長的公共子序列長度。
+
+### 輸入輸出範例
+
+輸入是兩個字串，輸出是一個整數，表示它們滿足題目條件的長度。
+
+```
+Input: text1 = "abcde", text2 = "ace"
+Output: 3
+```
+
+在這個範例中，最長公共子序列是「ace」。
+
+### 題解
+
+對於子序列問題，第二種動態規劃方法是，定義一個 dp 陣列，其中 dp[i] 表示到位置 i 為止的子序列的性質，並不必須以 i 結尾。這樣 dp 陣列的最後一位結果即為題目所求，不需要再對每個位置進行統計。
+
+在本題中，我們可以建立一個二維陣列 dp，其中 dp[i][j] 表示到第一個字串位置 i 為止、到第二個字串位置 j 為止、最長的公共子序列長度。這樣一來我們就可以很方便地分情況討論這兩個位置對應的字母相同與不同的情況了。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int longestCommonSubsequence(string text1, string text2) {
+    int m = text1.length(), n = text2.length();
+    vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+    for (int i = 1; i <= m; ++i) {
+        for (int j = 1; j <= n; ++j) {
+            if (text1[i - 1] == text2[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            } else {
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+    return dp[m][n];
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def longestCommonSubsequence(text1: str, text2: str) -> int:
+    m, n = len(text1), len(text2)
+    dp = [[0 for _ in range(n + 1)] for _ in range(m + 1)]
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if text1[i - 1] == text2[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1] + 1
+            else:
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+    return dp[m][n]
+```
+
+</TabItem>
+
+</Tabs>

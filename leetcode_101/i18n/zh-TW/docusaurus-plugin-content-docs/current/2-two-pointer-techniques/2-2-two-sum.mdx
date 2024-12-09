@@ -1,0 +1,78 @@
+---
+sidebar_position: 6
+---
+
+# 2.2 Two Sum
+
+## [167. Two Sum II - Input array is sorted](https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/)
+
+### 題目描述
+
+在一個增序的整數陣列裡找到兩個數，使它們的和為給定值。已知有且只有一對解。
+
+### 輸入輸出範例
+
+輸入是一個陣列（`numbers`）和一個給定值（`target`）。輸出是兩個數的位置，從 1 開始計數。
+
+```
+Input: numbers = [2,7,11,15], target = 9
+Output: [1,2]
+```
+
+在這個範例中，第一個數字（2）和第二個數字（7）的和等於給定值（9）。
+
+### 題解
+
+因為陣列已經排好序，我們可以採用方向相反的雙指針來尋找這兩個數字。一個指針初始指向最小的元素，即陣列最左邊，向右遍歷；另一個指針初始指向最大的元素，即陣列最右邊，向左遍歷。
+
+如果兩個指針指向元素的和等於給定值，那麼它們就是我們要的結果。如果兩個指針指向元素的和小於給定值，我們把左邊的指針右移一位，使得當前的和增加一點。如果兩個指針指向元素的和大於給定值，我們把右邊的指針左移一位，使得當前的和減少一點。
+
+可以證明，對於排好序且有解的陣列，雙指針一定能遍歷到最優解。證明方法如下：假設最優解的兩個數的位置分別是 `l` 和 `r`。我們假設在左指針在 `l` 左邊的時候，右指針已經移動到了 `r`；此時兩個指針指向值的和小於給定值，因此左指針會一直右移直到到達 `l`。同理，如果我們假設在右指針在 `r` 右邊的時候，左指針已經移動到了 `l`；此時兩個指針指向值的和大於給定值，因此右指針會一直左移直到到達 `r`。所以雙指針在任何時候都不可能處於 `(l,r)` 之間，又因為不滿足條件時指針必須移動一個，所以最終一定會收斂在 `l` 和 `r`。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<int> twoSum(vector<int>& numbers, int target) {
+    int l = 0, r = numbers.size() - 1, two_sum;
+    while (l < r) {
+        two_sum = numbers[l] + numbers[r];
+        if (two_sum == target) {
+            break;
+        }
+        if (two_sum < target) {
+            ++l;
+        } else {
+            --r;
+        }
+    }
+    return vector<int>{l + 1, r + 1};
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def twoSum(numbers: List[int], target: int) -> List[int]:
+    l, r = 0, len(numbers) - 1
+    while l < r:
+        two_sum = numbers[l] + numbers[r]
+        if two_sum == target:
+            break
+        if two_sum < target:
+            l += 1
+        else:
+            r -= 1
+    return [l + 1, r + 1]
+```
+
+</TabItem>
+
+</Tabs>
+
+### 複雜度分析
+
+- **時間複雜度**: $O(n)$，其中 $n$ 是陣列的長度。每次迭代中，指針會移動一次，最多執行 $n$ 次迭代。
+
+- **空間複雜度**: $O(1)$，只使用了常數額外空間。

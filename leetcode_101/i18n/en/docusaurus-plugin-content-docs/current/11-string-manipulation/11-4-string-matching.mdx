@@ -1,0 +1,106 @@
+---
+sidebar_position: 62
+---
+
+# 11.4 String Matching
+
+## [28. Implement strStr()](https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/)
+
+### Problem Description
+
+Determine whether a string is a substring of another string, and return its starting index.
+
+### Input and Output Example
+
+Input a parent string and a substring, and output an integer representing the position of the substring in the parent string. Return -1 if it doesn't exist.
+
+```
+Input: haystack = "hello", needle = "ll"
+Output: 2
+```
+
+### Solution Explanation
+
+We can use the famous Knuth-Morris-Pratt (KMP) algorithm to achieve matching in $O(m + n)$ time using dynamic programming. Here we define the `dp` array where `dp[i]` represents the longest prefix of `needle` that is also a suffix ending at position `i`. For example, for `needle = "ababaca"`, the `dp` array is `[-1, -1, 0, 1, 2, -1, 0]`, indicating the longest matches: [None, None, "a", "ab", "aba", None, "a"].
+
+This problem is complex, and beginners may skip it temporarily.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// Auxiliary function
+vector<int> computeDp(const string &needle) {
+    int n = needle.length();
+    vector<int> dp(n, -1);
+    for (int j = 1, k = -1; j < n; ++j) {
+        while (k > -1 && needle[k + 1] != needle[j]) {
+            k = dp[k];  // If mismatch, backtrack to the previous prefix
+        }
+        if (needle[k + 1] == needle[j]) {
+            ++k;  // Match found, increase the match length
+        }
+        dp[j] = k;  // Update the prefix match position
+    }
+    return dp;
+}
+// Main function
+int strStr(const string &haystack, const string &needle) {
+    int m = haystack.length(), n = needle.length();
+    vector<int> dp = computeDp(needle);
+    for (int i = 0, k = -1; i < m; ++i) {
+        while (k > -1 && needle[k + 1] != haystack[i]) {
+            k = dp[k];  // If mismatch, backtrack to the previous match
+        }
+        if (needle[k + 1] == haystack[i]) {
+            ++k;  / Match found, increase the match length
+        }
+        if (k == n - 1) {
+            return i - n + 1;  // Match complete
+        }
+    }
+    return -1;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+from typing import List
+
+# Auxiliary function
+def computeDp(needle: str) -> List[int]:
+    n = len(needle)
+    dp = [-1] * n
+    k = -1
+    for j in range(1, n):
+        while k > -1 and needle[k + 1] != needle[j]:
+            k = dp[k]  # If mismatch, backtrack to the previous prefix
+        if needle[k + 1] == needle[j]:
+            k += 1  # Match found, increase the match length
+        dp[j] = k  # Update the prefix match position
+    return dp
+
+# Main function
+def strStr(haystack: str, needle: str) -> int:
+    m, n = len(haystack), len(needle)
+    if n == 0:
+        return 0  # Edge case for an empty needle
+    
+    dp = computeDp(needle)
+    k = -1
+    for i in range(m):
+        while k > -1 and needle[k + 1] != haystack[i]:
+            k = dp[k]  # If mismatch, backtrack to the previous match
+        if needle[k + 1] == haystack[i]:
+            k += 1  # Match found, increase the match length
+        if k == n - 1:
+            return i - n + 1  # Match complete
+    return -1
+
+```
+
+</TabItem>
+
+</Tabs>

@@ -1,0 +1,78 @@
+---
+sidebar_position: 18
+---
+
+# 4.2 Quick Select
+
+## [215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/)
+
+### Problem Description
+
+In an unsorted array, find the $k$-th largest element.
+
+### Input and Output Example
+
+Input an array and a target value $k$, output the $k$-th largest element. The problem guarantees there is always a solution.
+
+```
+Input: [3,2,1,5,6,4] and k = 2
+Output: 5
+```
+
+### Solution Explanation
+
+`Quick Select` is commonly used to solve k-th element problems, achieving an average time complexity of $O(n)$ and space complexity of $O(1)$. Its implementation is similar to Quick Sort, but it only focuses on finding the $k$-th largest pivot without sorting the rest of the elements. Like Quick Sort, Quick Select generally requires shuffling the array first to avoid a worst-case time complexity of $O(n^2)$.
+
+If we directly use the Quick Sort code above, it may approach the time limit on LeetCode. Instead, we can trade space for time by directly storing elements greater than, less than, and equal to the pivot to minimize swaps.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+int findKthLargest(vector<int> nums, int k) {
+    int pivot = rand() % nums.size();
+    int pivot_val = nums[pivot];
+    vector<int> larger, equal, smaller;
+    for (int num : nums) {
+        if (num > pivot_val) {
+            larger.push_back(num);
+        } else if (num < pivot_val) {
+            smaller.push_back(num);
+        } else {
+            equal.push_back(num);
+        }
+    }
+    if (k <= larger.size()) {
+        return findKthLargest(larger, k);
+    }
+    if (k > larger.size() + equal.size()) {
+        return findKthLargest(smaller, k - larger.size() - equal.size());
+    }
+    return pivot_val;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def findKthLargest(nums: List[int], k: int) -> int:
+    pivot_val = random.choice(nums)
+    larger, equal, smaller = [], [], []
+    for num in nums:
+        if num > pivot_val:
+            larger.append(num)
+        elif num < pivot_val:
+            smaller.append(num)
+        else:
+            equal.append(num)
+    if k <= len(larger):
+        return findKthLargest(larger, k)
+    if k > len(larger) + len(equal):
+        return findKthLargest(smaller, k - len(larger) - len(equal))
+    return pivot_val
+```
+
+</TabItem>
+
+</Tabs>

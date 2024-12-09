@@ -1,0 +1,257 @@
+---
+sidebar_position: 51
+---
+
+# 10.4 Stacks and Queues
+
+## [232. Implement Queue using Stacks](https://leetcode.com/problems/implement-queue-using-stacks/)
+
+### Problem Description
+
+Try to implement a queue using stacks.
+
+### Input and Output Example
+
+Here is an example of how the data structure is used.
+
+```
+MyQueue queue = new MyQueue();
+queue.push(1);
+queue.push(2);
+queue.peek(); // returns 1
+queue.pop(); // returns 1
+queue.empty(); // returns false
+```
+
+### Solution Explanation
+
+We can implement a queue using two stacks: since we need a first-in-first-out result, we must reverse the array once using an additional stack. This reversing process can be completed either during insertion or during retrieval. Below is an example of implementing the reversal during retrieval.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+class MyQueue {
+   public:
+    MyQueue() {}
+
+    void push(int x) { s_in_.push(x); }
+
+    int pop() {
+        in2out();
+        int x = s_out_.top();
+        s_out_.pop();
+        return x;
+    }
+
+    int peek() {
+        in2out();
+        return s_out_.top();
+    }
+
+    bool empty() { return s_in_.empty() && s_out_.empty(); }
+
+   private:
+    void in2out() {
+        if (!s_out_.empty()) {
+            return;
+        }
+        while (!s_in_.empty()) {
+            int x = s_in_.top();
+            s_in_.pop();
+            s_out_.push(x);
+        }
+    }
+
+    stack<int> s_in_, s_out_;
+};
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+class MyQueue:
+    def __init__(self):
+        self.s_in = []
+        self.s_out = []
+
+    def _in2out(self):
+        if len(self.s_out) > 0:
+            return
+        while len(self.s_in) > 0:
+            self.s_out.append(self.s_in.pop())
+
+    def push(self, x: int) -> None:
+        self.s_in.append(x)
+
+    def pop(self) -> int:
+        self._in2out()
+        return self.s_out.pop()
+
+    def peek(self) -> int:
+        self._in2out()
+        return self.s_out[-1]
+
+    def empty(self) -> bool:
+        return len(self.s_in) == 0 and len(self.s_out) == 0
+```
+
+</TabItem>
+
+</Tabs>
+
+## [155. Min Stack](https://leetcode.com/problems/min-stack/)
+
+### Problem Description
+
+Design a minimum stack that supports not only regular stack operations but also retrieving the minimum value in the stack in $O(1)$ time.
+
+### Input and Output Example
+
+Here is an example of how the data structure is used.
+
+```
+MinStack minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+minStack.getMin(); // Returns -3.
+minStack.pop();
+minStack.top(); // Returns 0.
+minStack.getMin(); // Returns -2.
+```
+
+### Solution Explanation
+
+We can maintain an additional stack where the top represents the minimum value of all elements in the main stack. Every time a number is pushed onto the main stack, if it is less than or equal to the top of the auxiliary stack, it is also pushed onto the auxiliary stack, indicating it is a minimum value in the main stack. Similarly, every time a number is popped from the main stack, if it equals the top of the auxiliary stack, the top value of the auxiliary stack is also popped.
+
+An alternative method, which is simpler to write but has slightly higher time complexity, involves always pushing the minimum value of all elements in the main stack (the smaller of the top value of the auxiliary stack and the new value being pushed) onto the auxiliary stack. Similarly, every pop operation removes the top value from both stacks. This eliminates the need for conditionals but requires inserting and removing a value every time. Here, we only demonstrate the first approach.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+class MinStack {
+   public:
+    MinStack() {}
+
+    void push(int x) {
+        s_.push(x);
+        if (min_s_.empty() || min_s_.top() >= x) {
+            min_s_.push(x);
+        }
+    }
+
+    void pop() {
+        if (!min_s_.empty() && min_s_.top() == s_.top()) {
+            min_s_.pop();
+        }
+        s_.pop();
+    }
+
+    int top() { return s_.top(); }
+
+    int getMin() { return min_s_.top(); }
+
+   private:
+    stack<int> s_, min_s_;
+};
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+class MinStack:
+    def __init__(self):
+        self.s = []
+        self.min_s = []
+
+    def push(self, x: int) -> None:
+        self.s.append(x)
+        if len(self.min_s) == 0 or self.min_s[-1] >= x:
+            self.min_s.append(x)
+
+    def pop(self) -> None:
+        if len(self.min_s) != 0 and self.s[-1] == self.min_s[-1]:
+            self.min_s.pop()
+        self.s.pop()
+
+    def top(self) -> int:
+        return self.s[-1]
+
+    def getMin(self) -> int:
+        return self.min_s[-1]
+```
+
+</TabItem>
+
+</Tabs>
+
+
+## [20. Valid Parentheses](https://leetcode.com/problems/valid-parentheses/)
+
+### Problem Description
+
+Given a string containing only the characters `(`, `)`, `{`, `}`, `[`, and `]`, determine if the input string is valid. A valid string requires that every opening bracket has a corresponding closing bracket of the same type, and the substring enclosed by the brackets is also valid.
+
+### Input and Output Example
+
+The input is a string, and the output is a boolean value indicating whether the string is valid.
+
+```
+Input: "{[]}()"
+Output: true
+```
+
+### Solution Explanation
+
+Parenthesis matching is a classic problem that can be solved using a stack. As we iterate through the string from left to right, we push every opening bracket onto the stack. When encountering a closing bracket, we check if it matches the top of the stack. If it matches, we pop the stack; otherwise, the string is invalid.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+bool isValid(string s) {
+    stack<char> parsed;
+    unordered_map<char, int> matches{{’(’, ’)’}, {’{’, ’}’}, {’[’, ’]’}};
+    for (char c : s) {
+        if (matches.contains(c)) {
+            parsed.push(c);
+            continue;
+        }
+        if (parsed.empty()) {
+            return false;
+        }
+        if (c != matches[parsed.top()]) {
+            return false;
+        }
+        parsed.pop();
+    }
+    return parsed.empty();
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def isValid(s: str) -> bool:
+    parsed = []
+    matches = {"{": "}", "(": ")", "[": "]"}
+    for c in s:
+        if c in matches.keys():
+            parsed.append(c)
+            continue
+        if len(parsed) == 0:
+            return False
+        if c != matches[parsed[-1]]:
+            return False
+        parsed.pop()
+    return len(parsed) == 0
+```
+
+</TabItem>
+
+</Tabs>

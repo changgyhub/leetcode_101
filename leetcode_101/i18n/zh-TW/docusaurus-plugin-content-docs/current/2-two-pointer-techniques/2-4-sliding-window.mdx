@@ -1,0 +1,113 @@
+---
+sidebar_position: 8
+---
+
+# 2.4 滑動窗口
+
+## [76. Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/)
+
+### 題目描述
+
+給定兩個字串 `s` 和 `t`，求 `s` 中包含 `t` 所有字符的最短連續子字串的長度，同時要求時間複雜度不得超過 $O(n)$。
+
+
+### 輸入輸出範例
+
+輸入是兩個字串 `s` 和 `t`，輸出是 `s` 字串的一個子串。如果不存在解，則輸出一個空字串。
+
+```
+Input: s = "ADOBECODEBANC", t = "ABC"
+Output: "BANC"
+```
+
+在這個範例中，`s` 中同時包含一個 `A`、一個 `B`、一個 `C` 的最短子字串是 "BANC"。
+
+### 題解
+
+本題使用滑動窗口求解，即兩個指針 `l` 和 `r` 都是從最左端向最右端移動，且 `l` 的位置一定在 `r` 的左邊或重合。在 C++ 解法中，使用了兩個長度為 128 的陣列，`valid` 和 `freq`，用來映射字符（ASCII 僅包含 128 個字符）。其中 `valid` 表示每個字符在 `t` 中是否存在，而 `freq` 表示目前 `t` 中每個字符在 `s` 的滑動窗口中缺少的數量：如果為正，則說明還缺少；如果為負，則說明有盈餘。在 Python 解法中，直接使用了 `Counter` 數據結構，同時統計 `t` 中存在的字符和其缺少的數量（也可以用 `dict` 替代）。
+
+需要注意，本題雖然在 `for` 循環裡出現了一個 `while` 循環，但由於 `while` 循環負責移動 `l` 指針，且 `l` 只會從左到右移動一次，因此總時間複雜度仍然是 $O(n)$。
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+string minWindow(string s, string t) {
+    vector<bool> valid(128, false);
+    vector<int> freq(128, 0);
+    // 統計 t 中的字符情況。
+    for (int i = 0; i < t.length(); ++i) {
+        valid[t[i]] = true;
+        ++freq[t[i]];
+    }
+    // 移動滑動窗口，更新統計數據。
+    int count = 0;
+    int min_l = -1, min_length = -1;
+    for (int l = 0, r = 0; r < s.length(); ++r) {
+        if (!valid[s[r]]) {
+            continue;
+        }
+        // 將 r 位置的字符加入頻率統計，並檢查是否補充了 t 中缺失的字符。
+        if (--freq[s[r]] >= 0) {
+            ++count;
+        }
+        // 滑動窗口已包含 t 中全部字符，嘗試右移 l，在不影響結果的情況下尋找最短子串。
+        while (count == t.length()) {
+            if (min_length == -1 || r - l + 1 < min_length) {
+                min_l = l;
+                min_length = r - l + 1;
+            }
+            // 將 l 位置的字符移出頻率統計，並檢查 t 中對應字符是否重新缺失。
+            if (valid[s[l]] && ++freq[s[l]] > 0) {
+                --count;
+            }
+            ++l;
+        }
+    }
+    return min_length == -1 ? "" : s.substr(min_l, min_length);
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def minWindow(s: str, t: str) -> str:
+    # 統計 t 中的字符情況，等價於：
+    # freq = dict()
+    # for c in t:
+    #     freq[c] = freq.get(c, 0) + 1
+    freq = Counter(t)
+    # 移動滑動窗口，更新統計數據。
+    count = 0
+    min_l, min_length = None, None
+    l = 0
+    for r in range(len(s)):
+        if s[r] not in freq:
+            continue
+        # 將 r 位置的字符加入頻率統計，並檢查是否補充了 t 中缺失的字符。
+        freq[s[r]] -= 1
+        if freq[s[r]] >= 0:
+            count += 1
+        # 滑動窗口已包含 t 中全部字符，嘗試右移 l，在不影響結果的情況下尋找最短子串。
+        while count == len(t):
+            if min_length is None or r - l + 1 < min_length:
+                min_l = l
+                min_length = r - l + 1
+            # 將 l 位置的字符移出頻率統計，並檢查 t 中對應字符是否重新缺失。
+            if s[l] in freq:
+                freq[s[l]] += 1
+                if freq[s[l]] > 0:
+                    count -= 1
+            l += 1
+    return "" if min_length is None else s[min_l: min_l + min_length]
+```
+
+</TabItem>
+
+</Tabs>
+
+### 複雜度分析
+
+- **時間複雜度**: $O(|s| + |t|)$，對字符串 `s` 遍歷一次（窗口擴展和收縮共計 $O(|s|)$），初始化 `t` 的統計需要 $O(|t|)$。
+- **空間複雜度**: $O(|t|)$，字典 `freq` 的大小與 `t` 中的不同字符數量成正比。

@@ -1,0 +1,87 @@
+---
+sidebar_position: 56
+---
+
+# 10.9 Multisets and Mappings
+
+## [332. Reconstruct Itinerary](https://leetcode.com/problems/reconstruct-itinerary/)
+
+### Problem Description
+
+Given a person's flight records with departure and arrival airports, starting from JFK, determine the flight order. If there are multiple possibilities, return the lexicographically smallest sequence.
+
+### Input and Output Example
+
+Input is a 2D string array representing pairs of departure and arrival airports; output is a 1D string array representing the flight order.
+
+```
+Input: [["MUC", "LHR"], ["JFK", "MUC"], ["SFO", "SJC"], ["LHR", "SFO"]]
+Output: ["JFK", "MUC", "LHR", "SFO", "SJC"]
+```
+
+### Solution Explanation
+
+We can first use a hash table to store the departure and arrival airports, where the key is the departure airport, and the value is a multiset (ordered set) representing the corresponding arrival airports. Since a person may take the same route multiple times, we need to use a multiset to store duplicate values. After storing, we can use a stack/DFS to reconstruct the flight order from the endpoint to the starting point, and then reverse the result to get the order from the start to the endpoint.
+
+Since Python doesn't have a built-in multiset implementation, we can store an array and sort it. Alternatively, we can use the `Counter` structure, selecting the smallest key each time we search for the next airport.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+vector<string> findItinerary(vector<vector<string>>& tickets) {
+    vector<string> itinerary;
+    unordered_map<string, multiset<string>> cache;
+    for (const auto& ticket : tickets) {
+        cache[ticket[0]].insert(ticket[1]);
+    }
+    stack<string> s;
+    s.push("JFK");
+    while (!s.empty()) {
+        string t = s.top();
+        if (cache[t].empty()) {
+            itinerary.push_back(t);
+            s.pop();
+        } else {
+            s.push(*cache[t].begin());
+            cache[t].erase(cache[t].begin());
+        }
+    }
+    reverse(itinerary.begin(), itinerary.end());
+    return itinerary;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+def findItinerary(tickets: List[List[str]]) -> List[str]:
+    itinerary = []
+    cache = dict()
+    
+    for ticket in tickets:
+        if ticket[0] not in cache:
+            cache[ticket[0]] = []
+        cache[ticket[0]].append(ticket[1])
+    
+    for ticket in cache.keys():
+        cache[ticket].sort(reverse=True)
+    
+    s = ["JFK"]
+    while len(s) > 0:
+        t = s[-1]
+        if t not in cache or len(cache[t]) == 0:
+            itinerary.append(t)
+            s.pop()
+        else:
+            t_next = cache[t].pop()
+            s.append(t_next)
+    
+    return list(reversed(itinerary))
+
+```
+
+</TabItem>
+
+</Tabs>

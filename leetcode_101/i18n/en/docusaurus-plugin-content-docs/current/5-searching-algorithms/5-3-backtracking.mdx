@@ -1,0 +1,379 @@
+---
+sidebar_position: 23
+---
+
+# 5.3 Backtracking
+
+`Backtracking` is a special case of priority search, also known as the trial-and-error method. It is commonly used in depth-first search when the state of nodes needs to be recorded. Typically, problems involving permutations, combinations, or selections are more conveniently solved using backtracking.
+
+As the name suggests, the core of backtracking is to backtrack. When reaching a certain node, if we find that the current node (and its child nodes) do not meet the target requirements, we backtrack to the previous node and continue the search, while `restoring the state modified at the current node`. The benefit is that we can modify only the global state of the graph without creating a new graph to store states during each traversal. In terms of implementation, backtracking is similar to regular depth-first search, involving steps like [modifying the current node state]→[recursing into child nodes], but it adds an extra backtracking step, turning it into [modifying the current node state]→[recursing into child nodes]→[restoring the current node state].
+
+For readers unfamiliar with backtracking, this explanation might be unclear, which is entirely normal. The following problems are intended to help you understand backtracking. If it’s still confusing, remember two simple principles: `1. Pass states by reference, and 2. Restore all state changes after recursion`.
+
+There are generally two cases for backtracking modifications: one involves modifying the last output, such as in permutations and combinations, and the other involves modifying visit markers, such as searching for strings in a matrix.
+
+
+## [46. Permutations](https://leetcode.com/problems/permutations/)
+
+### Problem Description
+
+Given an array of distinct integers, return all possible permutations.
+
+### Input and Output Example
+
+The input is a one-dimensional integer array, and the output is a two-dimensional array representing all permutations of the input array.
+
+```
+Input: [1,2,3]
+Output: [[1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,2,1], [3,1,2]]
+```
+
+The order of output does not matter as long as all permutations are included.
+
+### Solution Explanation
+
+To generate all permutations, for each position \(i\), we can swap it with any subsequent position, then process position \(i+1\), and so on until the last position is processed. Instead of creating a new array to store the partially swapped numbers at each step, we use backtracking to modify the original array directly. Once recursion is complete, we restore the original state.
+
+For example, using the input `[1,2,3]`, this method outputs permutations in the order: `[[1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,2,1], [3,1,2]]`, ensuring all possible permutations are covered.
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// Helper function.
+void backtracking(vector<int> &nums, int level,
+                  vector<vector<int>> &permutations) {
+    if (level == nums.size() - 1) {
+        permutations.push_back(nums);  // Save the current permutation.
+        return;
+    }
+    for (int i = level; i < nums.size(); ++i) {
+        swap(nums[i], nums[level]);  // Modify current state.
+        backtracking(nums, level + 1, permutations);  // Recur to next level.
+        swap(nums[i], nums[level]);  // Revert current state.
+    }
+}
+
+// Main function.
+vector<vector<int>> permute(vector<int> &nums) {
+    vector<vector<int>> permutations;
+    backtracking(nums, 0, permutations);
+    return permutations;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# Helper function.
+def backtracking(nums: List[int], level: int, permutations: List[List[int]]):
+    if level == len(nums) - 1:
+        permutations.append(nums[:])  # Save current permutation via shallow copy.
+        return
+    for i in range(level, len(nums)):
+        nums[i], nums[level] = nums[level], nums[i]  # Modify current state.
+        backtracking(nums, level + 1, permutations)  # Recur to next level.
+        nums[i], nums[level] = nums[level], nums[i]  # Revert current state.
+
+# Main function.
+def permute(nums: List[int]) -> List[List[int]]:
+    permutations = []
+    backtracking(nums, 0, permutations)
+    return permutations
+```
+
+</TabItem>
+
+</Tabs>
+
+## [77. Combinations](https://leetcode.com/problems/combinations/)
+
+### Problem Description
+
+Given an integer `n` and an integer `k`, find all combinations of `k` numbers chosen from the range `1` to `n`.
+
+### Input and Output Example
+
+The input consists of two positive integers `n` and `k`. The output is a two-dimensional array representing all possible combinations.
+
+```
+Input: n = 4, k = 2
+Output: [[2,4], [3,4], [2,3], [1,2], [1,3], [1,4]]
+```
+
+The order of the dimensions in the two-dimensional array can be arbitrary.
+
+### Solution Explanation
+
+Similar to permutation problems, we can use backtracking. In permutations, backtracking swaps positions, while in combinations, it determines whether to include the current number in the result.
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// Auxiliary function
+void backtracking(vector<vector<int>>& combinations, vector<int>& pick, int pos,
+                  int n, int k) {
+    if (pick.size() == k) {
+        combinations.push_back(pick);
+        return;
+    }
+    for (int i = pos; i <= n; ++i) {
+        pick.push_back(i);  // Modify the current node state
+        backtracking(combinations, pick, i + 1, n, k);  // Recurse to child nodes
+        pick.pop_back();  // Restore the current node state
+    }
+}
+
+// Main function
+vector<vector<int>> combine(int n, int k) {
+    vector<vector<int>> combinations;
+    vector<int> pick;
+    backtracking(combinations, pick, 1, n, k);
+    return combinations;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# Auxiliary function
+def backtracking(
+    combinations: List[List[int]], pick: List[int], pos: int, n: int, k: int
+):
+    if len(pick) == k:
+        combinations.append(pick[:]) # int is a basic type, shallow copy is sufficient
+        return
+    for i in range(pos, n + 1):
+        pick.append(i) # Modify the current node state
+        backtracking(combinations, pick, i + 1, n, k) # Recurse to child nodes
+        pick.pop() # Restore the current node state
+
+# Main function
+def combine(n: int, k: int) -> List[List[int]]:
+    combinations = []
+    pick = []
+    backtracking(combinations, pick, 1, n, k)
+    return combinations
+```
+
+</TabItem>
+
+</Tabs>
+
+## [79. Word Search](https://leetcode.com/problems/word-search/)
+
+### Problem Description
+
+Given a grid of letters, where all letters are connected to adjacent letters in four directions (up, down, left, right), determine whether a given word can be found in the grid.
+
+### Input and Output Example
+
+The input consists of a 2D character array and a string. The output is a boolean indicating whether the word can be found.
+
+```
+Input: word = "ABCCED", board =
+[[’A’,’B’,’C’,’E’],
+ [’S’,’F’,’C’,’S’],
+ [’A’,’D’,’E’,’E’]]
+Output: true
+```
+
+Starting from the top-left corner 'A', we can move right, then down, and finally left to find the continuous sequence "ABCCED".
+
+### Solution Explanation
+
+Unlike permutation and combination problems, this problem modifies the visited state. During a depth-first search from any position, we mark the current position as visited to prevent revisiting (e.g., avoid moving right and then back left). After all possibilities are explored, we revert the current position to unvisited to avoid interfering with other searches. Using backtracking, we only need to modify a 2D visited matrix without passing the state as a new object to the recursive function.
+
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// Auxiliary function
+bool backtracking(vector<vector<char>>& board, string& word,
+                  vector<vector<bool>>& visited, int i, int j, int word_pos) {
+    if (i < 0 || i >= board.size() || j < 0 || j >= board[0].size() ||
+        visited[i][j] || board[i][j] != word[word_pos]) {
+        return false;
+    }
+    if (word_pos == word.size() - 1) {
+        return true;
+    }
+    visited[i][j] = true;  // Modify the current node state
+    if (backtracking(board, word, visited, i + 1, j, word_pos + 1) ||
+        backtracking(board, word, visited, i - 1, j, word_pos + 1) ||
+        backtracking(board, word, visited, i, j + 1, word_pos + 1) ||
+        backtracking(board, word, visited, i, j - 1, word_pos + 1)) {
+        return true;  // Recurse to child nodes
+    }
+    visited[i][j] = false;  // Restore the current node state
+    return false;
+}
+
+// Main function
+bool exist(vector<vector<char>>& board, string word) {
+    int m = board.size(), n = board[0].size();
+    vector<vector<bool>> visited(m, vector<bool>(n, false));
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (backtracking(board, word, visited, i, j, 0)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# Auxiliary function
+def backtracking(board: List[List[str]], word: str,
+                visited: List[List[bool]], i: int, j: int, word_pos: int):
+    if (i < 0 or i >= len(board) or j < 0 or j >= len(board[0])
+        or visited[i][j] or board[i][j] != word[word_pos]):
+        return False
+    if word_pos == len(word) - 1:
+        return True
+    visited[i][j] = True # Modify the current node state
+    if (backtracking(board, word, visited, i + 1, j, word_pos + 1) or
+        backtracking(board, word, visited, i - 1, j, word_pos + 1) or
+        backtracking(board, word, visited, i, j + 1, word_pos + 1) or
+        backtracking(board, word, visited, i, j - 1, word_pos + 1)):
+        return True # Recurse to child nodes
+    visited[i][j] = False # Restore the current node state
+    return False
+
+# Main function
+def exist(board: List[List[str]], word: str) -> bool:
+    m, n = len(board), len(board[0])
+    visited = [[False for _ in range(n)] for _ in range(m)]
+    return any([
+        backtracking(board, word, visited, i, j, 0)
+        for i in range(m) for j in range(n)
+     ])
+```
+
+</TabItem>
+
+</Tabs>
+
+## [51. N-Queens](https://leetcode.com/problems/n-queens/)
+
+### Problem Description
+
+Given an n x n chessboard, determine all possible ways to place n queens so that no two queens attack each other. A queen can attack another queen on the same row, column, or diagonals.
+
+<figure>
+![](n-queens.png)
+<figcaption>Problem 51 - An example solution to the 8-Queens problem</figcaption>
+</figure>
+
+### Input and Output Example
+
+Input is an integer n, output is a 2D list of strings representing all valid chessboard configurations.
+
+```
+Input: 4
+Output: [
+ [".Q..", // Solution 1
+  "...Q",
+  "Q...",
+  "..Q."],
+ ["..Q.", // Solution 2
+  "Q...",
+  "...Q",
+  ".Q.."]
+]
+```
+
+In this example, dots represent empty squares, and 'Q' represents queens.
+
+### Solution Explanation
+
+Similar to finding words in a matrix, this problem involves modifying the state matrix during backtracking. The difference here is that we need to track visited columns, left diagonals, and right diagonals. If we traverse by rows to place queens, we don't need to maintain a separate visited array for rows.
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+```cpp
+// Auxiliary function
+void backtracking(vector<vector<string>> &solutions, vector<string> &board,
+                  vector<bool> &column, vector<bool> &ldiag,
+                  vector<bool> &rdiag, int row) {
+    int n = board.size();
+    if (row == n) {
+        solutions.push_back(board);
+        return;
+    }
+    for (int i = 0; i < n; ++i) {
+        if (column[i] || ldiag[n - row + i - 1] || rdiag[row + i]) {
+            continue;
+        }
+        // Modify the current node state
+        board[row][i] = 'Q';
+        column[i] = ldiag[n - row + i - 1] = rdiag[row + i] = true;
+        // Recurse to child nodes
+        backtracking(solutions, board, column, ldiag, rdiag, row + 1);
+        // Restore the current node state
+        board[row][i] = '.';
+        column[i] = ldiag[n - row + i - 1] = rdiag[row + i] = false;
+    }
+}
+
+// Main function
+vector<vector<string>> solveNQueens(int n) {
+    vector<vector<string>> solutions;
+    vector<string> board(n, string(n, ’.’));
+    vector<bool> column(n, false);
+    vector<bool> ldiag(2 * n - 1, false);
+    vector<bool> rdiag(2 * n - 1, false);
+    backtracking(solutions, board, column, ldiag, rdiag, 0);
+    return solutions;
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Python">
+
+```py
+# Auxiliary function
+def backtracking(solutions: List[List[str]], board: List[List[str]],
+    column: List[bool], ldiag: List[bool], rdiag: List[bool], row: int):
+    n = len(board)
+    if row == n:
+        solutions.append(["".join(row) for row in board])
+        return
+    for i in range(n):
+        if column[i] or ldiag[n - row + i - 1] or rdiag[row + i]:
+            continue
+        # Modify the current node state
+        board[row][i] = "Q"
+        column[i] = ldiag[n - row + i - 1] = rdiag[row + i] = True
+        # Recurse to child nodes
+        backtracking(solutions, board, column, ldiag, rdiag, row + 1)
+        # Restore the current node state
+        board[row][i] = "."
+        column[i] = ldiag[n - row + i - 1] = rdiag[row + i] = False
+
+# Main function
+def solveNQueens(n: int) -> List[List[str]]:
+    solutions = []
+    board = [["." for _ in range(n)] for _ in range(n)]
+    column = [False] * n
+    ldiag = [False] * (2 * n - 1)
+    rdiag = [False] * (2 * n - 1)
+    backtracking(solutions, board, column, ldiag, rdiag, 0)
+    return solutions
+```
+
+</TabItem>
+
+</Tabs>
